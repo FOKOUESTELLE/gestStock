@@ -23,7 +23,7 @@
                     <input type = "password" id = "password" name = "password" placeholder ="PASSWORD" required>
                 </div>
                 <div class="box">
-                  <button type = "submit"><a href="../../index.html" class="connexion">Connexion</a></button>
+                  <button type = "submit"><a href="../../index.php" class="connexion">Connexion</a></button>
                 </div>
                 <div class="oublier">
                    <p><a href ="#">mot de passe oublie?</a>
