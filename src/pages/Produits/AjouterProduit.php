@@ -34,8 +34,7 @@
         <ul class="navbar-nav me-lg-2">
           <li class="nav-item nav-profile dropdown">
             <a class="nav-link" href="#" data-bs-toggle="dropdown" id="profileDropdown">
-              <img src="../../../assets/images/faces/face5.jpg" alt="profile"/>
-              <span class="nav-profile-name">Eugenia Mullins</span>
+              <span class="nav-profile-name">Bienvenue sur le tableau de bord</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
               <a class="dropdown-item">
@@ -49,7 +48,7 @@
             </div>
           </li>
           <li class="nav-item nav-user-status dropdown">
-              <p class="mb-0">Last login was 23 hours ago.</p>
+              <p class="mb-0"></p>
           </li>
         </ul>
         <ul class="navbar-nav navbar-nav-right">
@@ -199,13 +198,15 @@
           </li>          
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-              <i class="typcn typcn-chart-pie-outline menu-icon"></i>
-              <span class="menu-title">Charts</span>
+            <i class="typcn typcn-gift menu-icon"></i>
+              <span class="menu-title">Gestion des Produits</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="charts">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/charts/chartjs.html">ChartJs</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/AjouterProduit.php">Ajouter</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/ListeProduits.php">Liste de produits</a></li>
+
               </ul>
             </div>
           </li>
@@ -257,68 +258,81 @@
           </li>
         </ul>
       </nav>
-      <!-- partial -->
-      <div class="main-panel">
-        <div class="content-wrapper">
-          <div class="row">
-            <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Line chart</h4>
-                  <canvas id="lineChart"></canvas>
-                </div>
-              </div>
+      
+<!-- formulaire d'ajout -->
+
+    <div class="container my-5">
+        <h1 class="text-center text-bold">Ajouter un Produit</h1>
+        <div class="card border-primary mb-4 rounded-3">
+            <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
+                <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un Produit<i class="fas fa-plus-circle"></i></h3>             
             </div>
-            <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Bar chart</h4>
-                  <canvas id="barChart"></canvas>
-                </div>
-              </div>
+            <div class="card-body shadow">
+                <form  enctype="multipart/form-data" id="ajoutEtudiantForm" method = "POST" action ="">
+                    <div class="mb-3">
+                        <label for="matricule" class="form-label">
+                        <i class="typcn typcn-tag menu-icon"></i> Code
+                        </label>
+                        <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le matricule doit contenir 1 à 6 caractères alphanumériques.">
+                        <small class="form-text text-muted">Par exemple : A12345</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">
+                        <i class="typcn typcn-tag menu-icon"></i> Nom
+                        </label>
+                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="type" class="form-label">
+                        <i class="typcn typcn-th-large-outline menu-icon"></i>Type
+                        </label>
+                        <select class="form-select" id="type" name = "type" required>
+                            <option value="">Sélectionnez le type</option>
+                            <option value="M">Television</option>
+                            <option value="F">Ordinateur</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                        <i class="typcn typcn-document-text menu-icon"></i>Description
+                        </label>
+                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
+                
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">
+                        <i class="typcn typcn-image menu-icon"></i></i> Image
+                         </label>
+                         <input type="file" accept="image/*" /> 
+                    </div>
+                    <div class="mb-3">
+                      <label for="enabled" class="form-label">
+                      <i class="typcn typcn-tick-outline menu-icon"></i></i> Enabled
+                      </label>
+                      <input type="text" class="form-control" id="enabled" name = "enabled" title="">
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times-circle me-2"></i> Annuler
+                        </button>
+                        <button type="submit" class="btn btn-success" name ="enregistrer">
+                            <i class="fas fa-check-circle me-2"></i> Enregistrer
+                        </button>
+                    </div>
+                </form>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Area chart</h4>
-                  <canvas id="areaChart"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Doughnut chart</h4>
-                  <div class="doughnutjs-wrapper d-flex justify-content-center">
-                    <canvas id="doughnutChart"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 grid-margin grid-margin-lg-0 stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Pie chart</h4>
-                  <div class="doughnutjs-wrapper d-flex justify-content-center">
-                    <canvas id="pieChart"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-lg-6 grid-margin grid-margin-lg-0 stretch-card">
-              <div class="card">
-                <div class="card-body">
-                  <h4 class="card-title">Scatter chart</h4>
-                  <canvas id="scatterChart"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
+    </div>
+</div>
+
+    <!-- <script src="bootstrap/js/bootstrap.bundle.min.js"></script> -->
+    <!-- <script src="js/bootstrap.min.js" type="text/javascript"></script> -->
+    <!-- <script src="js/jquery-3.7.1.min.js" type="text/javascript"></script> -->
+    <!-- <script src="js/popper.min.js" type="text/javascript"></script> -->
+
+
+
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
