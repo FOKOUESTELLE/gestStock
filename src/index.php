@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>PolluxUI Admin</title>
+  <title>Dashboard</title>
   <!-- base:css -->
   <link rel="stylesheet" href="assets/vendors/typicons/typicons.css">
   <link rel="stylesheet" href="assets/vendors/css/vendor.bundle.base.css">
@@ -242,7 +242,7 @@
           </li>          
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-              <i class="typcn typcn-chart-pie-outline menu-icon"></i>
+            <i class="typcn typcn-gift menu-icon"></i>
               <span class="menu-title">Gestion des produits</span>
               <i class="menu-arrow"></i>
             </a>
@@ -250,6 +250,19 @@
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="pages/Produits/AjouterProduit.php">Ajouter</a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/Produits/ListeProduits.php">Liste de produits</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+              <i class="typcn typcn-chart-pie-outline menu-icon"></i>
+              <span class="menu-title">Gestion des Clients</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="charts">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="pages/Produits/AjouterProduit.php">Ajouter</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/Produits/ListeProduits.php">Liste des clients</a></li>
               </ul>
             </div>
           </li>
