@@ -81,11 +81,10 @@ require_once '../Nav/sidebar.php';
 
 
         <!-- content-wrapper ends -->
-
           <!-- partial:../../partials/_footer.php -->
-     <?php
+         <?php
          require_once '../Nav/footer.php';
-     ?> 
+         ?>
         <!-- partial -->
       </div>
       <!-- main-panel ends -->

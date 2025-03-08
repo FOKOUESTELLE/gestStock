@@ -49,12 +49,12 @@
             </div>
           </li>          
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
+            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-clients">
             <i class="typcn typcn-gift menu-icon"></i>
               <span class="menu-title">Gestion des Produits</span>
               <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="charts">
+            <div class="collapse" id="gestion-produits">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/AjouterProduit.php">Ajouter</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/ListeProduits.php">Liste de produits</a></li>
@@ -63,18 +63,47 @@
             </div>
           </li>
           <li class="nav-item">
-         <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-         <i class="typcn typcn-group-outline"></i>
-           <span class="menu-title">Gestion des clients</span>
-           <i class="menu-arrow"></i>
-         </a>
-         <div class="collapse" id="charts">
-           <ul class="nav flex-column sub-menu">
-             <li class="nav-item"> <a class="nav-link" href="../../pages/Clients/AjouterClient.php">Ajouter</a></li>
-             <li class="nav-item"> <a class="nav-link" href="../../pages/Clients/ListeClients.php">Liste des clients</a></li>
-           </ul>
-         </div>
-       </li>
+             <a class="nav-link" data-bs-toggle="collapse" href="#gestion-clients" aria-expanded="false" aria-controls="gestion-clients">
+             <i class="typcn typcn-group-outline"></i>
+               <span class="menu-title">Gestion des clients</span>
+               <i class="menu-arrow"></i>
+             </a>
+             <div class="collapse" id="gestion-clients">
+               <ul class="nav flex-column sub-menu">
+                 <li class="nav-item"> <a class="nav-link" href="../../pages/Clients/AjouterClient.php">Ajouter</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="../../pages/Clients/ListeClients.php">Liste des clients</a></li>
+               </ul>
+             </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="collapse" href="#gestion-clients" aria-expanded="false" aria-controls="charts">
+          <i class="typcn typcn-group-outline"></i>
+            <span class="menu-title">Gestion des fournisseurs</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="gestion-clients">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="../../pages/Fournisseurs/AjouterFourn.php">Ajouter</a></li>
+              <li class="nav-item"> <a class="nav-link" href="../../pages/Fournisseurs/ListeFourns.php">Liste des fournisseurs</a></li>
+            </ul>
+          </div>
+        </li>
+         <li class="nav-item">
+             <a class="nav-link" data-bs-toggle="collapse" href="#gestion-achats" aria-expanded="false" aria-controls="gestion-achats">
+               <i class="typcn typcn-shopping-cart menu-icon"></i>
+               <span class="menu-title">Gestion des achats</span>
+               <i class="menu-arrow"></i>
+             </a>
+             <div class="collapse" id="gestion-achats">
+               <ul class="nav flex-column sub-menu">
+                 <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/AjouterAchat.php">Ajouter</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/ListeAchats.php">Liste des achats</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/ListeProduitsAchetes.php">Liste des produits achetes</a></li>
+
+               </ul>
+             </div>
+        </li>
+
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
               <i class="typcn typcn-th-small-outline menu-icon"></i>

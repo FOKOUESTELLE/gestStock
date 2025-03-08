@@ -25,12 +25,12 @@ require_once '../Nav/sidebar.php';
                 <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un Produit<i class="fas fa-plus-circle"></i></h3>             
             </div>
             <div class="card-body shadow">
-                <form  enctype="multipart/form-data" id="ajoutEtudiantForm" method = "POST" action ="">
+                <form  enctype="multipart/form-data" id="ajoutProduitForm" method = "POST" action ="">
                     <div class="mb-3">
                         <label for="matricule" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> Code
                         </label>
-                        <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le matricule doit contenir 1 à 6 caractères alphanumériques.">
+                        <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
                         <small class="form-text text-muted">Par exemple : A12345</small>
                     </div>
                     <div class="mb-3">
@@ -64,18 +64,20 @@ require_once '../Nav/sidebar.php';
                          <input type="file" accept="image/*" /> 
                     </div>
                     <div class="mb-3">
-                      <label for="enabled" class="form-label">
-                      <i class="typcn typcn-tick-outline menu-icon"></i></i> Enabled
-                      </label>
-                      <input type="text" class="form-control" id="enabled" name = "enabled" title="">
-                    </div>
+                     <label for="enabled" class="form-label">
+                       <i class="typcn typcn-tick-outline menu-icon"></i> Enabled
+                     </label>
+                     <input type="checkbox" class="form-check-input" id="enabled" name="enabled" value="1">
+                     <label class="form-check-label" for="enabled">Produit activé</label>
+                   </div>
                     <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times-circle me-2"></i> Annuler
-                        </button>
-                        <button type="submit" class="btn btn-success" name ="enregistrer">
-                            <i class="fas fa-check-circle me-2"></i> Enregistrer
-                        </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="typcn typcn-times me-2"></i> Annuler
+                    </button>
+                    <button type="submit" class="btn btn-success" name="enregistrer">
+                        <i class="typcn typcn-tick me-2"></i> Enregistrer
+                    </button>
+
                     </div>
                 </form>
             </div>
@@ -96,8 +98,10 @@ require_once '../Nav/sidebar.php';
             <div class="card">
                 <div class="card-body">
                     <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" class="text-muted" target="_blank">Bootstrapdash</a>. All rights reserved.</span>
-                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">Hand-crafted & made with <i class="typcn typcn-heart-full-outline text-danger"></i></span>
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 
+                            <a href="https://www.bootstrapdash.com/" class="text-muted" target="_blank">Bootstrapdash</a>. All rights reserved.</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">Hand-crafted & made with 
+                            <i class="typcn typcn-heart-full-outline text-danger"></i></span>
                     </div>
                 </div>    
             </div>        
