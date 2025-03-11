@@ -46,7 +46,6 @@ require_once '../Nav/sidebar.php';
                         <tr class="text-center fw-bold">
                             <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> Numero
                             <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> CodeClient
-                            <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> CodeProduit
                             <th scope="col"> <i class="typcn typcn-lightbulb"></i> Type de commande
                             <th scope="col"><i class="typcn typcn-credit-card"></i> Reduction
                             <th scope="col"><i class="typcn typcn-credit-card"></i> Sous Total
@@ -79,9 +78,7 @@ require_once '../Nav/sidebar.php';
                                       <td></td>
                                       <td></td>
                                       <td></td>
-                                      <td></td>
-
-
+                                    
                                       <td class='text-center'>
 
                                       <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
@@ -140,12 +137,6 @@ require_once '../Nav/sidebar.php';
                 </label>
                 <input type="text" class="form-control" id="code_client" name="code_client" placeholder="Code Client" required >
             </div>
-            <div class="mb-3">
-               <label for="code_produit" class="form-label">
-               <i class="typcn typcn-tag"></i> CodeProduit
-               </label>
-               <input type="text" class="form-control" id="code_prod" name="code_prod" placeholder="Code Produit" required >
-           </div>
           <div class="mb-3">
               <label for="raison_achat" class="form-label">
               <i class="typcn typcn-lightbulb"></i> Type de commande

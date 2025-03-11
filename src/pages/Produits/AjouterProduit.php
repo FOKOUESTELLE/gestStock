@@ -27,12 +27,19 @@ require_once '../Nav/sidebar.php';
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutProduitForm" method = "POST" action ="">
                     <div class="mb-3">
-                        <label for="matricule" class="form-label">
+                        <label for="code" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> Code
                         </label>
                         <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
                         <small class="form-text text-muted">Par exemple : A12345</small>
                     </div>
+                                      
+                  <div class="mb-3">
+                      <label for="num_cmd" class="form-label">
+                      <i class="typcn typcn-tag"></i> Numéro de commande
+                      </label>
+                      <input type="text" class="form-control" id="num_cmd" name="num_cmd" placeholder="Entrez le numéro de commande" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le numéro doit contenir 1 à 6 caractères alphanumériques.">
+                  </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> Nom

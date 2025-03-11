@@ -22,54 +22,60 @@ require_once '../Nav/sidebar.php';
         <h1 class="text-center text-bold">Ajouter un Exemplaire</h1>
         <div class="card border-primary mb-4 rounded-3">
             <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
-                <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un Exemplaire<i class="fas fa-plus-circle"></i></h3>             
+                <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i>Ajouter un Exemplaire<i class="fas fa-plus-circle"></i></h3>             
             </div>
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutProduitForm" method = "POST" action ="">
                     <div class="mb-3">
-                        <label for="code" class="form-label">
+                        <label for="sku" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> SKU
                         </label>
-                        <input type="text" class="form-control" id="code_exemp" name = "code_exemp" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                        <small class="form-text text-muted">Par exemple : A12345</small>
+                        <input type="text" class="form-control" id="sku_prod" name="sku_prod" placeholder="Entrez le SKU du produit" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le SKU doit contenir 1 à 6 caractères alphanumériques.">
+                    </div>  
+                    <div class="mb-3">
+                        <label for="code_barre" class="form-label">
+                            <i class="typcn typcn-credit-card menu-icon"></i> Code barre
+                        </label>
+                        <input type="text" class="form-control" id="code_barre" name="code_barre" placeholder="Entrez le code barre du produit" required maxlength="13">
                     </div>
                     <div class="mb-3">
-                        <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nom
+                        <label for="code" class="form-label">
+                        <i class="typcn typcn-tag menu-icon"></i> CodeProduit
                         </label>
-                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                        <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="code du produit" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="original_price" class="form-label">
+                            <i class="typcn typcn-tag menu-icon"></i> Prix original
+                        </label>
+                        <input type="text" class="form-control" id="original_price" name="original_price" placeholder="Entrez le prix original du produit" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="special_price" class="form-label">
+                            <i class="typcn typcn-star menu-icon"></i> Prix spécial
+                        </label>
+                        <input type="text" class="form-control" id="special_price" name="special_price" placeholder="Entrez le prix spécial du produit" required>
                     </div>
                     
                     <div class="mb-3">
                         <label for="type" class="form-label">
-                        <i class="typcn typcn-th-large-outline menu-icon"></i>Type
+                            <i class="typcn typcn-th-large-outline menu-icon"></i> Type
                         </label>
-                        <select class="form-select" id="type" name = "type" required>
+                        <select class="form-select" id="type" name="type" required>
                             <option value="">Sélectionnez le type</option>
-                            <option value="M">Television</option>
+                            <option value="M">Télévision</option>
                             <option value="F">Ordinateur</option>
                         </select>
                     </div>
+                    
                     <div class="mb-3">
                         <label for="description" class="form-label">
-                        <i class="typcn typcn-document-text menu-icon"></i>Description
+                            <i class="typcn typcn-document-text menu-icon"></i> Description
                         </label>
                         <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
-                
-                    </div>
-                    <div class="mb-3">
-                        <label for="image" class="form-label">
-                        <i class="typcn typcn-image menu-icon"></i></i> Image
-                         </label>
-                         <input type="file" accept="image/*" /> 
-                    </div>
-                    <div class="mb-3">
-                     <label for="enabled" class="form-label">
-                       <i class="typcn typcn-tick-outline menu-icon"></i> Enabled
-                     </label>
-                     <input type="checkbox" class="form-check-input" id="enabled" name="enabled" value="1">
-                     <label class="form-check-label" for="enabled">Produit activé</label>
-                   </div>
+                    </div> 
                     <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="typcn typcn-times me-2"></i> Annuler

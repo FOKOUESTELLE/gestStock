@@ -49,7 +49,7 @@
             </div>
           </li>          
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-clients">
+            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
             <i class="typcn typcn-gift menu-icon"></i>
               <span class="menu-title">Gestion des Produits</span>
               <i class="menu-arrow"></i>
@@ -62,6 +62,19 @@
                 <li class="nav-item"> <a class="nav-link" href="../../pages/ExemplairesProduit/ListeExemplaires.php">Liste des Exemplaires</a></li>
               </ul>
             </div>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
+              <i class="typcn typcn-gift menu-icon"></i>
+                <span class="menu-title">Categories de Produits</span>
+                <i class="menu-arrow"></i>
+              </a>
+              <div class="collapse" id="gestion-produits">
+                <ul class="nav flex-column sub-menu">
+                  <li class="nav-item"> <a class="nav-link" href="../../pages/Categories/AjouterCatProd.php">Ajouter</a></li>
+                  <li class="nav-item"> <a class="nav-link" href="../../pages/Categories/ListeCategories.php">Liste des categories</a></li>
+                </ul>
+              </div>
           </li>
           <li class="nav-item">
              <a class="nav-link" data-bs-toggle="collapse" href="#gestion-clients" aria-expanded="false" aria-controls="gestion-clients">
@@ -107,12 +120,12 @@
              
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-achats" aria-expanded="false" aria-controls="gestion-achats">
-              <i class="typcn typcn-shopping-cart menu-icon"></i>
-              <span class="menu-title">Gestion des commandes</span>
+            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-commandes" aria-expanded="false" aria-controls="gestion-achats">
+             <i class="typcn typcn-shopping-bag menu-icon"></i>  
+             <span class="menu-title">Gestion des commandes</span>
               <i class="menu-arrow"></i>
             </a>
-            <div class="collapse" id="gestion-achats">
+            <div class="collapse" id="gestion-commandes">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="../../pages/Commandes/CreerCommande.php">Creer</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../../pages/commandes/ListeCommandes.php">Liste des commandes</a></li>

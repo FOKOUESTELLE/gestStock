@@ -39,12 +39,6 @@ require_once '../Nav/sidebar.php';
                   </label>
                   <input type="text" class="form-control" id="code_client" name="code_client" placeholder="Code Client" required >
               </div>
-              <div class="mb-3">
-                 <label for="code_produit" class="form-label">
-                 <i class="typcn typcn-tag"></i> CodeProduit
-                 </label>
-                 <input type="text" class="form-control" id="code_prod" name="code_prod" placeholder="Code Produit" required >
-             </div>
 
                     <div class="mb-3">
                         <label for="raison_achat" class="form-label">
