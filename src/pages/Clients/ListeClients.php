@@ -115,7 +115,7 @@ require_once '../Nav/sidebar.php';
                         <label for="nom" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> Nom
                         </label>
-                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du client" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">

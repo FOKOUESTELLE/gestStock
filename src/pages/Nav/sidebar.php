@@ -58,7 +58,8 @@
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/AjouterProduit.php">Ajouter</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/ListeProduits.php">Liste de produits</a></li>
-
+                <li class="nav-item"> <a class="nav-link" href="../../pages/ExemplairesProduit/AjouterExemplaire.php">AjouterExemplaire</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../../pages/ExemplairesProduit/ListeExemplaires.php">Liste des Exemplaires</a></li>
               </ul>
             </div>
           </li>
@@ -99,10 +100,26 @@
                  <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/AjouterAchat.php">Ajouter</a></li>
                  <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/ListeAchats.php">Liste des achats</a></li>
                  <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/ListeProduitsAchetes.php">Liste des produits achetes</a></li>
+                 
 
                </ul>
              </div>
+             
         </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-achats" aria-expanded="false" aria-controls="gestion-achats">
+              <i class="typcn typcn-shopping-cart menu-icon"></i>
+              <span class="menu-title">Gestion des commandes</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="gestion-achats">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../../pages/Commandes/CreerCommande.php">Creer</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../../pages/commandes/ListeCommandes.php">Liste des commandes</a></li>
+              </ul>
+            </div>
+            
+       </li>
 
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
