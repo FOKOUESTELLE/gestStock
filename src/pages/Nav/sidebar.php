@@ -90,6 +90,19 @@
              </div>
         </li>
         <li class="nav-item">
+           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-paiements" aria-expanded="false" aria-controls="gestion-paiements">
+           <i class="typcn typcn-credit-card"></i> 
+             <span class="menu-title">Gestion des paiements</span>
+             <i class="menu-arrow"></i>
+           </a>
+           <div class="collapse" id="gestion-paiements">
+             <ul class="nav flex-column sub-menu">
+               <li class="nav-item"> <a class="nav-link" href="../../pages/Paiements/AjouterPaiement.php">Ajouter</a></li>
+               <li class="nav-item"> <a class="nav-link" href="../../pages/Paiements/ListePaiements.php">Liste des paiements</a></li>
+             </ul>
+           </div>
+      </li>
+        <li class="nav-item">
           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-clients" aria-expanded="false" aria-controls="charts">
           <i class="typcn typcn-group-outline"></i>
             <span class="menu-title">Gestion des fournisseurs</span>

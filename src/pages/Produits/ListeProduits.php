@@ -45,6 +45,8 @@ require_once '../Nav/sidebar.php';
                     <thead class="table-primary">
                         <tr class="text-center fw-bold">
                             <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> Code
+                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Categorie
+                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Nombre d'exemplaire
                             <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> Numero de commande
                             <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Nom
                             <th scope="col"><i class="typcn typcn-th-large-outline menu-icon fs-3"></i>Type
@@ -65,6 +67,10 @@ require_once '../Nav/sidebar.php';
                                       <td></td>
                                       <td></td>
                                       <td></td>
+                                      <td></td>
+                                      <td></td>
+
+
 
                                       <td class='text-center'>
 
@@ -119,6 +125,18 @@ require_once '../Nav/sidebar.php';
                        <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
                        <small class="form-text text-muted">Par exemple : A12345</small>
                    </div>
+                   <div class="mb-3">
+                        <label for="nom" class="form-label">
+                        <i class="typcn typcn-tag menu-icon"></i> Categorie
+                        </label>
+                        <input type="text" class="form-control" id="nom_cat" name = "nom_cat" required> 
+                    </div>
+                    <div class="mb-3">
+                        <label for="qte" class="form-label">
+                        <i class="typcn typcn-tag menu-icon"></i> Nombre d'exemplaire
+                        </label>
+                        <input type="number" class="form-control" id="nbre_exemp" name = "nbre_exemp" required> 
+                    </div>        
                    <div class="mb-3">
                      <label for="num_cmd" class="form-label">
                      <i class="typcn typcn-tag"></i> Numéro de commande
