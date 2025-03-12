@@ -2,6 +2,7 @@
 <?php
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
+require_once '../Fonctions/db_connection.php';
 
 ?>
 <!DOCTYPE html>
@@ -26,24 +27,25 @@ require_once '../Nav/sidebar.php';
             </div>
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutClientForm" method = "POST" action ="">
+        
                     <div class="mb-3">
                         <label for="matricule" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> Code
                         </label>
-                        <input type="text" class="form-control" id="code_client" name = "code_client" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
+                        <input type="text" class="form-control" id="code_client" name = "code_client" placeholder="Entrez le code du client" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
                         <small class="form-text text-muted">Par exemple : A12345</small>
                     </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> Nom
                         </label>
-                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                        <input type="text" class="form-control" id="nom_client" name = "nom_client" placeholder="Entrez le nom du client" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">
                             <i class="typcn typcn-phone-outline menu-icon"></i> Numéro de téléphone
                         </label>
-                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="Entrez votre numéro de téléphone" required pattern="^\+?[0-9]{1,4}?[-. \(\)]?(\(?\d{1,3}?\)?[-. \(\)]?)?[\d- .]{5,15}$" title="Entrez un numéro de téléphone valide (ex : +1234567890)">
+                        <input type="tel" class="form-control" id="num_tel" name="num_tel" placeholder="Entrez votre numéro de téléphone" required pattern="^\+?[0-9]{1,4}?[-. \(\)]?(\(?\d{1,3}?\)?[-. \(\)]?)?[\d- .]{5,15}$" title="Entrez un numéro de téléphone valide (ex : +1234567890)">
                         <small class="form-text text-muted">Exemple : +1 (234) 567-8901</small>
                     </div>
                     <div class="mb-3">
@@ -78,6 +80,36 @@ require_once '../Nav/sidebar.php';
     <!-- <script src="js/jquery-3.7.1.min.js" type="text/javascript"></script> -->
     <!-- <script src="js/popper.min.js" type="text/javascript"></script> -->
 
+        <?php
+        
+            if(isset($_POST["enregistrer"])){
+                $code_client = $_POST["code_client"];
+                $nom_client = $_POST["nom_client"];
+                $num_tel= $_POST["num_tel"];
+                $adresse = $_POST["adresse"];
+                $ville = $_POST["ville"];
+
+                $conn = getConnection();
+
+                $sql = "INSERT INTO client VALUES ('$code_client', ' $nom_client', '$num_tel', ' $adresse', '$ville')";
+
+                if ($conn->query($sql) === TRUE) {
+                    echo "Insertion effectuée";
+                } else {
+                    echo "Insertion refusée : " . $conn->error;
+                }
+
+                $conn->close();
+            } 
+    
+    
+    
+    
+        ?>
+
+
+
+
 
 
         <!-- content-wrapper ends -->
@@ -109,6 +141,8 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+
+
+</body>
 </html>
