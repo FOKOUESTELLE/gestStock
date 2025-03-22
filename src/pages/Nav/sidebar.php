@@ -179,7 +179,6 @@
                            <i class="typcn typcn-user-add"></i> Ajouter
                        </a>
         </li>
-
              <li class="nav-item">
                <a class="nav-link" href="../../pages/Permissions/ListePermissions.php">
                  <i class="typcn typcn-th-list"></i> Liste des permissions
@@ -188,6 +187,27 @@
            </ul>
          </div>
       </li>
+      <li class="nav-item">
+         <a class="nav-link" data-bs-toggle="collapse" href="#gestion-users" aria-expanded="false" aria-controls="gestion-users">
+             <i class="typcn typcn-group-outline"></i>
+               <span class="menu-title">Gestion des utilisateurs</span>
+               <i class="menu-arrow"></i>
+         </a>
+         <div class="collapse" id="gestion-users">
+             <ul class="nav flex-column sub-menu">
+                 <li class="nav-item">
+                     <a class="nav-link" href="../../pages/Users/AjouterUser.php">
+                         <i class="typcn typcn-user-add"></i> Ajouter
+                     </a>
+                  </li>
+                  <li class="nav-item">
+                   <a class="nav-link" href="../../pages/Users/ListeUsers.php">
+                     <i class="typcn typcn-th-list"></i> Liste des utilisateurs
+                   </a>
+                 </li>     
+               </ul>
+       </div>
+    </li>
 
 
           <li class="nav-item">

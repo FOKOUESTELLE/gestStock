@@ -12,7 +12,7 @@ require_once '../Fonctions/db_connection.php';
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>AjoutClient</title>
+  <title>AjoutUsers</title>
 </head>
 
 <body>
@@ -20,47 +20,40 @@ require_once '../Fonctions/db_connection.php';
 <!-- formulaire d'ajout -->
     <div class="container my-5">
     
-        <h1 class="text-center text-bold">Ajouter un Client</h1>
+        <h1 class="text-center text-bold">Ajouter un utilisateur</h1>
         <div class="card border-primary mb-4 rounded-3">
             <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
-                <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un Client<i class="fas fa-plus-circle"></i></h3>             
+                <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un utilisateur<i class="fas fa-plus-circle"></i></h3>             
             </div>
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutClientForm" method = "POST" action ="">
         
                     <div class="mb-3">
                         <label for="matricule" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> idClient
+                        <i class="typcn typcn-key-outline menu-icon"></i>ID User
                         </label>
-                        <input type="number" class="form-control" id="id_client" name = "id_client" placeholder="Entrez l'identifiant du client"  maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                        <small class="form-text text-muted">Par exemple : A12345</small>
+                        <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur">
                     </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nom
+                        <i class="typcn typcn-user menu-icon fs-3"></i></i> Nom
                         </label>
-                        <input type="text" class="form-control" id="nom_client" name = "nom_client" placeholder="Entrez le nom du client" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                        <input type="text" class="form-control" id="nom_user" name = "nom_user" placeholder="Entrez le nom de l'utilisateur" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
-                        <label for="phone" class="form-label">
-                            <i class="typcn typcn-phone-outline menu-icon"></i> Numéro de téléphone
+                        <label for="matricule" class="form-label">
+                        <i class="typcn typcn-key-outline menu-icon"></i>ID role
                         </label>
-                        <input type="tel" class="form-control" id="num_tel" name="num_tel" placeholder="Entrez votre numéro de téléphone" required pattern="^\+?[0-9]{1,4}?[-. \(\)]?(\(?\d{1,3}?\)?[-. \(\)]?)?[\d- .]{5,15}$" title="Entrez un numéro de téléphone valide (ex : +1234567890)">
-                        <small class="form-text text-muted">Exemple : +1 (234) 567-8901</small>
+                        <input type="number" class="form-control" id="id_role" name = "id_role" placeholder="identifiant du role" disabled>
                     </div>
                     <div class="mb-3">
-                         <label for="adresse" class="form-label">
-                            <i class="typcn typcn-location-outline menu-icon"></i> Adresse de Livraison
-                         </label>
-                            <input type="text" class="form-control" id="adresse" name="adresse" placeholder="Entrez l'adresse de livraison" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="ville" class="form-label">
-                        <i class="typcn typcn-location-outline menu-icon"></i> Ville
-                      </label>
-                      <input type="text" class="form-control" id="ville" name="ville" placeholder="Entrez la ville" required pattern="^[A-Za-zÀ-ÿ\s-]+$" title="La ville doit contenir uniquement des lettres et des espaces.">
-                        <small class="form-text text-muted">Exemple : Paris</small>
-                    </div>
+                        <label for="matricule" class="form-label">
+                        <i class="typcn typcn-user-outline menu-icon"></i>Role
+                        </label>
+                        <select class="form-select" id="role" name = "role" required>
+                            <option value="">Sélectionnez le role</option>
+                        </select>
+                    </div>                          
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="typcn typcn-times me-2"></i> Annuler
