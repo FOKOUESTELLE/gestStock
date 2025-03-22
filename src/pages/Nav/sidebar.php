@@ -143,9 +143,52 @@
                 <li class="nav-item"> <a class="nav-link" href="../../pages/Commandes/CreerCommande.php">Creer</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../../pages/commandes/ListeCommandes.php">Liste des commandes</a></li>
               </ul>
-            </div>
-            
+            </div>        
        </li>
+       <li class="nav-item">
+           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-roles" aria-expanded="false" aria-controls="gestion-roles">
+             <i class="typcn typcn-group-outline menu-icon"></i>
+             <span class="menu-title">Gestion des rôles</span>
+             <i class="menu-arrow"></i>
+           </a>
+           <div class="collapse" id="gestion-roles">
+             <ul class="nav flex-column sub-menu">
+               <li class="nav-item">
+                 <a class="nav-link" href="../../pages/Roles/AjouterRole.php">
+                   <i class="typcn typcn-user-add"></i> Ajouter
+                 </a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" href="../../pages/Roles/ListeRoles.php">
+                   <i class="typcn typcn-th-list"></i> Liste des rôles
+                 </a>
+               </li>     
+             </ul>
+           </div>
+        </li>
+        <li class="nav-item">
+           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-permissions" aria-expanded="false" aria-controls="gestion-permissions">
+               <i class="typcn typcn-key-outline menu-icon"></i>
+               <span class="menu-title">Gestion des permissions</span>
+               <i class="menu-arrow"></i>
+           </a>
+           <div class="collapse" id="gestion-permissions">
+               <ul class="nav flex-column sub-menu">
+                   <li class="nav-item">
+                       <a class="nav-link" href="../../pages/Permissions/AjouterPermission.php">
+                           <i class="typcn typcn-user-add"></i> Ajouter
+                       </a>
+        </li>
+
+             <li class="nav-item">
+               <a class="nav-link" href="../../pages/Permissions/ListePermissions.php">
+                 <i class="typcn typcn-th-list"></i> Liste des permissions
+               </a>
+             </li>     
+           </ul>
+         </div>
+      </li>
+
 
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">

@@ -30,9 +30,9 @@ require_once '../Fonctions/db_connection.php';
         
                     <div class="mb-3">
                         <label for="matricule" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Code
+                        <i class="typcn typcn-tag menu-icon"></i> idClient
                         </label>
-                        <input type="text" class="form-control" id="code_client" name = "code_client" placeholder="Entrez le code du client" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
+                        <input type="number" class="form-control" id="id_client" name = "id_client" placeholder="Entrez le code du client"  maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
                         <small class="form-text text-muted">Par exemple : A12345</small>
                     </div>
                     <div class="mb-3">
@@ -83,7 +83,7 @@ require_once '../Fonctions/db_connection.php';
         <?php
         
             if(isset($_POST["enregistrer"])){
-                $code_client = $_POST["code_client"];
+                // $code_client = $_POST["code_client"];
                 $nom_client = $_POST["nom_client"];
                 $num_tel= $_POST["num_tel"];
                 $adresse = $_POST["adresse"];
@@ -91,7 +91,7 @@ require_once '../Fonctions/db_connection.php';
 
                 $conn = getConnection();
 
-                $sql = "INSERT INTO client VALUES ('$code_client', ' $nom_client', '$num_tel', ' $adresse', '$ville')";
+                $sql = "INSERT INTO client VALUES (' $nom_client', '$num_tel', ' $adresse', '$ville')";
 
                 if ($conn->query($sql) === TRUE) {
                     echo "Insertion effectuée";
