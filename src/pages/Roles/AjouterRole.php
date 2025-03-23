@@ -1,7 +1,39 @@
 
 <?php
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
+require_once '../Fonctions/db_connection.php';
+require '../Fonctions/fonctions.php';
+
+  if (isset($_POST["enregistrer"])) {
+      $id = $_POST["id_role"];
+      $nom = $_POST["nom_role"];
+      // Connexion à la base de données
+      $conn = getConnection();
+      // Vérifier si la connexion est bien établie
+      if (!$conn) {
+          die("Échec de la connexion à la base de données !");
+      }
+      // Utiliser une requête préparée pour éviter l'injection SQL
+      $sql = "INSERT INTO roles (id_role, nom_role) VALUES (?, ?)";
+      $result = $conn->prepare($sql);
+      if ($result) {
+          $result->bind_param("is", $id, $nom); // "is" : i (integer), s (string)
+          if ($result->execute()) {
+              header("Location: ../../pages/samples/succes.php");
+              exit();
+          } else {
+              header("Location: ../../pages/samples/error-500.php");
+              exit();
+          }
+          $result->close(); // Fermer la requête
+      } else {
+          die("Erreur lors de la préparation de la requête.");
+      }
+      $conn->close(); // Fermer la connexion
+  }
+
 
 ?>
 <!DOCTYPE html>
@@ -97,6 +129,9 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+
+
+
+</body>
 </html>
