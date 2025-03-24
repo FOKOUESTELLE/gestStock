@@ -1,8 +1,13 @@
 
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
 require_once '../Fonctions/db_connection.php';
+$conn = getConnection();
+$sql = "SELECT id_role, nom_role FROM roles";
+$result = $conn->query($sql);
 
 ?>
 <!DOCTYPE html>
@@ -13,6 +18,16 @@ require_once '../Fonctions/db_connection.php';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>AjoutUsers</title>
+  <script>
+      // Fonction pour mettre à jour le champ id_role en fonction du rôle sélectionné
+      function updateRoleId() {
+        var roleSelect = document.getElementById('role');
+        var roleIdInput = document.getElementById('id_role');
+        // Récupérer l'ID du rôle à partir de l'attribut data-id_role de l'option sélectionnée
+        var selectedOption = roleSelect.options[roleSelect.selectedIndex];
+        roleIdInput.value = selectedOption.getAttribute('data-id_role');
+      }
+ </script>
 </head>
 
 <body>
@@ -32,7 +47,7 @@ require_once '../Fonctions/db_connection.php';
                         <label for="matricule" class="form-label">
                         <i class="typcn typcn-key-outline menu-icon"></i>ID User
                         </label>
-                        <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur">
+                        <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur" required>
                     </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
@@ -41,19 +56,40 @@ require_once '../Fonctions/db_connection.php';
                         <input type="text" class="form-control" id="nom_user" name = "nom_user" placeholder="Entrez le nom de l'utilisateur" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
+                        <label for="email" class="form-label">
+                        <i class="typcn typcn-user menu-icon fs-3"></i></i> Adresse mail
+                        </label>
+                        <input type="email" class="form-control" id="email_user" name = "email_user" placeholder="Entrez l'adresse mail de l'utilisateur" required title="Veuillez entrer une adresse mail valide.">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password_user" class="form-label">
+                        <i class="typcn typcn-lock-closed menu-icon fs-3"></i>Mot de passe
+                        </label>
+                        <input type="password" class="form-control" id="password_user" name="password_user" placeholder="Entrez le mot de passe de l'utilisateur" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre et avoir une longueur minimale de 8 caractères.">
+                    </div>
+                    <div class="mb-3">
+                         <label for="matricule" class="form-label">
+                         <i class="typcn typcn-user-outline menu-icon"></i>Role
+                         </label>
+                         <select class="form-select" id="role" name="role" required onchange="updateRoleId()">
+                             <option value="">Sélectionnez le rôle</option>
+                             <?php
+                             if ($result->num_rows > 0) {
+                                 while ($row = $result->fetch_assoc()) {
+                                     echo "<option value='" . $row['nom_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
+                                 }
+                             } else {
+                                 echo "<option value=''>Aucun rôle disponible</option>";
+                             }
+                             ?>
+                         </select>
+                     </div>                          
+                    <div class="mb-3">
                         <label for="matricule" class="form-label">
                         <i class="typcn typcn-key-outline menu-icon"></i>ID role
                         </label>
-                        <input type="number" class="form-control" id="id_role" name = "id_role" placeholder="identifiant du role" disabled>
+                        <input type="number" class="form-control" id="id_role" name = "id_role" placeholder="identifiant du role" readonly>
                     </div>
-                    <div class="mb-3">
-                        <label for="matricule" class="form-label">
-                        <i class="typcn typcn-user-outline menu-icon"></i>Role
-                        </label>
-                        <select class="form-select" id="role" name = "role" required>
-                            <option value="">Sélectionnez le role</option>
-                        </select>
-                    </div>                          
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                         <i class="typcn typcn-times me-2"></i> Annuler
@@ -72,37 +108,6 @@ require_once '../Fonctions/db_connection.php';
     <!-- <script src="js/bootstrap.min.js" type="text/javascript"></script> -->
     <!-- <script src="js/jquery-3.7.1.min.js" type="text/javascript"></script> -->
     <!-- <script src="js/popper.min.js" type="text/javascript"></script> -->
-
-        <?php
-        
-            if(isset($_POST["enregistrer"])){
-                // $code_client = $_POST["code_client"];
-                $nom_client = $_POST["nom_client"];
-                $num_tel= $_POST["num_tel"];
-                $adresse = $_POST["adresse"];
-                $ville = $_POST["ville"];
-
-                $conn = getConnection();
-
-                $sql = "INSERT INTO client VALUES (' $nom_client', '$num_tel', ' $adresse', '$ville')";
-
-                if ($conn->query($sql) === TRUE) {
-                    echo "Insertion effectuée";
-                } else {
-                    echo "Insertion refusée : " . $conn->error;
-                }
-
-                $conn->close();
-            } 
-    
-    
-    
-    
-        ?>
-
-
-
-
 
 
         <!-- content-wrapper ends -->
@@ -136,6 +141,49 @@ require_once '../Fonctions/db_connection.php';
   <!-- End custom js for this page-->
 
 
+  <?php
+   
+    if (isset($_POST["enregistrer"])) {
+        $id = $_POST["id_user"];
+        $nom = $_POST["nom_user"];
+        $email = $_POST["email_user"];
+        $password = $_POST["password_user"];
+        $id_role = $_POST["id_role"];
+        $role = $_POST["role"];
+        $conn = getConnection();
+        
+        if (!$conn) {
+            die("Échec de la connexion à la base de données !");
+        }
+       
+        // Utiliser une requête préparée pour éviter l'injection SQL
+        $sql = "INSERT INTO users (id_user, nom_user, adresse_mail, password, id_role, role) VALUES (?, ?, ?, ?, ?, ?)";
+        $result = $conn->prepare($sql);
+        if ($result) {
+           
+            $result->bind_param("isssis", $id, $nom, $email, $password, $id_role, $role);
+            if ($result->execute()) {
+                $_SESSION["id"] = $id;
+                $_SESSION["nom"] = $nom;
+                $_SESSION["email"] = $email;
+                $_SESSION["password"] = $password;
+                $_SESSION["id_role"] = $id_role;
+                $_SESSION["role"] = $role;
+                header("Location: ../../pages/samples/succes.php");
+                exit();
+            } else {
+                // En cas d'erreur
+                header("Location: ../../pages/samples/error-500.php");
+                exit();
+            }
+            $result->close(); 
+        } else {
+            die("Erreur lors de la préparation de la requête.");
+        }
+        $conn->close(); 
+    }
+
+  ?>
 
 </body>
 </html>

@@ -44,8 +44,9 @@ require_once '../Nav/sidebar.php';
                         <tr class="text-center fw-bold">
                         <th scope="col"> <i class="typcn typcn-key-outline menu-icon fs-3"></i> ID user</th>
                         <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i> Nom</th>
-                        <th scope="col"><i class="typcn typcn-key-outline menu-icon fs-3"></i> ID role</th>
+                        <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i>Adresse mail</th>
                         <th scope="col"><i class="typcn typcn-user-outline menu-icon fs-3"></i> Role</th>
+                        <th scope="col"><i class="typcn typcn-key-outline menu-icon fs-3"></i> ID role</th>
                         <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
                     </tr>
                     </thead>
@@ -56,6 +57,8 @@ require_once '../Nav/sidebar.php';
                                       <td></td>
                                       <td></td>
                                       <td></td>
+                                      <td></td>
+
                                       <td class='text-center'>
 
                                       <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
@@ -91,22 +94,22 @@ require_once '../Nav/sidebar.php';
 
    
     <!-- Modal pour ajouter un produit -->
-    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addStudentModalLabel" data-bs-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-3 shadow">
-                <div class="modal-header bg-dark-subtle">
-                    <h5 class="modal-title text-success" id="addUserModalLabel"><i class="typcn typcn-user-add"></i>Ajouter un utilisateur <i class="fas fa-plus-circle"></i></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times text-danger"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                <div class="mb-3">
-          <label for="matricule" class="form-label">
-          <i class="typcn typcn-key-outline menu-icon"></i>ID User
-          </label>
-          <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur">
-      </div>
+         <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addStudentModalLabel" data-bs-backdrop="static" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-3 shadow">
+                    <div class="modal-header bg-dark-subtle">
+                        <h5 class="modal-title text-success" id="addUserModalLabel"><i class="typcn typcn-user-add"></i>Ajouter un utilisateur <i class="fas fa-plus-circle"></i></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times text-danger"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                    <div class="mb-3">
+              <label for="matricule" class="form-label">
+              <i class="typcn typcn-key-outline menu-icon"></i>ID User
+              </label>
+              <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur">
+         </div>
          <div class="mb-3">
              <label for="nom" class="form-label">
              <i class="typcn typcn-user menu-icon"></i></i> Nom
@@ -114,19 +117,40 @@ require_once '../Nav/sidebar.php';
              <input type="text" class="form-control" id="nom_user" name = "nom_user" placeholder="Entrez le nom de l'utilisateur" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide">
          </div>
          <div class="mb-3">
-             <label for="matricule" class="form-label">
-             <i class="typcn typcn-key-outline menu-icon"></i>ID role
+             <label for="email" class="form-label">
+             <i class="typcn typcn-user menu-icon fs-3"></i></i> Adresse mail
              </label>
-             <input type="number" class="form-control" id="id_role" name = "id_role" placeholder="identifiant du role" disabled>
-         </div>
-         <div class="mb-3">
+             <input type="email" class="form-control" id="email_user" name = "email_user" placeholder="Entrez l'adresse mail de l'utilisateur" required title="Veuillez entrer une adresse mail valide">
+        </div>
+        <div class="mb-3">
+            <label for="password_user" class="form-label">
+            <i class="typcn typcn-lock-closed menu-icon fs-3"></i>Mot de passe
+            </label>
+            <input type="password" class="form-control" id="password_user" name="password_user" placeholder="Entrez le mot de passe de l'utilisateur" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}" title="Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre, un caractère spécial (@#$%^&+=!) et avoir une longueur minimale de 8 caractères.">
+        </div>
+        <div class="mb-3">
              <label for="matricule" class="form-label">
              <i class="typcn typcn-user-outline menu-icon"></i>Role
              </label>
-             <select class="form-select" id="role" name = "role" required>
-                 <option value="">Sélectionnez le role</option>
+             <select class="form-select" id="role" name="role" required onchange="updateRoleId()">
+                 <option value="">Sélectionnez le rôle</option>
+                 <?php
+                 if ($result->num_rows > 0) {
+                     while ($row = $result->fetch_assoc()) {
+                         echo "<option value='" . $row['nom_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
+                     }
+                 } else {
+                     echo "<option value=''>Aucun rôle disponible</option>";
+                 }
+                 ?>
              </select>
          </div>                          
+         <div class="mb-3">
+             <label for="matricule" class="form-label">
+             <i class="typcn typcn-key-outline menu-icon"></i>ID role
+             </label>
+             <input type="number" class="form-control" id="id_role" name = "id_role" placeholder="identifiant du role" readonly>
+         </div>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             <i class="fas fa-times-circle me-2"></i> Annuler

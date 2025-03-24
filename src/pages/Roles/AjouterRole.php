@@ -1,40 +1,11 @@
 
 <?php
+session_start();
 ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
 require_once '../Fonctions/db_connection.php';
 require '../Fonctions/fonctions.php';
-
-  if (isset($_POST["enregistrer"])) {
-      $id = $_POST["id_role"];
-      $nom = $_POST["nom_role"];
-      // Connexion à la base de données
-      $conn = getConnection();
-      // Vérifier si la connexion est bien établie
-      if (!$conn) {
-          die("Échec de la connexion à la base de données !");
-      }
-      // Utiliser une requête préparée pour éviter l'injection SQL
-      $sql = "INSERT INTO roles (id_role, nom_role) VALUES (?, ?)";
-      $result = $conn->prepare($sql);
-      if ($result) {
-          $result->bind_param("is", $id, $nom); // "is" : i (integer), s (string)
-          if ($result->execute()) {
-              header("Location: ../../pages/samples/succes.php");
-              exit();
-          } else {
-              header("Location: ../../pages/samples/error-500.php");
-              exit();
-          }
-          $result->close(); // Fermer la requête
-      } else {
-          die("Erreur lors de la préparation de la requête.");
-      }
-      $conn->close(); // Fermer la connexion
-  }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,17 +66,17 @@ require '../Fonctions/fonctions.php';
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
         <footer class="footer">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 
-                            <a href="https://www.bootstrapdash.com/" class="text-muted" target="_blank">Bootstrapdash</a>. All rights reserved.</span>
-                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">Hand-crafted & made with 
-                            <i class="typcn typcn-heart-full-outline text-danger"></i></span>
-                    </div>
-                </div>    
-            </div>        
-        </footer>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy; 2025 
+                    <a href="https://www.glotelho.com/" class="text-muted" target="_blank">Glotelho</a>. Tous droits réservés.</span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">Développé avec passion  <i class="typcn typcn-heart-full-outline text-danger"></i> par GlotoStock.</span>
+            </div>
+        </div>    
+    </div>        
+</footer>
+
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
@@ -129,6 +100,39 @@ require '../Fonctions/fonctions.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
+
+  <?php
+    if (isset($_POST["enregistrer"])) {
+        $id = $_POST["id_role"];
+        $nom = $_POST["nom_role"];
+
+        $conn = getConnection();
+    
+        if (!$conn) {
+            die("Échec de la connexion à la base de données !");
+        }
+        // Utiliser une requête préparée pour éviter l'injection SQL
+        $sql = "INSERT INTO roles (id_role, nom_role) VALUES (?, ?)";
+        $result = $conn->prepare($sql);
+        if ($result) {
+            $result->bind_param("is", $id, $nom);
+            if ($result->execute()) {
+                $_SESSION["id"] = $id;
+                $_SESSION["nom"] = $nom;
+                header("Location: ../../pages/samples/succes.php");
+                exit();
+            } else {
+                // En cas d'erreur
+                header("Location: ../../pages/samples/error-500.php");
+                exit();
+            }
+            $result->close(); 
+        } else {
+            die("Erreur lors de la préparation de la requête.");
+        }
+        $conn->close(); 
+    }
+?>
 
 
 

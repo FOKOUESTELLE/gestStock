@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>PolluxUI Admin</title>
+  <title>GlotoStock Admin</title>
   <!-- base:css -->
   <link rel="stylesheet" href="../../assets/vendors/typicons/typicons.css">
   <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
@@ -27,18 +27,18 @@
                 <h1 class="display-1 mb-0">500</h1>
               </div>
               <div class="col-lg-6 error-page-divider text-lg-left ps-lg-4">
-                <h2>SORRY!</h2>
-                <h3 class="fw-light">Internal server error!</h3>
+                <h2>DESOLE!</h2>
+                <h3 class="fw-light">Erreur interne du serveur !</h3>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-12 text-center mt-xl-2">
-                <a class="text-white fw-medium" href="../../index.html">Back to home</a>
+                  <a class="text-white fw-medium" href="javascript:void(0);" onclick="window.history.back();">Revenir</a>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-12 mt-xl-2">
-                <p class="text-white fw-medium text-center">Copyright &copy; 2021  All rights reserved.</p>
+              <p class="text-white fw-medium text-center">Copyright &copy; 2025 Glotelho. Tous droits réservés. | Développé avec GlotoStock.</p>
               </div>
             </div>
           </div>

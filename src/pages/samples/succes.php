@@ -1,3 +1,8 @@
+<?php
+    session_start();  
+    unset($_SESSION["id"]);
+    unset($_SESSION["nom"]);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +10,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>PolluxUI Admin</title>
+  <title>GlotoStock Admin</title>
   <!-- base:css -->
   <link rel="stylesheet" href="../../assets/vendors/typicons/typicons.css">
   <link rel="stylesheet" href="../../assets/vendors/css/vendor.bundle.base.css">
@@ -33,12 +38,14 @@
               </div>
               <div class="row mt-5">
                 <div class="col-12 text-center mt-xl-2">
-                  <a class="text-white fw-medium" href="../../index.html">Retour à l'accueil</a>
+                    <a class="text-white fw-medium" href="javascript:void(0);" onclick="window.history.back();">Revenir</a>
                 </div>
               </div>
+
               <div class="row mt-5">
                 <div class="col-12 mt-xl-2">
-                  <p class="text-white fw-medium text-center">Copyright &copy; 2024  All rights reserved.</p>
+                <p class="text-white fw-medium text-center">Copyright &copy; 2025 Glotelho. Tous droits réservés. | Développé avec GlotoStock.</p>
+
                 </div>
               </div>
             </div>
@@ -60,6 +67,6 @@
   <script src="../../assets/js/settings.js"></script>
   <script src="../../assets/js/todolist.js"></script>
   <!-- endinject -->
-</body>
 
+</body>
 </html>
