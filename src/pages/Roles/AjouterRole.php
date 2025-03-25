@@ -15,6 +15,12 @@ require '../Fonctions/fonctions.php';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>AjoutRole</title>
+  </script>
+ <script>
+    function resetForm() {
+        document.getElementById('ajoutRoleForm').reset();
+    }
+</script>
 </head>
 
 <body>
@@ -28,7 +34,7 @@ require '../Fonctions/fonctions.php';
                 <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un role<i class="fas fa-plus-circle"></i></h3>             
             </div>
                     <div class="card-body shadow">
-                        <form  enctype="multipart/form-data" id="ajoutRoleForm" method = "POST" action ="">
+                        <form  enctype="multipart/form-data" id="ajoutRoleForm" method = "POST" action ="" onsubmit="resetForm()">
                         <div class="mb-3">
                              <label for="id_role" class="form-label">
                                  <i class="typcn typcn-key-outline menu-icon"></i> ID du rôle

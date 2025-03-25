@@ -28,6 +28,11 @@ $result = $conn->query($sql);
         roleIdInput.value = selectedOption.getAttribute('data-id_role');
       }
  </script>
+ <script>
+    function resetForm() {
+        document.getElementById('ajoutUserForm').reset();
+    }
+</script>
 </head>
 
 <body>
@@ -41,7 +46,7 @@ $result = $conn->query($sql);
                 <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un utilisateur<i class="fas fa-plus-circle"></i></h3>             
             </div>
             <div class="card-body shadow">
-                <form  enctype="multipart/form-data" id="ajoutClientForm" method = "POST" action ="">
+                <form  enctype="multipart/form-data" id="ajoutUserForm" method = "POST" action ="" onsubmit="resetForm()">
         
                     <div class="mb-3">
                         <label for="matricule" class="form-label">

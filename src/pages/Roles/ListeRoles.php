@@ -1,6 +1,13 @@
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
+require_once '../Fonctions/db_connection.php';
+require '../Fonctions/fonctions.php';
+$sql = "SELECT* FROM roles";
+$conn = getConnection();
+$result = $conn -> query($sql);
 
 ?>
 
@@ -32,7 +39,7 @@ require_once '../Nav/sidebar.php';
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-cube"></i> Roles</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addRoleModal">
+            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addRoleModal" data-action="add">
             <i class="typcn typcn-plus m-lg-1"></i> Ajouter Role
             </button>
         </div>
@@ -48,16 +55,24 @@ require_once '../Nav/sidebar.php';
                         </tr>
                     </thead>
                         <tbody id="rolesList">
-                                 
-                                      <td></td>
-                                      <td></td>     
-                                      <td class='text-center'>
-                                      <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
-                                      <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                        <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
-                                     </td>
-                                    </tr>
-
+                            <?php
+                            if($result -> num_rows >0){
+                                While($row = $result->fetch_assoc()){
+                                    ?>
+                                    <tr>
+                                         <td><?=$row["id_role"]?></td>
+                                         <td><?=$row["nom_role"]?></td>     
+                                         <td class='text-center'>
+                                         <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_role"] ?>" name="btnmod" data-action="edit"> <i class="typcn typcn-edit fs-3"></i></button>
+                                         <button class="btn btn-danger rounded btnDel" id="<?= $row["id_role"] ?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                                        </td>
+                                       </tr>
+                                    <?php
+                                }
+                            }else{
+                                echo "<tr><td colspan='6' style='text-align:center;'>Aucun role trouvé</td></tr>";
+                            }
+                            ?>
                         </tbody>
                     </table>
                     <!-- Pagination -->
@@ -163,6 +178,171 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
+   
+  <?php
+    if (isset($_POST["enregistrer"])) {
+        $id = $_POST["id_role"];
+        $nom = $_POST["nom_role"];
 
+        $conn = getConnection();
+    
+        if (!$conn) {
+            die("Échec de la connexion à la base de données !");
+        }
+        // Utiliser une requête préparée pour éviter l'injection SQL
+        $sql = "INSERT INTO roles (id_role, nom_role) VALUES (?, ?)";
+        $result = $conn->prepare($sql);
+        if ($result) {
+            $result->bind_param("is", $id, $nom);
+            if ($result->execute()) {
+                $_SESSION["id"] = $id;
+                $_SESSION["nom"] = $nom;
+                header("Location: ../../pages/samples/succes.php");
+                exit();
+            } else {
+                // En cas d'erreur
+                header("Location: ../../pages/samples/error-500.php");
+                exit();
+            }
+            $result->close(); 
+        } else {
+            die("Erreur lors de la préparation de la requête.");
+        }
+        $conn->close(); 
+    }
+?>
+
+  <script>
+
+    $(document).on('click', '.btnEdit', function(){
+        var id_role = $(this).attr('id');
+        var actionType = $(this).data('action');
+    //    alert (id_role);
+       console.log('Envoi de la requête AJAX...');
+       $.ajax({
+        url: 'TraitementRole.php',
+        type: 'POST',
+        data: {
+        id_role: id_role,
+        action: 'editRole'
+    },
+    success: function(response) {
+        // Affiche toute la réponse du serveur dans la console
+        console.log("Réponse du serveur : ", response);
+        
+        // On vérifie si la réponse est bien en JSON
+        try {
+            const data = JSON.parse(response); // Essaie de parser la réponse JSON
+            console.log("Données reçues :", data);
+            if (data.error) {
+                alert(data.error); // Affiche l'erreur s'il y en a
+            } else {
+                $('#id_role').val(data.id_role);
+                $('#nom_role').val(data.nom_role);
+                updateBtn = document.getElementById('updateButton');
+                saveBtn = document.getElementById('saveButton');
+                updateBtn.classList.remove('d-none');
+                saveBtn.classList.add('d-none');
+                $('#id_role').prop('disabled', true);
+                $('#addRoleModal').modal('show');
+            }
+        } catch (e) {
+            console.error("Erreur lors du parsing de la réponse JSON :", e);
+            console.log("Réponse brute du serveur :", response);
+        }
+    },
+    error: function(xhr, status, error) {
+        console.log("Erreur AJAX :", status, error);  // Affiche l'erreur AJAX si elle existe
+    }
+});
+    $('#openAddRoleModal').click(function() {
+        $('#resetButton').click();
+        $('#saveButton').removeClass('d-none');
+        $('#updateButton').addClass('d-none');
+
+        $('#id_role').val('').prop('disabled', false);
+
+        // Réinitialiser les champs du formulaire
+        $('#id_role').val('');
+        $('#nom_role').val('');
+    });
+    })
+
+// evenement applique sur le bouton ajoutRole
+    $('#openAddRoleModal').click(function(){
+        $('#resetButton').click();
+        updateBtn = document.getElementById('updateButton');
+        saveBtn = document.getElementById('saveButton');
+
+        saveBtn.classList.remove('d-none');
+        updateBtn.classList.add('d-none');
+
+    });
+    
+    //evenement execute lors de la mise a jour
+    
+    $('#updateButton').click(function(){
+        var id_role = $('#id_role').val();
+        var nom_role = $('#nom_role').val();
+        $.ajax({
+        url: 'TraitementRole.php',
+        type: 'POST',
+        data: {
+                id_role: id_role,
+                nom_role: nom_role,
+                action: 'updateRole'
+            },
+
+            dataType: 'json',
+            success: function(data){
+                alert(data.message);
+                $('#addRoleModal').modal('hide');
+                location.reload();
+            },
+            error: function(){
+
+                alert("Une erreur est survenue lors de la reccuperation des details du role!");
+                console.error("Une erreur est survenue lors de la reccuperation des details du role!");            
+            }
+        })
+    });
+
+    //suppression d'un role
+
+    $('#openAddRoleModal').click(function(){
+     $('#resetButton').click();
+     updateBtn = document.getElementById('updateButton');
+     saveBtn = document.getElementById('saveButton');
+     saveBtn.classList.remove('d-none');
+     updateBtn.classList.add('d-none');
+ });
+
+ $(document).on('click', '.btnDel', function(){
+     var id_role = $(this).attr('id');
+     alert (id_role);
+     $.ajax({
+         url: 'TraitementRole.php',
+         type: 'POST',
+         data: {
+            id_role: id_role,
+             action: 'deleteRole'
+         },
+         dataType: 'json',
+         success: function(data){
+            location.reload();
+         },
+         error:function(){
+             alert("Une erreur est survenue lors de la reccuperation des details du role!");
+             console.error("Une erreur est survenue lors de la reccuperation des details du role!");
+            // console.error("");
+         }
+     });
+ })
+    
+
+    </script>
+
+
+
+</body>
 </html>
