@@ -111,13 +111,13 @@ $result = $conn -> query($sql);
                 </div>
                 <div class="modal-body">
                     <form id="ajoutRoleForm" method = "post" action ="">
-                        <div class="mb-3">
-                            <label for="id_role" class="form-label">
-                                <i class="typcn typcn-key-outline menu-icon"></i> ID du rôle
-                            </label>
-                            <input type="number" class="form-control" id="id_role" name="id_role" placeholder="Entrez l'identifiant du rôle" required>   
-                        </div>                             
-                        <div class="mb-3">
+                        <!-- <div class="mb-3"> -->
+                            <!-- <label for="id_role" class="form-label"> -->
+                                <!-- <i class="typcn typcn-key-outline menu-icon"></i> ID du rôle -->
+                            <!-- </label> -->
+                            <!-- <input type="number" class="form-control" id="id_role" name="id_role" placeholder="Entrez l'identifiant du rôle" required>    -->
+                        <!-- </div>                              -->
+                        <!-- <div class="mb-3"> -->
                             <label for="nom" class="form-label">
                                 <i class="typcn typcn-user-outline menu-icon"></i> Nom du rôle
                             </label>
@@ -181,36 +181,46 @@ $result = $conn -> query($sql);
    
   <?php
     if (isset($_POST["enregistrer"])) {
-        $id = $_POST["id_role"];
-        $nom = $_POST["nom_role"];
-
-        $conn = getConnection();
+        if (isset($_POST["nom_role"]) && !empty($_POST["nom_role"])) {
+            $nom = $_POST["nom_role"];
     
-        if (!$conn) {
-            die("Échec de la connexion à la base de données !");
-        }
-        // Utiliser une requête préparée pour éviter l'injection SQL
-        $sql = "INSERT INTO roles (id_role, nom_role) VALUES (?, ?)";
-        $result = $conn->prepare($sql);
-        if ($result) {
-            $result->bind_param("is", $id, $nom);
-            if ($result->execute()) {
-                $_SESSION["id"] = $id;
-                $_SESSION["nom"] = $nom;
-                header("Location: ../../pages/samples/succes.php");
-                exit();
-            } else {
-                // En cas d'erreur
-                header("Location: ../../pages/samples/error-500.php");
-                exit();
+            $conn = getConnection();
+    
+            if (!$conn) {
+                die("Échec de la connexion à la base de données !");
             }
-            $result->close(); 
+    
+            $sql = "INSERT INTO roles (nom_role) VALUES (?)";
+            $result = $conn->prepare($sql);
+    
+            if ($result) {
+        
+                $result->bind_param("s", $nom);
+    
+                if ($result->execute()) {
+    
+                    $_SESSION["id"] = $id;
+                    $_SESSION["nom"] = $nom;
+    
+                    header("Location: ../../pages/samples/succes.php");
+        
+                } else {
+                    header("Location: ../../pages/samples/succes.php");
+
+                }
+                $result->close();
+            } else {
+                die("Erreur lors de la préparation de la requête : " . $conn->error);
+            }
+            $conn->close();
         } else {
-            die("Erreur lors de la préparation de la requête.");
+            echo "Le nom du rôle est requis.<br>";
         }
-        $conn->close(); 
     }
-?>
+    ?>
+
+
+
 
   <script>
 

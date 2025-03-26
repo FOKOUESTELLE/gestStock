@@ -1,6 +1,14 @@
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
+require_once '../Fonctions/db_connection.php';
+require '../Fonctions/fonctions.php';
+$sql = "SELECT* FROM users";
+$conn = getConnection();
+$result = $conn -> query($sql);
+
 
 ?>
 
@@ -45,6 +53,7 @@ require_once '../Nav/sidebar.php';
                         <th scope="col"> <i class="typcn typcn-key-outline menu-icon fs-3"></i> ID user</th>
                         <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i> Nom</th>
                         <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i>Adresse mail</th>
+                        <th scope="col"><i class="typcn typcn-key-outline menu-icon fs-3"></i>Password</th>
                         <th scope="col"><i class="typcn typcn-user-outline menu-icon fs-3"></i> Role</th>
                         <th scope="col"><i class="typcn typcn-key-outline menu-icon fs-3"></i> ID role</th>
                         <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
@@ -52,20 +61,32 @@ require_once '../Nav/sidebar.php';
                     </thead>
 
                         <tbody id="clientsList">
-                                 
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
+                                <tr>
+                                <?php
+                                    if($result -> num_rows >0){
+                                        While($row = $result->fetch_assoc()){
+                                ?>
+                                <tr>
+                                    <td><?=$row["id_user"]?></td>
+                                    <td><?=$row["nom_user"]?></td>
+                                    <td><?=$row["adresse_mail"]?></td>
+                                    <td><?=$row["password"]?></td>
+                                    <td><?=$row["role"]?></td>
+                                    <td><?=$row["id_role"]?></td>   
 
-                                      <td class='text-center'>
-
-                                      <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
-                                      <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                        <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
-                                     </td>
-                                    </tr>
+                                    <td class='text-center'>
+                                    <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
+                                    <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
+                                      <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                                    </td>
+                                </tr>
+                                <?php
+                                    }
+                                }
+                                else{
+                                    echo "<tr><td colspan='6' style='text-align:center;'>Aucun role trouvé</td></tr>";
+                                }
+                               ?>
 
                         </tbody>
                     </table>

@@ -46,14 +46,14 @@ $result = $conn->query($sql);
                 <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un utilisateur<i class="fas fa-plus-circle"></i></h3>             
             </div>
             <div class="card-body shadow">
-                <form  enctype="multipart/form-data" id="ajoutUserForm" method = "POST" action ="" onsubmit="resetForm()">
+                <form  enctype="multipart/form-data" id="ajoutUserForm" method = "POST" action ="">
         
-                    <div class="mb-3">
-                        <label for="matricule" class="form-label">
-                        <i class="typcn typcn-key-outline menu-icon"></i>ID User
-                        </label>
-                        <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur" required>
-                    </div>
+                    <!-- <div class="mb-3"> -->
+                        <!-- <label for="matricule" class="form-label"> -->
+                        <!-- <i class="typcn typcn-key-outline menu-icon"></i>ID User -->
+                        <!-- </label> -->
+                        <!-- <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur" required> -->
+                    <!-- </div> -->
                     <div class="mb-3">
                         <label for="nom" class="form-label">
                         <i class="typcn typcn-user menu-icon fs-3"></i></i> Nom
@@ -149,7 +149,7 @@ $result = $conn->query($sql);
   <?php
    
     if (isset($_POST["enregistrer"])) {
-        $id = $_POST["id_user"];
+        // $id = $_POST["id_user"];
         $nom = $_POST["nom_user"];
         $email = $_POST["email_user"];
         $password = $_POST["password_user"];
@@ -162,11 +162,11 @@ $result = $conn->query($sql);
         }
        
         // Utiliser une requête préparée pour éviter l'injection SQL
-        $sql = "INSERT INTO users (id_user, nom_user, adresse_mail, password, id_role, role) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role, role) VALUES (?, ?, ?, ?, ?)";
         $result = $conn->prepare($sql);
         if ($result) {
            
-            $result->bind_param("isssis", $id, $nom, $email, $password, $id_role, $role);
+            $result->bind_param("sssis", $nom, $email, $password, $id_role, $role);
             if ($result->execute()) {
                 $_SESSION["id"] = $id;
                 $_SESSION["nom"] = $nom;

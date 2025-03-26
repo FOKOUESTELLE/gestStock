@@ -65,14 +65,11 @@ form h1{
     font-size: 15px;
 }
 
-input[type="text"] {
-    text-align: center; 
-    margin-top: 10%; 
-    box-shadow: -5px 5px 10px grey;
-    background-size: 15%;
-    background-repeat: no-repeat;
-    width: 300px;
+.select {
+    padding: 10px; /* Pour éviter que le texte soit coupé */
+    border-radius: 5px; /* Arrondi les bords */
 }
+
 
 
 input[type="password"] {

@@ -34,18 +34,18 @@ require '../Fonctions/fonctions.php';
                 <h3 class="mb-0"><i class="typcn typcn-plus-outline menu-icon"></i> Ajouter un role<i class="fas fa-plus-circle"></i></h3>             
             </div>
                     <div class="card-body shadow">
-                        <form  enctype="multipart/form-data" id="ajoutRoleForm" method = "POST" action ="" onsubmit="resetForm()">
-                        <div class="mb-3">
-                             <label for="id_role" class="form-label">
-                                 <i class="typcn typcn-key-outline menu-icon"></i> ID du rôle
-                             </label>
-                             <input type="number" class="form-control" id="id_role" name="id_role" placeholder="Entrez l'identifiant du rôle" required>   
-                        </div>                             
+                        <form  enctype="multipart/form-data" id="ajoutRoleForm" method = "POST" action ="">
+                        <!-- <div class="mb-3"> -->
+                             <!-- <label for="id_role" class="form-label"> -->
+                                 <!-- <i class="typcn typcn-key-outline menu-icon"></i> ID du rôle -->
+                             <!-- </label> -->
+                             <!-- <input type="number" class="form-control" id="id_role" name="id_role" placeholder="Entrez l'identifiant du rôle" required>    -->
+                        <!-- </div>                              -->
                         <div class="mb-3">
                             <label for="nom" class="form-label">
                                 <i class="typcn typcn-user-outline menu-icon"></i> Nom du rôle
                             </label>
-                            <input type="text" class="form-control" id="nom_role" name="nom_role" placeholder="Entrez le nom du rôle" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                            <input type="text" class="form-control" id="nom_role" name="nom_role" placeholder="Entrez le nom du rôle" required title="Veuillez entrer un nom valide.">
                         </div>
                     <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -107,38 +107,46 @@ require '../Fonctions/fonctions.php';
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
 
-  <?php
+   <?php
     if (isset($_POST["enregistrer"])) {
-        $id = $_POST["id_role"];
-        $nom = $_POST["nom_role"];
-
-        $conn = getConnection();
+        if (isset($_POST["nom_role"]) && !empty($_POST["nom_role"])) {
+            $nom = $_POST["nom_role"];
     
-        if (!$conn) {
-            die("Échec de la connexion à la base de données !");
-        }
-        // Utiliser une requête préparée pour éviter l'injection SQL
-        $sql = "INSERT INTO roles (id_role, nom_role) VALUES (?, ?)";
-        $result = $conn->prepare($sql);
-        if ($result) {
-            $result->bind_param("is", $id, $nom);
-            if ($result->execute()) {
-                $_SESSION["id"] = $id;
-                $_SESSION["nom"] = $nom;
-                header("Location: ../../pages/samples/succes.php");
-                exit();
-            } else {
-                // En cas d'erreur
-                header("Location: ../../pages/samples/error-500.php");
-                exit();
+            $conn = getConnection();
+    
+            if (!$conn) {
+                die("Échec de la connexion à la base de données !");
             }
-            $result->close(); 
+    
+            $sql = "INSERT INTO roles (nom_role) VALUES (?)";
+            $result = $conn->prepare($sql);
+    
+            if ($result) {
+        
+                $result->bind_param("s", $nom);
+    
+                if ($result->execute()) {
+    
+                    $_SESSION["id"] = $id;
+                    $_SESSION["nom"] = $nom;
+    
+                    header("Location: ../../pages/samples/succes.php");
+        
+                } else {
+                    header("Location: ../../pages/samples/succes.php");
+
+                }
+                $result->close();
+            } else {
+                die("Erreur lors de la préparation de la requête : " . $conn->error);
+            }
+            $conn->close();
         } else {
-            die("Erreur lors de la préparation de la requête.");
+            echo "Le nom du rôle est requis.<br>";
         }
-        $conn->close(); 
     }
-?>
+    ?>
+
 
 
 
