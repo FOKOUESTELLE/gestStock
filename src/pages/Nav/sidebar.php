@@ -6,8 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    
-    
+     
     <!-- partial -->
     <br><br><br>
     <div class="container-fluid page-body-wrapper">      
@@ -47,7 +46,7 @@
                 <li class="nav-item"><a class="nav-link" href="../../pages/forms/basic_elements.html">Basic Elements</a></li>                
               </ul>
             </div>
-          </li>          
+          </li>        
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
             <i class="typcn typcn-gift menu-icon"></i>
@@ -133,7 +132,7 @@
              
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-commandes" aria-expanded="false" aria-controls="gestion-achats">
+            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-commandes" aria-expanded="false" aria-controls="gestion-commandes">
              <i class="typcn typcn-shopping-bag menu-icon"></i>  
              <span class="menu-title">Gestion des commandes</span>
               <i class="menu-arrow"></i>
@@ -143,7 +142,7 @@
                 <li class="nav-item"> <a class="nav-link" href="../../pages/Commandes/CreerCommande.php">Creer</a></li>
                 <li class="nav-item"> <a class="nav-link" href="../../pages/commandes/ListeCommandes.php">Liste des commandes</a></li>
               </ul>
-            </div>        
+            </div>   
        </li>
        <li class="nav-item">
            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-roles" aria-expanded="false" aria-controls="gestion-roles">

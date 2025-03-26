@@ -51,32 +51,48 @@ $result = $conn->query($sql);
     <div class="form-right">    
     </div>
     </div> 
-
     <?php
-        
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['role'])) {
-
-            $role = isset($_POST['role']) ? $_POST['role'] : '';
-
-            $password = $_POST['password'];
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['envoyer'])) {
+        if (!empty($_POST['role']) && !empty($_POST['password'])) {
             $role = $_POST['role'];
             $password = $_POST['password'];
+
+            // Requête préparée pour récupérer l'utilisateur par rôle
             $sql = "SELECT * FROM users WHERE role = ? AND password = ?";
-            $conn = getConnection();
-            $result = $conn->prepare($sql);
-            $result->bind_param("ss", $role, $password);
-            $result->execute();
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ss", $role, $password);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-            switch ($role) {
+            if ($result->num_rows == 1) {
+                $user = $result->fetch_assoc();
 
-                case 'Admin':
-                    redirection("../../index.php");
-                    break;
+                // Vérification du mot de passe
+                if ($password === $user['password']) {
+                    $_SESSION['user_id'] = $user['id_user'];
+                    $_SESSION['role'] = $user['role'];
 
+                    // Gestion des rôles avec switch case
+                    switch ($role) {
+                        case 'Admin':
+                            redirection("../../index.php") ;
+                            exit();
+                        case 'Vendeuse':
+                           redirection("../Commandes/CreerCommandeVendeuse.php");
+                            exit();
+                        default:
+                            echo "<p style='color:red;'>Rôle non reconnu.</p>";
+                    }
+                } else {
+                    echo "<p style='color:red;'>Mot de passe incorrect.</p>";
+                }
+            } else {
+                echo "<p style='color:red;'>Utilisateur non trouvé.</p>";
             }
+        } else {
+            echo "<p style='color:red;'>Veuillez remplir tous les champs.</p>";
         }
-        
-        
+    }
     ?>
 
 

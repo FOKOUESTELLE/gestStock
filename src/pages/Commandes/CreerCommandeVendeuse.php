@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once '../Nav/navbar.php';
-require_once '../Nav/sidebar.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,8 +13,49 @@ require_once '../Nav/sidebar.php';
 </head>
 
 <body>
-      
-<!-- formulaire d'ajout -->
+      <!-- partial -->
+    <br><br><br>
+    <div class="container-fluid page-body-wrapper">      
+      <!-- partial:../../partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas mt-10" id="sidebar">
+    
+        <ul class="nav">
+          <li class="nav-item">      
+          </li>          
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-commandes" aria-expanded="false" aria-controls="gestion-achats">
+             <i class="typcn typcn-shopping-bag menu-icon"></i>  
+             <span class="menu-title">Gestion des commandes</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="gestion-commandes">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../../pages/commandes/ListeCommandesVendeuse.php">Liste des commandes</a></li>
+              </ul>
+            </div>   
+        </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+              <i class="typcn typcn-user-add-outline menu-icon"></i>
+              <span class="menu-title">User Pages</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../samples/login.php"> Login </a></li>
+                <li class="nav-item"> <a class="nav-link" href="../samples/login.php"> Deconnexion</a></li>                             
+              </ul>
+            </div>
+          </li>                            
+          <li class="nav-item">
+            <a class="nav-link" href="../../../docs/documentation.html">
+              <i class="typcn typcn-mortar-board menu-icon"></i>
+              <span class="menu-title">Documentation</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    <!-- formulaire d'ajout -->
     <div class="container my-5">
     
         <h1 class="text-center text-bold">Creer une commande</h1>
