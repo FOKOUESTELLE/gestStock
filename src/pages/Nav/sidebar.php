@@ -63,12 +63,12 @@
             </div>
           </li>
           <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
+              <a class="nav-link" data-bs-toggle="collapse" href="#gestion-categorie" aria-expanded="false" aria-controls="gestion-produits">
               <i class="typcn typcn-gift menu-icon"></i>
                 <span class="menu-title">Categories de Produits</span>
                 <i class="menu-arrow"></i>
               </a>
-              <div class="collapse" id="gestion-produits">
+              <div class="collapse" id="gestion-categorie">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item"> <a class="nav-link" href="../../pages/Categories/AjouterCatProd.php">Ajouter</a></li>
                   <li class="nav-item"> <a class="nav-link" href="../../pages/Categories/ListeCategories.php">Liste des categories</a></li>

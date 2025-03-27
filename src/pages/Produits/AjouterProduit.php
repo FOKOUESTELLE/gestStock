@@ -1,8 +1,10 @@
 
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
-
+require_once '../Fonctions/db_connection.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,17 +29,30 @@ require_once '../Nav/sidebar.php';
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutProduitForm" method = "POST" action ="">
                     <div class="mb-3">
-                        <label for="code" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Code
+                        <!-- <label for="code" class="form-label"> -->
+                        <!-- <i class="typcn typcn-tag menu-icon"></i> ID produit -->
+                        <!-- </label> -->
+                        <!-- <input type="text" class="form-control" id="id_prod" name = "id_prod" placeholder="Entrez l'identifiant du produit'" required> -->
+                    <!-- </div> -->
+                    <div class="mb-3">
+                       <label for="type" class="form-label">
+                       <i class="typcn typcn-th-large-outline menu-icon"></i>Categorie
+                       </label>
+                       <select class="form-select" id="nom_cat" name = "nom_cat" required>
+                           <option value="">Sélectionnez la categorie</option>
+                       </select>
+                   </div>
+                    <div class="mb-3">
+                        <label for="nom" class="form-label">
+                        <i class="typcn typcn-tag menu-icon"></i>ID categorie
                         </label>
-                        <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                        <small class="form-text text-muted">Par exemple : A12345</small>
+                        <input type="text" class="form-control" id="id_cat" name = "id_cat" required> 
                     </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Categorie
+                        <i class="typcn typcn-tag menu-icon"></i> Nom du 
                         </label>
-                        <input type="text" class="form-control" id="nom_cat" name = "nom_cat" required> 
+                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
                         <label for="qte" class="form-label">
@@ -45,43 +60,13 @@ require_once '../Nav/sidebar.php';
                         </label>
                         <input type="number" class="form-control" id="nbre_exemp" name = "nbre_exemp" required> 
                     </div>        
-                                      
-                  <div class="mb-3">
-                      <label for="num_cmd" class="form-label">
-                      <i class="typcn typcn-tag"></i> Numéro de commande
-                      </label>
-                      <input type="text" class="form-control" id="num_cmd" name="num_cmd" placeholder="Entrez le numéro de commande" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le numéro doit contenir 1 à 6 caractères alphanumériques.">
-                  </div>
-                    <div class="mb-3">
-                        <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nom
-                        </label>
-                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
-                    </div>
                     
-                    <div class="mb-3">
-                        <label for="type" class="form-label">
-                        <i class="typcn typcn-th-large-outline menu-icon"></i>Type
-                        </label>
-                        <select class="form-select" id="type" name = "type" required>
-                            <option value="">Sélectionnez le type</option>
-                            <option value="M">Television</option>
-                            <option value="F">Ordinateur</option>
-                        </select>
-                    </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">
                         <i class="typcn typcn-document-text menu-icon"></i>Description
                         </label>
                         <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
                 
-                    </div>
-                    <div class="mb-3">
-                        <label for="image" class="form-label">
-                        <i class="typcn typcn-image menu-icon"></i></i> Image
-                         </label>
-                         <input type="file" accept="image/*" /> 
-                    </div>
                     <div class="mb-3">
                      <label for="enabled" class="form-label">
                        <i class="typcn typcn-tick-outline menu-icon"></i> Enabled
@@ -147,6 +132,51 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+  <?php
+   
+   if (isset($_POST["enregistrer"])) {
+       // $id = $_POST["id_user"];
+       $nom = $_POST["nom_user"];
+       $email = $_POST["email_user"];
+       $password = $_POST["password_user"];
+       $id_role = $_POST["id_role"];
+       $role = $_POST["role"];
+       $conn = getConnection();
+       
+       if (!$conn) {
+           die("Échec de la connexion à la base de données !");
+       }
+      
+       // Utiliser une requête préparée pour éviter l'injection SQL
+       $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role, role) VALUES (?, ?, ?, ?, ?)";
+       $result = $conn->prepare($sql);
+       if ($result) {
+          
+           $result->bind_param("sssis", $nom, $email, $password, $id_role, $role);
+           if ($result->execute()) {
+               $_SESSION["id"] = $id;
+               $_SESSION["nom"] = $nom;
+               $_SESSION["email"] = $email;
+               $_SESSION["password"] = $password;
+               $_SESSION["id_role"] = $id_role;
+               $_SESSION["role"] = $role;
+               header("Location: ../../pages/samples/succes.php");
+               exit();
+           } else {
+               // En cas d'erreur
+               header("Location: ../../pages/samples/error-500.php");
+               exit();
+           }
+           $result->close(); 
+       } else {
+           die("Erreur lors de la préparation de la requête.");
+       }
+       $conn->close(); 
+   }
+
+ ?>
+
+
+</body>
 </html>

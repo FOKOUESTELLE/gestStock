@@ -65,109 +65,79 @@ require_once '../Nav/navbar.php';
             </div>
             <div class="card-body shadow">
             <form enctype="multipart/form-data" id="ajoutCmdForm" method="POST" action="">
-                    
-                    <div class="mb-3">
-                        <label for="num_cmd" class="form-label">
-                        <i class="typcn typcn-tag"></i> Numéro de commande
-                        </label>
-                        <input type="text" class="form-control" id="num_cmd" name="num_cmd" placeholder="Entrez le numéro de commande" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le numéro doit contenir 1 à 6 caractères alphanumériques.">
-                    </div>
-                    <div class="mb-3">
+              <div>  
                   <label for="code_client" class="form-label">
-                  <i class="typcn typcn-tag"></i> CodeClient
+                  <i class="typcn typcn-tag"></i> ID Client
                   </label>
-                  <input type="text" class="form-control" id="code_client" name="code_client" placeholder="Code Client" required >
+                  <input type="text" class="form-control" id="id_client" name="id_client" required >
+              </div>
+              <div>  
+                <label for="code_client" class="form-label">
+                <i class="typcn typcn-tag"></i> Date
+                </label>
+                <input type="date" class="form-control" id="date_cmd" name="date_cmd" required >
               </div>
 
-                    <div class="mb-3">
-                        <label for="raison_achat" class="form-label">
-                        <i class="typcn typcn-lightbulb"></i> Type de commande
-                        </label>
-                        <select class="form-select" id="raison_achat" name="raison_achat" required>
-                            <option value="">Sélectionnez le type de commande</option>
-                            <option value="Stocker">Plus</option>
-                            <option value="Vendre">Fleet</option>
-                        </select>
-                    </div>
+              <div class="mb-3">
+                  <label for="raison_achat" class="form-label">
+                  <i class="typcn typcn-lightbulb"></i> Type de commande
+                  </label>
+                  <select class="form-select" id="raison_achat" name="raison_achat" required>
+                      <option value="">Sélectionnez le type de commande</option>
+                      <option value="Stocker">Plus</option>
+                      <option value="Vendre">Fleet</option>
+                  </select>
+              </div>                  
+              <div class="mb-3">
+                  <label for="reduction" class="form-label">
+                  <i class="typcn typcn-credit-card"></i>Reduction
+                  </label>
+                  <input type="text" class="form-control" id="reduction" name="reduction" required>
+              </div>
+              <div class="mb-3">
+                  <label for="frais_livraison" class="form-label">
+                  <i class="typcn typcn-location-arrow"></i> Frais de livraison
+                  </label>
+                  <input type="text" class="form-control" id="frais_livraison" name="frais_livraison" required>
+              </div>  
+              <div class="mb-3">
+                  <label for="methode_livraison" class="form-label">
+                  <i class="typcn typcn-location"></i> Méthode de livraison
+                  </label>
+                  <select class="form-select" id="methode_livraison" name="methode_livraison" required>
+                      <option value="">Sélectionnez la méthode de livraison</option>
+                       <option value="Sur place">Retrait en magasin</option>
+                       <option value="A domicile"> Livraison À domicile</option>
+                  </select>
+              </div>
                     
-                    <div class="mb-3">
-                        <label for="reduction" class="form-label">
-                        <i class="typcn typcn-credit-card"></i>Reduction
-                        </label>
-                        <input type="text" class="form-control" id="reduction" name="reduction" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="sous_total" class="form-label">
-                        <i class="typcn typcn-credit-card"></i>Sous Total
-                        </label>
-                        <input type="text" class="form-control" id="sous_total" name="sous_total" required>
-                    </div>      
-                    <div class="mb-3">
-                         <label for="total" class="form-label">
-                         <i class="typcn typcn-credit-card"></i> Total
-                         </label>
-                         <input type="text" class="form-control" id="total" name="total" required>
-                     </div>
-                    
-                    <div class="mb-3">
-                        <label for="statut" class="form-label">
-                        <i class="typcn typcn-info-large"></i> Statut
-                        </label>
-                        <input type="text" class="form-control" id="statut" name="statut" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="frais_livraison" class="form-label">
-                        <i class="typcn typcn-location-arrow"></i> Frais de livraison
-                        </label>
-                        <input type="text" class="form-control" id="frais_livraison" name="frais_livraison" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="metode_paiement" class="form-label">
-                        <i class="typcn typcn-credit-card"></i> Méthode de paiement
-                        </label>
-                        <select class="form-select" id="metode_paiement" name="metode_paiement" required>
-                            <option value="">Sélectionnez la méthode de paiement</option>
-                            <option value="Espece">Espèce</option>
-                            <option value="Orange money">Orange Money</option>
-                            <option value="Mobile money">Mobile Money</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="methode_livraison" class="form-label">
-                        <i class="typcn typcn-location"></i> Méthode de livraison
-                        </label>
-                        <select class="form-select" id="methode_livraison" name="methode_livraison" required>
-                            <option value="">Sélectionnez la méthode de livraison</option>
-                             <option value="Sur place">Retrait en magasin</option>
-                             <option value="A domicile"> Livraison À domicile</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="adresse_livraison" class="form-label">
-                        <i class="typcn typcn-home"></i> Adresse de livraison
-                        </label>
-                        <input type="text" class="form-control" id="adresse_livraison" name="adresse_livraison" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="frais_transport" class="form-label">
-                        <i class="typcn typcn-plane"></i> Frais de transport
-                        </label>
-                        <input type="text" class="form-control" id="frais_transport" name="frais_transport" required>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="adresse_facturation" class="form-label">
-                        <i class="typcn typcn-document"></i> Adresse de facturation
-                        </label>
-                        <input type="text" class="form-control" id="adresse_facturation" name="adresse_facturation" required>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between">
+              <div class="mb-3">
+                  <label for="adresse_livraison" class="form-label">
+                  <i class="typcn typcn-home"></i> Adresse de livraison
+                  </label>
+                  <input type="text" class="form-control" id="adresse_livraison" name="adresse_livraison" required>
+              </div>
+              
+              <div class="mb-3">
+                  <label for="frais_transport" class="form-label">
+                  <i class="typcn typcn-plane"></i> Frais de transport
+                  </label>
+                  <input type="text" class="form-control" id="frais_transport" name="frais_transport" required>
+              </div>
+             <div class="mb-3">
+                  <label for="total" class="form-label">
+                  <i class="typcn typcn-credit-card"></i> Total
+                  </label>
+                  <input type="text" class="form-control" id="total" name="total" required>
+              </div>
+              <div class="mb-3">
+                 <label for="statut" class="form-label">
+                 <i class="typcn typcn-info-large"></i> Statut
+                 </label>
+                 <input type="text" class="form-control" id="statut" name="statut" required>
+              </div>
+              
+              <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             <i class="typcn typcn-times"></i> Annuler
                         </button>
@@ -216,6 +186,49 @@ require_once '../Nav/navbar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+  <?php
+   
+   if (isset($_POST["enregistrer"])) {
+       $id_client = $_POST["id_client"];
+       $date_cmd = $_POST["date_cmd"];
+       $type_cmd = $_POST["type_cmd"];
+       $id_role = $_POST["id_role"];
+       $role = $_POST["role"];
+       $conn = getConnection();
+       
+       if (!$conn) {
+           die("Échec de la connexion à la base de données !");
+       }
+      
+       // Utiliser une requête préparée pour éviter l'injection SQL
+       $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role, role) VALUES (?, ?, ?, ?, ?)";
+       $result = $conn->prepare($sql);
+       if ($result) {
+          
+           $result->bind_param("sssis", $nom, $email, $password, $id_role, $role);
+           if ($result->execute()) {
+               $_SESSION["id"] = $id;
+               $_SESSION["nom"] = $nom;
+               $_SESSION["email"] = $email;
+               $_SESSION["password"] = $password;
+               $_SESSION["id_role"] = $id_role;
+               $_SESSION["role"] = $role;
+               header("Location: ../../pages/samples/succes.php");
+               exit();
+           } else {
+               // En cas d'erreur
+               header("Location: ../../pages/samples/error-500.php");
+               exit();
+           }
+           $result->close(); 
+       } else {
+           die("Erreur lors de la préparation de la requête.");
+       }
+       $conn->close(); 
+   }
+
+ ?>
+
+</body>
 </html>

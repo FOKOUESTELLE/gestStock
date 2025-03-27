@@ -1,7 +1,13 @@
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
-
+require_once '../Fonctions/db_connection.php';
+require '../Fonctions/fonctions.php';
+$sql = "SELECT* FROM categorie";
+$conn = getConnection();
+$result = $conn -> query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +38,7 @@ require_once '../Nav/sidebar.php';
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-cube"></i> Categories</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addCategorieModal">
+            <button class="btn btn-add btn-success rounded-5 shadow" id="btnAddCategorie" data-bs-toggle="modal" data-bs-target="#addCategorieModal" data-action="add">
             <i class="typcn typcn-plus m-lg-1"></i> Ajouter Categorie
 
 
@@ -44,25 +50,36 @@ require_once '../Nav/sidebar.php';
                 <table class="table table-striped table-hover table-bordered rounded-3 align-middle mt-4">
                     <thead class="table-primary">
                         <tr class="text-center fw-bold">
-                            <th scope="col">  <i class="typcn typcn-tag menu-icon"></i> Code
-                            <th scope="col">  <i class="typcn typcn-tag menu-icon"></i> Nom
+                            <th scope="col">  <i class="typcn typcn-tag menu-icon"></i> ID categorie
+                            <th scope="col">  <i class="typcn typcn-tag menu-icon"></i> Nom categorie
                             <th scope="col"><i class="typcn typcn-document-text menu-icon fs-3"></i>Description
                             <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
                         </tr>
                     </thead>
 
                         <tbody id="productsList">
-                                 
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
+                            <?php
+                            if($result -> num_rows>0){
+                                while($row = $result -> fetch_assoc()){
 
-                                      <td class='text-center'>
-                                      <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
-                                      <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                        <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
-                                     </td>
-                                    </tr>
+                            ?>
+                             <tr>
+                             <td><?=$row["id_categorie"]?></td>
+                             <td><?=$row["nom_cat"]?></td>
+                             <td><?=$row["description"]?></td>
+   
+                               <td class='text-center'>
+                               <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_categorie"] ?>" name="btnmod" data-action="edit"> <i class="typcn typcn-edit fs-3"></i></button>
+                               <button class="btn btn-danger rounded" id="<?= $row["id_categorie"] ?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                              </td>
+                             </tr>
+                            <?php
+                                  }
+                              }else{
+                                  echo "<tr><td colspan='6' style='text-align:center;'>Aucune categorie trouvée</td></tr>";
+                              }
+                            ?>                 
+
 
                         </tbody>
                     </table>
@@ -103,25 +120,23 @@ require_once '../Nav/sidebar.php';
                 <div class="modal-body">
                     <form id="ajoutCategorieForm" method = "post" action ="">
                     <div class="mb-3">
-                       <label for="code_cat" class="form-label">
-                       <i class="typcn typcn-tag menu-icon"></i> Code
-                       </label>
-                       <input type="text" class="form-control" id="code_cat" name = "code_cat" placeholder="Entrez le code de la categorie" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                       <small class="form-text text-muted">Par exemple : A12345</small>
-                   </div>
-                                     
+                         <label for="id_role" class="form-label">
+                             <i class="typcn typcn-key-outline menu-icon"></i> ID Categorie
+                         </label>
+                         <input type="number" class="form-control" id="id_categorie" name="id_categorie" required readonly>   
+                    </div>                             
                    <div class="mb-3">
                        <label for="nom" class="form-label">
-                       <i class="typcn typcn-tag menu-icon"></i> Nom
+                       <i class="typcn typcn-tag menu-icon"></i> Nom Categorie
                        </label>
-                       <input type="text" class="form-control" id="nom_cat" name = "nom_cat" placeholder="Entrez le nom de la categorie" required pattern="[A-Za-zÀ-ÿ '- ]+" title="Veuillez entrer un nom valide.">
+                       <input type="text" class="form-control" id="nom_cat" name = "nom_cat" placeholder="Entrez le nom de la categorie" required title="Veuillez entrer un nom valide.">
                    </div>
                    
                    <div class="mb-3">
                        <label for="description" class="form-label">
                        <i class="typcn typcn-document-text menu-icon"></i>Description
                        </label>
-                       <textarea class="form-control" id="description_cat" name="description_cat" rows="4" placeholder="Entrez la description de la categorie"></textarea>
+                       <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description de la categorie"></textarea>
                
                    </div>
 
@@ -180,6 +195,166 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+  <?php
+   
+   if (isset($_POST["enregistrer"])) {
+       $nom = $_POST["nom_cat"];
+       $description = $_POST["description"];
+       $conn = getConnection();
+       
+       if (!$conn) {
+           die("Échec de la connexion à la base de données !");
+       }
+      
+       $sql = "INSERT INTO categorie (nom_cat, description) VALUES (?, ?)";
+       $result = $conn->prepare($sql);
+       if ($result) {
+          
+           $result->bind_param("ss", $nom, $description);
+           if ($result->execute()) {
+               $_SESSION["id_cat"] = $id_cat;
+               $_SESSION["nom_cat"] = $nom_cat;
+               $_SESSION["description"] = $email;
+               header("Location: ../../pages/samples/succes.php");
+               exit();
+           } else {
+               header("Location: ../../pages/samples/error-500.php");
+               exit();
+           }
+           $result->close(); 
+       } else {
+           die("Erreur lors de la préparation de la requête.");
+       }
+       $conn->close(); 
+   }
+
+ ?>
+
+<script>
+
+    $(document).ready(function () {
+
+        $('#btnAddCategorie').click(function () {
+
+            $('#ajoutCategorieForm')[0].reset();
+            $('#id_categorie').parent().hide(); 
+            $('#id_categorie').val(''); 
+
+            // Changer l'affichage des boutons
+            $('#saveButton').removeClass('d-none');
+            $('#updateButton').addClass('d-none'); 
+
+            // Afficher le modal
+            $('#addCategorieModal').modal('show');
+       });
+    })
+
+    $(document).on('click', '.btnEdit', function(){
+        var id_categorie = $(this).attr('id');
+        console.log('Envoi de la requête AJAX... ID:', id_categorie);
+        $.ajax({
+            url: 'TraitementCat.php',
+            type: 'POST',
+            data: {
+                id_categorie: id_categorie,
+                action: 'editCategorie'
+            },
+            success: function(response) {
+                console.log("Réponse du serveur :", response);
+
+                try {
+                    const data = JSON.parse(response);
+
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        $('#id_categorie').val(data.id_categorie).prop('readonly', true);
+                        $('#nom_cat').val(data.nom_cat);
+                        $('#description').val(data.description);
+
+                        $('#updateButton').removeClass('d-none');
+                        $('#saveButton').addClass('d-none');
+
+                        $('#addCategorieModal').removeAttr('aria-hidden');
+                        $('#addCategorieModal').modal('show'); 
+                    }
+                } catch (e) {
+                    console.error("Erreur JSON :", e);
+                    console.log("Réponse brute du serveur :", response);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("Erreur AJAX :", status, error);
+            }
+        });
+    });
+
+// evenement applique sur le bouton ajoutCategorie
+    $('#updateButton').click(function(){
+        var id_categorie = $('#id_categorie').val();
+        var nom_cat = $('#nom_cat').val();
+        var description = $('#description').val();
+        $.ajax({
+        url: 'TraitementCat.php',
+        type: 'POST',
+        data: {
+                id_categorie: id_categorie,
+                nom_cat: nom_cat,
+                description: description,
+                action: 'updateCategorie'
+            },
+
+            dataType: 'json',
+            success: function(data){
+                alert(data.message);
+                $('#addCategorieModal').modal('hide');
+                location.reload();
+            },
+            error: function(){
+
+                alert("Une erreur est survenue lors de la reccuperation des details de la categorie!");
+                console.error("Une erreur est survenue lors de la reccuperation des details de la categorie!");       
+            }
+        })
+    });
+
+    //suppression d'une categorie
+
+    $('#openAddCategorieModal').click(function(){
+    $('#resetButton').click();
+    updateBtn = document.getElementById('updateButton');
+    saveBtn = document.getElementById('saveButton');
+    saveBtn.classList.remove('d-none');
+    updateBtn.classList.add('d-none');
+});
+
+$(document).on('click', '.btnDel', function(){
+    var id_categorie = $(this).attr('id');
+    alert (id_categorie);
+    $.ajax({
+        url: 'TraitementCat.php',
+        type: 'POST',
+        data: {
+            id_role:id_role,
+            action: 'deleteCategorie'
+        },
+        dataType: 'json',
+        success: function(data){
+           location.reload();
+        },
+        error:function(){
+            alert("Une erreur est survenue lors de la reccuperation des details de la categorie!");
+            console.error("Une erreur est survenue lors de la reccuperation des details de la categorie..");
+           // console.error("");
+        }
+    });
+})
+
+    
+
+</script>
+
+
+</body>
 </html>

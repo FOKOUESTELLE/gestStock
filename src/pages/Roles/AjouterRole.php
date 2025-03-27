@@ -111,7 +111,6 @@ require '../Fonctions/fonctions.php';
     if (isset($_POST["enregistrer"])) {
         if (isset($_POST["nom_role"]) && !empty($_POST["nom_role"])) {
             $nom = $_POST["nom_role"];
-    
             $conn = getConnection();
     
             if (!$conn) {

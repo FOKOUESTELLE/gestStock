@@ -39,7 +39,7 @@ $result = $conn -> query($sql);
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-cube"></i> Roles</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addRoleModal" data-action="add">
+            <button class="btn btn-add btn-success rounded-5 shadow" id = "btnAddRole" data-bs-toggle="modal" data-bs-target="#addRoleModal" data-action="add">
             <i class="typcn typcn-plus m-lg-1"></i> Ajouter Role
             </button>
         </div>
@@ -111,17 +111,17 @@ $result = $conn -> query($sql);
                 </div>
                 <div class="modal-body">
                     <form id="ajoutRoleForm" method = "post" action ="">
-                        <!-- <div class="mb-3"> -->
-                            <!-- <label for="id_role" class="form-label"> -->
-                                <!-- <i class="typcn typcn-key-outline menu-icon"></i> ID du rôle -->
-                            <!-- </label> -->
-                            <!-- <input type="number" class="form-control" id="id_role" name="id_role" placeholder="Entrez l'identifiant du rôle" required>    -->
-                        <!-- </div>                              -->
-                        <!-- <div class="mb-3"> -->
+                        <div class="mb-3">
+                            <label for="id_role" class="form-label">
+                                <i class="typcn typcn-key-outline menu-icon"></i> ID du rôle
+                            </label>
+                            <input type="number" class="form-control" id="id_role" name="id_role" placeholder="Entrez l'identifiant du rôle">   
+                        </div>                             
+                        <div class="mb-3">
                             <label for="nom" class="form-label">
                                 <i class="typcn typcn-user-outline menu-icon"></i> Nom du rôle
                             </label>
-                            <input type="text" class="form-control" id="nom_role" name="nom_role" placeholder="Entrez le nom du rôle" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                            <input type="text" class="form-control" id="nom_role" name="nom_role" placeholder="Entrez le nom du rôle" title="Veuillez entrer un nom valide.">
                         </div>
                         <div class="d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -224,6 +224,19 @@ $result = $conn -> query($sql);
 
   <script>
 
+    $(document).ready(function () {
+          $('#btnAddRole').click(function () {
+              $('#ajoutRoleForm')[0].reset();
+              $('#id_role').parent().hide(); 
+              $('#id_role').val(''); 
+              // Changer l'affichage des boutons
+              $('#saveButton').removeClass('d-none');
+              $('#updateButton').addClass('d-none'); 
+              // Afficher le modal
+              $('#addRoleModal').modal('show');
+         });
+      })
+
     $(document).on('click', '.btnEdit', function(){
         var id_role = $(this).attr('id');
         var actionType = $(this).data('action');
@@ -279,80 +292,64 @@ $result = $conn -> query($sql);
     })
 
 // evenement applique sur le bouton ajoutRole
-    $('#openAddRoleModal').click(function(){
-        $('#resetButton').click();
-        updateBtn = document.getElementById('updateButton');
-        saveBtn = document.getElementById('saveButton');
+$('#updateButton').click(function(){
+    var id_role = $('#id_role').val();
+    var nom_role = $('#nom_role').val();
+    $.ajax({
+    url: 'TraitementRole.php',
+    type: 'POST',
+    data: {
+            id_role: id_role,
+            nom_role: nom_role,
+            action: 'updateRole'
+        },
 
-        saveBtn.classList.remove('d-none');
-        updateBtn.classList.add('d-none');
+        dataType: 'json',
+        success: function(data){
+            alert(data.message);
+            $('#addRoleModal').modal('hide');
+            location.reload();
+        },
+        error: function(){
 
-    });
-    
-    //evenement execute lors de la mise a jour
-    
-    $('#updateButton').click(function(){
-        var id_role = $('#id_role').val();
-        var nom_role = $('#nom_role').val();
-        $.ajax({
+            alert("Une erreur est survenue lors de la reccuperation des details du role!");
+            console.error("Une erreur est survenue lors de la reccuperation des details du role!");       
+        }
+    })
+});
+
+   //suppression d'un role
+   $('#openAddRoleModal').click(function(){
+    $('#resetButton').click();
+    updateBtn = document.getElementById('updateButton');
+    saveBtn = document.getElementById('saveButton');
+    saveBtn.classList.remove('d-none');
+    updateBtn.classList.add('d-none');
+});
+
+$(document).on('click', '.btnDel', function(){
+    var id_role = $(this).attr('id');
+    alert (id_role);
+    $.ajax({
         url: 'TraitementRole.php',
         type: 'POST',
         data: {
-                id_role: id_role,
-                nom_role: nom_role,
-                action: 'updateRole'
-            },
-
-            dataType: 'json',
-            success: function(data){
-                alert(data.message);
-                $('#addRoleModal').modal('hide');
-                location.reload();
-            },
-            error: function(){
-
-                alert("Une erreur est survenue lors de la reccuperation des details du role!");
-                console.error("Une erreur est survenue lors de la reccuperation des details du role!");            
-            }
-        })
+            id_role:id_role,
+            action: 'deleteRole'
+        },
+        dataType: 'json',
+        success: function(data){
+           location.reload();
+        },
+        error:function(){
+            alert("Une erreur est survenue lors de la reccuperation des details du role!");
+            console.error("Une erreur est survenue lors de la reccuperation des details du role..");
+           // console.error("");
+        }
     });
+})
 
-    //suppression d'un role
-
-    $('#openAddRoleModal').click(function(){
-     $('#resetButton').click();
-     updateBtn = document.getElementById('updateButton');
-     saveBtn = document.getElementById('saveButton');
-     saveBtn.classList.remove('d-none');
-     updateBtn.classList.add('d-none');
- });
-
- $(document).on('click', '.btnDel', function(){
-     var id_role = $(this).attr('id');
-     alert (id_role);
-     $.ajax({
-         url: 'TraitementRole.php',
-         type: 'POST',
-         data: {
-            id_role: id_role,
-             action: 'deleteRole'
-         },
-         dataType: 'json',
-         success: function(data){
-            location.reload();
-         },
-         error:function(){
-             alert("Une erreur est survenue lors de la reccuperation des details du role!");
-             console.error("Une erreur est survenue lors de la reccuperation des details du role!");
-            // console.error("");
-         }
-     });
- })
     
-
     </script>
-
-
-
 </body>
 </html>

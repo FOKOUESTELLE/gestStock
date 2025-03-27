@@ -1,7 +1,10 @@
 <?php
 session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
+require_once '../Fonctions/db_connection.php';
+require '../Fonctions/fonctions.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

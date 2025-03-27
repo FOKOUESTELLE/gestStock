@@ -1,7 +1,13 @@
 
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
+require_once '../Fonctions/db_connection.php';
+$conn = getConnection();
+$sql = "SELECT id_role, nom_role FROM roles";
+$result = $conn->query($sql);
 
 ?>
 <!DOCTYPE html>
@@ -26,17 +32,16 @@ require_once '../Nav/sidebar.php';
             </div>
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutProduitForm" method = "POST" action ="">
-                    <div class="mb-3">
-                        <label for="code_cat" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Code
-                        </label>
-                        <input type="text" class="form-control" id="code_cat" name = "code_cat" placeholder="Entrez le code de la categorie" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                        <small class="form-text text-muted">Par exemple : A12345</small>
-                    </div>
+                    <!-- <div class="mb-3"> -->
+                        <!-- <label for="code_cat" class="form-label"> -->
+                        <!-- <i class="typcn typcn-tag menu-icon"></i> ID categorie -->
+                        <!-- </label> -->
+                        <!-- <input type="text" class="form-control" id="id_cat" name = "id_cat" placeholder="Entrez l'identifiant de la categorie" required> -->
+                    <!-- </div> -->
                                       
                     <div class="mb-3">
                         <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nom
+                        <i class="typcn typcn-tag menu-icon"></i> Nom Categorie
                         </label>
                         <input type="text" class="form-control" id="nom_cat" name = "nom_cat" placeholder="Entrez le nom de la categorie" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
@@ -107,6 +112,43 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
+  <?php
+   
+   if (isset($_POST["enregistrer"])) {
+       $nom = $_POST["nom_cat"];
+       $description = $_POST["description_cat"];
+       $conn = getConnection();
+       
+       if (!$conn) {
+           die("Échec de la connexion à la base de données !");
+       }
+      
+       // Utiliser une requête préparée pour éviter l'injection SQL
+       $sql = "INSERT INTO categorie (nom_cat, description) VALUES (?, ?)";
+       $result = $conn->prepare($sql);
+       if ($result) {
+          
+           $result->bind_param("ss", $nom, $description);
+           if ($result->execute()) {
+               $_SESSION["id_cat"] = $id_cat;
+               $_SESSION["nom_cat"] = $nom_cat;
+               $_SESSION["description"] = $email;
+               header("Location: ../../pages/samples/succes.php");
+               exit();
+           } else {
+               // En cas d'erreur
+               header("Location: ../../pages/samples/error-500.php");
+               exit();
+           }
+           $result->close(); 
+       } else {
+           die("Erreur lors de la préparation de la requête.");
+       }
+       $conn->close(); 
+   }
 
+ ?>
+
+
+</body>
 </html>

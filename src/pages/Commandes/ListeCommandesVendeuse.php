@@ -38,7 +38,8 @@ require_once '../Nav/navbar.php';
            </a>
            <div class="collapse" id="gestion-commandes">
              <ul class="nav flex-column sub-menu">
-               <li class="nav-item"> <a class="nav-link" href="../../pages/commandes/ListeCommandesVendeuse.php">Liste des commandes</a></li>
+             <li class="nav-item"> <a class="nav-link" href="../../pages/Commandes/CreerCommandeVendeuse.php">Creer</a></li>
+               <li class="nav-item"> <a class="nav-link" href="../../pages/Commandes/ListeCommandesVendeuse.php">Liste des commandes</a></li>
              </ul>
            </div>   
        </li>
