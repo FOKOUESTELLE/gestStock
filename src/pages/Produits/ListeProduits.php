@@ -5,7 +5,8 @@
     require_once '../Nav/sidebar.php';
     require_once '../Fonctions/db_connection.php';
     require '../Fonctions/fonctions.php';
-    $sql = "SELECT* FROM produits";
+    $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.nbre_exemp, P.description
+            FROM produits P, categorie C WHERE P.id_categorie = C.id_categorie";
     $conn = getConnection();
     $result = $conn -> query($sql);
     $sql2 = "SELECT id_categorie, nom_cat FROM categorie";
@@ -50,7 +51,7 @@
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-cube"></i> Produits</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" id ="btnAddProduit" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <button class="btn btn-add btn-success rounded-5 shadow" id ="btnAddProduit" data-bs-toggle="modal" data-bs-target="#addProduitModal" data-action="add">
             <i class="typcn typcn-plus m-lg-1"></i> Ajouter Produit
 
 
@@ -80,14 +81,14 @@
                                 ?>
                                 <tr>
                                     <td><?=$row["id_produit"]?></td>
-                                    <td><?=$row["categorie"]?></td>
+                                    <td><?=$row["nom_cat"]?></td>
                                     <td><?=$row["id_categorie"]?></td>
                                     <td><?=$row["nom_produit"]?></td>
                                     <td><?=$row["nbre_exemp"]?></td>
                                     <td><?=$row["description"]?></td>  
                                     <td class='text-center'>
-                                      <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                        <button class="btn btn-danger rounded btnSup" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                                      <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_produit"]?>" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
+                                        <button class="btn btn-danger rounded btnSup" id="<?= $row["id_produit"]?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
                                      </td>
                                     </tr>
                                     <?php
@@ -125,11 +126,11 @@
 
    
     <!-- Modal pour ajouter un produit -->
-    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal fade" id="addProduitModal" tabindex="-1" aria-labelledby="#addProduitModalLabel" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-3 shadow">
                 <div class="modal-header bg-dark-subtle">
-                    <h5 class="modal-title text-success" id="addStudentModalLabel"><i class="typcn typcn-plus m-lg-1"></i> Ajouter un produit <i class="typcn typcn-plus-circle"></i></h5>
+                    <h5 class="modal-title text-success" id="addProduitModalLabel"><i class="typcn typcn-plus m-lg-1"></i> Ajouter un produit <i class="typcn typcn-plus-circle"></i></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fas fa-times text-danger"></i>
                     </button>
@@ -151,7 +152,7 @@
                                   <?php
                                        if ($result2->num_rows > 0) {
                                            while ($row = $result2->fetch_assoc()) {
-                                               echo "<option value='" . $row['nom_cat'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
+                                               echo "<option value='" . $row['id_categorie'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
                                            }
                                        } else {
                                            echo "<option value=''>Aucune categorie disponible</option>";
@@ -169,7 +170,7 @@
                                <label for="nom" class="form-label">
                                <i class="typcn typcn-tag menu-icon"></i> Nom du produit
                                </label>
-                               <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                               <input type="text" class="form-control" id="nom_produit" name = "nom_produit" placeholder="Entrez le nom du produit" required title="Veuillez entrer un nom valide.">
                            </div>
                            <div class="mb-3">
                                <label for="qte" class="form-label">
@@ -243,7 +244,7 @@
            if (isset($_POST["enregistrer"])) {
             $categorie = $_POST["nom_cat"];
             $id_categorie = $_POST["id_categorie"];
-            $nom = $_POST["nom"];
+            $nom = $_POST["nom_produit"];
             $nbre_exemp = $_POST["nbre_exemp"];
             $description = $_POST["description"];
             $conn = getConnection();
@@ -264,7 +265,7 @@
                 if ($result->execute()) {
                     $_SESSION["categorie"] = $categorie;
                     $_SESSION["id_categorie"] = $id_categorie;
-                    $_SESSION["nom"] = $nom;
+                    $_SESSION["nom_produit"] = $nom_produit;
                     $_SESSION["nbre_exemp"] = $nbre_exemp;
                     $_SESSION["description"] = $description;
                     header("Location: ../../pages/samples/succes.php");
@@ -303,14 +304,14 @@ $(document).ready(function () {
 
 $(document).on('click', '.btnEdit', function(){
     var id_produit = $(this).attr('id');
-    alert(id_produit);
-    console.log('Envoi de la requête AJAX... ID:', id_categorie);
+    // alert(id_produit);
+    console.log('Envoi de la requête AJAX... ID:', id_produit);
     $.ajax({
         url: 'TraitementProd.php',
         type: 'POST',
         data: {
-            id_categorie: id_categorie,
-            action: 'editCategorie'
+            id_produit: id_produit,
+            action: 'editProduit'
         },
         success: function(response) {
             console.log("Réponse du serveur :", response);
@@ -321,15 +322,19 @@ $(document).on('click', '.btnEdit', function(){
                 if (data.error) {
                     alert(data.error);
                 } else {
+                    $('#id_produit').val(data.id_produit).prop('readonly', true);
+                    $('#nom_cat').val(data.categorie);
                     $('#id_categorie').val(data.id_categorie).prop('readonly', true);
-                    $('#nom_cat').val(data.nom_cat);
+                    $('#nom_produit').val(data.nom_produit);
+                    $('#nbre_exemp').val(data.nbre_exemp);
                     $('#description').val(data.description);
+
 
                     $('#updateButton').removeClass('d-none');
                     $('#saveButton').addClass('d-none');
 
-                    $('#addCategorieModal').removeAttr('aria-hidden');
-                    $('#addCategorieModal').modal('show'); 
+                    $('#addProduitModal').removeAttr('aria-hidden');
+                    $('#addProduitModal').modal('show'); 
                 }
             } catch (e) {
                 console.error("Erreur JSON :", e);
@@ -342,35 +347,46 @@ $(document).on('click', '.btnEdit', function(){
     });
 });
 
-// evenement applique sur le bouton ajoutCategorie
-$('#updateButton').click(function(){
+// evenement applique sur le bouton ajoutProduit
+
+$('#updateButton').click(function() {
+    var id_produit = $('#id_produit').val(); // Récupérer l'ID du produit
+    var categorie = $('#nom_cat').val();
     var id_categorie = $('#id_categorie').val();
-    var nom_cat = $('#nom_cat').val();
+    var nom_produit = $('#nom_produit').val();
+    var nbre_exemp = $('#nbre_exemp').val();
     var description = $('#description').val();
+
+    // Envoi de la requête Ajax pour mettre à jour le produit
     $.ajax({
-    url: 'TraitementCat.php',
-    type: 'POST',
-    data: {
+        url: 'TraitementProd.php',
+        type: 'POST',
+        data: {
+            id_produit: id_produit,
+            categorie: categorie,
             id_categorie: id_categorie,
-            nom_cat: nom_cat,
+            nom_produit: nom_produit,
+            nbre_exemp: nbre_exemp,
             description: description,
-            action: 'updateCategorie'
+            action: 'updateProduit'
         },
-
         dataType: 'json',
-        success: function(data){
+        success: function(data) {
             alert(data.message);
-            $('#addCategorieModal').modal('hide');
-            location.reload();
+            if (data.success) {
+                alert(data.message); // Afficher le message de succès
+                $('#addProduitModal').modal('hide'); // Fermer le modal
+                location.reload(); // Recharger la page pour voir les changements
+            } else {
+                alert(data.message); // Afficher l'erreur
+            }
         },
-        error: function(){
-
-            alert("Une erreur est survenue lors de la reccuperation des details de la categorie!");
-            console.error("Une erreur est survenue lors de la reccuperation des details de la categorie!");    
+        error: function(xhr, status, error) {
+            console.log("Erreur lors de la mise à jour du produit :", status, error);
+            alert("Une erreur est survenue lors de la mise à jour du produit.");
         }
-    })
+    });
 });
-
 //suppression d'une categorie
 
 $('#openAddCategorieModal').click(function(){

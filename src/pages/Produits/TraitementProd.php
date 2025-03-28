@@ -2,20 +2,20 @@
     include_once '../Fonctions/db_connection.php';
 
     // Activer le mode debug pour afficher les erreurs PHP
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    // error_reporting(E_ALL);
+    // ini_set('display_errors', 1);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $conn = getConnection();
         $action = $_POST['action'];
 
         switch ($action) {
-            case 'editCategorie':
-                $id_categorie = intval($_POST['id_categorie']);
+            case 'editProduit':
+                $id_produit = intval($_POST['id_produit']);
 
-                $sql = "SELECT * FROM categorie WHERE id_categorie = ?";
+                $sql = "SELECT * FROM produits WHERE id_produit = ?";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $id_categorie);
+                $stmt->bind_param("i", $id_produit);
                 $stmt->execute();
                 $result = $stmt->get_result();
 
@@ -23,38 +23,43 @@
                     $data = $result->fetch_assoc();
                     echo json_encode($data);
                 } else {
-                    echo json_encode(['error' => 'Aucune catégorie trouvée pour cet ID']);
+                    echo json_encode(['error' => 'Aucun produit trouvé pour cet ID']);
                 }
                 break;
 
-            case 'updateCategorie':
-
+            case 'updateProduit':
+                    $id_produit = $_POST['id_produit'];
+                    $categorie = $_POST['categorie'];
                     $id_categorie = $_POST['id_categorie'];
-                    $nom_cat = $_POST['nom_cat'];
+                    $nom_produit = $_POST['nom_produit'];
+                    $nbre_exemp = $_POST['nbre_exemp'];
                     $description= $_POST['description'];
 
-                    $sql = "UPDATE categorie set nom_cat = ?, description = ? WHERE id_categorie = ?";
+                    $sql = "UPDATE produits set categorie = ?, id_categorie = ?, nom_produit = ?, nbre_exemp = ?, description = ? WHERE id_produit = ?";
                     //echo json_encode($sql);
                     $conn = getConnection();
                     $result = $conn -> prepare($sql);
-                    $result -> bind_param("ssi", $nom_cat, $description, $id_categorie,);
-                    //$result = true;
+                    $result -> bind_param("sisisi", $categorie, $id_categorie, $nom_produit, $nbre_exemp, $description, $id_produit);
                     if($result->execute()){
 
                         $response = array(
-                            'succes' => true,
+                            'success' => true,
                             'message' => 'Mise a jour effectuee'
                         );
 
                     }else{
 
                         $response = array(
-                            'succes' => false,
+                            'success' => false,
                             'message' => 'Echec lors de la modification'
                         );
 
                     }
+                    // var_dump($response);
                     echo json_encode($response);
+                    // Fermer la connexion
+                    //closeConnection($conn);
+                    //exit();
 
                     break;
 
