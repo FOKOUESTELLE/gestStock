@@ -70,7 +70,7 @@ $result = $conn -> query($sql);
    
                                <td class='text-center'>
                                <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_categorie"] ?>" name="btnmod" data-action="edit"> <i class="typcn typcn-edit fs-3"></i></button>
-                               <button class="btn btn-danger rounded" id="<?= $row["id_categorie"] ?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                               <button class="btn btn-danger rounded btnDel" id="<?= $row["id_categorie"] ?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
                               </td>
                              </tr>
                             <?php
@@ -215,7 +215,7 @@ $result = $conn -> query($sql);
            if ($result->execute()) {
                $_SESSION["id_cat"] = $id_cat;
                $_SESSION["nom_cat"] = $nom_cat;
-               $_SESSION["description"] = $email;
+               $_SESSION["description"] = $description;
                header("Location: ../../pages/samples/succes.php");
                exit();
            } else {
@@ -252,6 +252,7 @@ $result = $conn -> query($sql);
 
     $(document).on('click', '.btnEdit', function(){
         var id_categorie = $(this).attr('id');
+        //alert(id_categorie);
         console.log('Envoi de la requête AJAX... ID:', id_categorie);
         $.ajax({
             url: 'TraitementCat.php',
@@ -336,7 +337,7 @@ $(document).on('click', '.btnDel', function(){
         url: 'TraitementCat.php',
         type: 'POST',
         data: {
-            id_role:id_role,
+            id_categorie: id_categorie,
             action: 'deleteCategorie'
         },
         dataType: 'json',
@@ -351,10 +352,6 @@ $(document).on('click', '.btnDel', function(){
     });
 })
 
-    
-
 </script>
-
-
 </body>
 </html>

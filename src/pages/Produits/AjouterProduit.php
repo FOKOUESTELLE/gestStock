@@ -5,6 +5,9 @@ ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
 require_once '../Fonctions/db_connection.php';
+$conn = getConnection();
+$sql = "SELECT id_categorie, nom_cat FROM categorie";
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,6 +17,17 @@ require_once '../Fonctions/db_connection.php';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>AjoutProduit</title>
+
+  <script>
+     // Fonction pour mettre à jour le champ id_categorie en fonction de la categorie sélectionnée
+     function updateCategorieId() {
+       var categorieSelect = document.getElementById('nom_cat');
+       var categorieIdInput = document.getElementById('id_categorie');
+       // Récupérer l'ID de la categorie à partir de l'attribut data-id_categorie de l'option sélectionnée
+       var selectedOption =categorieSelect.options[categorieSelect.selectedIndex];
+      categorieIdInput.value = selectedOption.getAttribute('data-id_categorie');
+     }
+</script>
 </head>
 
 <body>
@@ -38,19 +52,28 @@ require_once '../Fonctions/db_connection.php';
                        <label for="type" class="form-label">
                        <i class="typcn typcn-th-large-outline menu-icon"></i>Categorie
                        </label>
-                       <select class="form-select" id="nom_cat" name = "nom_cat" required>
+                       <select class="form-select" id="nom_cat" name = "nom_cat" onchange = "updateCategorieId()" required>
                            <option value="">Sélectionnez la categorie</option>
+                           <?php
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        echo "<option value='" . $row['nom_cat'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
+                                    }
+                                } else {
+                                    echo "<option value=''>Aucune categorie disponible</option>";
+                                }
+                                ?>
                        </select>
                    </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i>ID categorie
                         </label>
-                        <input type="text" class="form-control" id="id_cat" name = "id_cat" required> 
+                        <input type="text" class="form-control" id="id_categorie" name = "id_categorie" readonly> 
                     </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nom du 
+                        <i class="typcn typcn-tag menu-icon"></i> Nom du produit
                         </label>
                         <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
@@ -66,14 +89,6 @@ require_once '../Fonctions/db_connection.php';
                         <i class="typcn typcn-document-text menu-icon"></i>Description
                         </label>
                         <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
-                
-                    <div class="mb-3">
-                     <label for="enabled" class="form-label">
-                       <i class="typcn typcn-tick-outline menu-icon"></i> Enabled
-                     </label>
-                     <input type="checkbox" class="form-check-input" id="enabled" name="enabled" value="1">
-                     <label class="form-check-label" for="enabled">Produit activé</label>
-                   </div>
                     <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="typcn typcn-times me-2"></i> Annuler
@@ -98,17 +113,9 @@ require_once '../Fonctions/db_connection.php';
 
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
-       <footer class="footer">
-           <div class="card">
-               <div class="card-body">
-                   <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                       <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright &copy; 2025 
-                           <a href="https://www.glotelho.com/" class="text-muted" target="_blank">Glotelho</a>. Tous droits réservés.</span>
-                       <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">Développé avec passion  <i class="typcn typcn-heart-full-outline text-danger"></i> par GlotoStock.</span>
-                   </div>
-               </div>    
-           </div>        
-       </footer>
+        <?php
+            require_once '../Nav/footer.php';
+        ?> 
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
@@ -137,11 +144,11 @@ require_once '../Fonctions/db_connection.php';
    
    if (isset($_POST["enregistrer"])) {
        // $id = $_POST["id_user"];
-       $nom = $_POST["nom_user"];
-       $email = $_POST["email_user"];
-       $password = $_POST["password_user"];
-       $id_role = $_POST["id_role"];
-       $role = $_POST["role"];
+       $categorie = $_POST["nom_cat"];
+       $id_categorie = $_POST["id_categorie"];
+       $nom = $_POST["nom"];
+       $nbre_exemp = $_POST["nbre_exemp"];
+       $description = $_POST["description"];
        $conn = getConnection();
        
        if (!$conn) {
@@ -149,18 +156,20 @@ require_once '../Fonctions/db_connection.php';
        }
       
        // Utiliser une requête préparée pour éviter l'injection SQL
-       $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role, role) VALUES (?, ?, ?, ?, ?)";
+       $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, nbre_exemp, description) VALUES (?, ?, ?, ?, ?)";
        $result = $conn->prepare($sql);
+       if (!$result) {
+        die("Erreur lors de la préparation de la requête: " . $conn->error);
+    }    
        if ($result) {
           
-           $result->bind_param("sssis", $nom, $email, $password, $id_role, $role);
+           $result->bind_param("sisis", $categorie, $id_categorie, $nom,  $nbre_exemp, $description);
            if ($result->execute()) {
-               $_SESSION["id"] = $id;
+               $_SESSION["categorie"] = $categorie;
+               $_SESSION["id_categorie"] = $id_categorie;
                $_SESSION["nom"] = $nom;
-               $_SESSION["email"] = $email;
-               $_SESSION["password"] = $password;
-               $_SESSION["id_role"] = $id_role;
-               $_SESSION["role"] = $role;
+               $_SESSION["nbre_exemp"] = $nbre_exemp;
+               $_SESSION["description"] = $description;
                header("Location: ../../pages/samples/succes.php");
                exit();
            } else {

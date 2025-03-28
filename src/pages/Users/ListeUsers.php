@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
@@ -9,9 +9,7 @@ $sql = "SELECT* FROM users";
 $conn = getConnection();
 $result = $conn -> query($sql);
 
-
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +27,6 @@ $result = $conn -> query($sql);
   <!-- endinject -->
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
 </head>
-
 <body>
 
       
@@ -61,7 +58,6 @@ $result = $conn -> query($sql);
                     </thead>
 
                         <tbody id="clientsList">
-                                <tr>
                                 <?php
                                     if($result -> num_rows >0){
                                         While($row = $result->fetch_assoc()){

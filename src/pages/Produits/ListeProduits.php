@@ -1,7 +1,15 @@
 <?php
-require_once '../Nav/navbar.php';
-require_once '../Nav/sidebar.php';
-
+    session_start();
+    ob_start();
+    require_once '../Nav/navbar.php';
+    require_once '../Nav/sidebar.php';
+    require_once '../Fonctions/db_connection.php';
+    require '../Fonctions/fonctions.php';
+    $sql = "SELECT* FROM produits";
+    $conn = getConnection();
+    $result = $conn -> query($sql);
+    $sql2 = "SELECT id_categorie, nom_cat FROM categorie";
+    $result2 = $conn->query($sql2);
 ?>
 
 <!DOCTYPE html>
@@ -20,6 +28,16 @@ require_once '../Nav/sidebar.php';
   <link rel="stylesheet" href="../../assets/css/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+  <script>
+     // Fonction pour mettre à jour le champ id_categorie en fonction de la categorie sélectionnée
+     function updateCategorieId() {
+       var categorieSelect = document.getElementById('nom_cat');
+       var categorieIdInput = document.getElementById('id_categorie');
+       // Récupérer l'ID de la categorie à partir de l'attribut data-id_categorie de l'option sélectionnée
+       var selectedOption =categorieSelect.options[categorieSelect.selectedIndex];
+      categorieIdInput.value = selectedOption.getAttribute('data-id_categorie');
+     }
+</script>
 </head>
 
 <body>
@@ -32,7 +50,7 @@ require_once '../Nav/sidebar.php';
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-cube"></i> Produits</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <button class="btn btn-add btn-success rounded-5 shadow" id ="btnAddProduit" data-bs-toggle="modal" data-bs-target="#addStudentModal">
             <i class="typcn typcn-plus m-lg-1"></i> Ajouter Produit
 
 
@@ -44,41 +62,41 @@ require_once '../Nav/sidebar.php';
                 <table class="table table-striped table-hover table-bordered rounded-3 align-middle mt-4">
                     <thead class="table-primary">
                         <tr class="text-center fw-bold">
-                            <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> Code
+                            <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> ID Produit
                             <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Categorie
+                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i>ID Categorie
+                            <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Nom du produit
                             <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Nombre d'exemplaire
-                            <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> Numero de commande
-                            <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Nom
-                            <th scope="col"><i class="typcn typcn-th-large-outline menu-icon fs-3"></i>Type
                             <th scope="col"><i class="typcn typcn-document-text menu-icon fs-3"></i>Description
-                            <th scope="col"><i class="typcn typcn-image menu-icon fs-3"></i></i> Image
-                            <th scope="col"> <i class="typcn typcn-tick-outline menu-icon fs-3"></i></i> Enabled
                             <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
 
                         </tr>
                     </thead>
 
                         <tbody id="productsList">
-                                 
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-
-
-
-                                      <td class='text-center'>
-
-                                      <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
+                                <?php
+                                    if($result -> num_rows >0){
+                                        While($row = $result->fetch_assoc()){
+                                ?>
+                                <tr>
+                                    <td><?=$row["id_produit"]?></td>
+                                    <td><?=$row["categorie"]?></td>
+                                    <td><?=$row["id_categorie"]?></td>
+                                    <td><?=$row["nom_produit"]?></td>
+                                    <td><?=$row["nbre_exemp"]?></td>
+                                    <td><?=$row["description"]?></td>  
+                                    <td class='text-center'>
                                       <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                        <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                                        <button class="btn btn-danger rounded btnSup" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
                                      </td>
                                     </tr>
+                                    <?php
+                                       }
+                                   }
+                                   else{
+                                       echo "<tr><td colspan='6' style='text-align:center;'>Aucun produit trouvé</td></tr>";
+                                   }
+                                  ?>
 
                         </tbody>
                     </table>
@@ -118,68 +136,55 @@ require_once '../Nav/sidebar.php';
                 </div>
                 <div class="modal-body">
                     <form id="ajoutProduitForm" method = "post" action ="">
-                    <div class="mb-3">
-                       <label for="code" class="form-label">
-                       <i class="typcn typcn-tag menu-icon"></i> Code
-                       </label>
-                       <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                       <small class="form-text text-muted">Par exemple : A12345</small>
-                   </div>
-                   <div class="mb-3">
-                        <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Categorie
-                        </label>
-                        <input type="text" class="form-control" id="nom_cat" name = "nom_cat" required> 
-                    </div>
-                    <div class="mb-3">
-                        <label for="qte" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nombre d'exemplaire
-                        </label>
-                        <input type="number" class="form-control" id="nbre_exemp" name = "nbre_exemp" required> 
-                    </div>        
-                   <div class="mb-3">
-                     <label for="num_cmd" class="form-label">
-                     <i class="typcn typcn-tag"></i> Numéro de commande
-                     </label>
-                     <input type="text" class="form-control" id="num_cmd" name="num_cmd" placeholder="Entrez le numéro de commande" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Lenuméro doit contenir 1 à 6 caractères alphanumériques."> 
-                 </div>
-                   <div class="mb-3">
-                       <label for="nom" class="form-label">
-                       <i class="typcn typcn-tag menu-icon"></i> Nom
-                       </label>
-                       <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
-                   </div>
-                   
-                   <div class="mb-3">
-                       <label for="type" class="form-label">
-                       <i class="typcn typcn-th-large-outline menu-icon"></i>Type
-                       </label>
-                       <select class="form-select" id="type" name = "type" required>
-                           <option value="">Sélectionnez le type</option>
-                           <option value="M">Television</option>
-                           <option value="F">Ordinateur</option>
-                       </select>
-                   </div>
-                   <div class="mb-3">
-                       <label for="description" class="form-label">
-                       <i class="typcn typcn-document-text menu-icon"></i>Description
-                       </label>
-                       <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
-               
-                   </div>
-                   <div class="mb-3">
-                       <label for="image" class="form-label">
-                       <i class="typcn typcn-image menu-icon"></i></i> Image
-                        </label>
-                        <input type="file" accept="image/*" /> 
-                   </div>
-                   <div class="mb-3">
-                     <label for="enabled" class="form-label">
-                     <i class="typcn typcn-tick-outline menu-icon"></i></i> Enabled
-                     </label>
-                     <input type="text" class="form-control" id="enabled" name = "enabled" title="">
-                   </div>
-                        <div class="d-flex justify-content-between">
+                        <div class="mb-3">
+                           <label for="id_produit" class="form-label">
+                               <i class="typcn typcn-key-outline menu-icon"></i> ID Produit
+                           </label>
+                           <input type="number" class="form-control" id="id_produit" name="id_produit" required readonly>   
+                        </div>                             
+                            <div class="mb-3">
+                              <label for="type" class="form-label">
+                              <i class="typcn typcn-th-large-outline menu-icon"></i>Categorie
+                              </label>
+                              <select class="form-select" id="nom_cat" name = "nom_cat" onchange = "updateCategorieId()" required>
+                                  <option value="">Sélectionnez la categorie</option>
+                                  <?php
+                                       if ($result2->num_rows > 0) {
+                                           while ($row = $result2->fetch_assoc()) {
+                                               echo "<option value='" . $row['nom_cat'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
+                                           }
+                                       } else {
+                                           echo "<option value=''>Aucune categorie disponible</option>";
+                                       }
+                                       ?>
+                              </select>
+                          </div>
+                           <div class="mb-3">
+                               <label for="nom" class="form-label">
+                               <i class="typcn typcn-tag menu-icon"></i>ID categorie
+                               </label>
+                               <input type="text" class="form-control" id="id_categorie" name = "id_categorie" readonly> 
+                           </div>
+                           <div class="mb-3">
+                               <label for="nom" class="form-label">
+                               <i class="typcn typcn-tag menu-icon"></i> Nom du produit
+                               </label>
+                               <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                           </div>
+                           <div class="mb-3">
+                               <label for="qte" class="form-label">
+                               <i class="typcn typcn-tag menu-icon"></i> Nombre d'exemplaire
+                               </label>
+                               <input type="number" class="form-control" id="nbre_exemp" name = "nbre_exemp" required> 
+                           </div>        
+                                   
+                           <div class="mb-3">
+                               <label for="description" class="form-label">
+                               <i class="typcn typcn-document-text menu-icon"></i>Description
+                               </label>
+                               <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
+                            </div>
+                            <div class="d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 <i class="fas fa-times-circle me-2"></i> Annuler
                             </button>
@@ -234,6 +239,171 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
+     <?php
+           if (isset($_POST["enregistrer"])) {
+            $categorie = $_POST["nom_cat"];
+            $id_categorie = $_POST["id_categorie"];
+            $nom = $_POST["nom"];
+            $nbre_exemp = $_POST["nbre_exemp"];
+            $description = $_POST["description"];
+            $conn = getConnection();
+            
+            if (!$conn) {
+                die("Échec de la connexion à la base de données !");
+            }
+           
+            // Utiliser une requête préparée pour éviter l'injection SQL
+            $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, nbre_exemp, description) VALUES (?, ?, ?, ?, ?)";
+            $result = $conn->prepare($sql);
+            if (!$result) {
+             die("Erreur lors de la préparation de la requête: " . $conn->error);
+         }    
+            if ($result) {
+               
+                $result->bind_param("sisis", $categorie, $id_categorie, $nom,  $nbre_exemp, $description);
+                if ($result->execute()) {
+                    $_SESSION["categorie"] = $categorie;
+                    $_SESSION["id_categorie"] = $id_categorie;
+                    $_SESSION["nom"] = $nom;
+                    $_SESSION["nbre_exemp"] = $nbre_exemp;
+                    $_SESSION["description"] = $description;
+                    header("Location: ../../pages/samples/succes.php");
+                    exit();
+                } else {
+                    // En cas d'erreur
+                    header("Location: ../../pages/samples/error-500.php");
+                    exit();
+                }
+                $result->close(); 
+            } else {
+                die("Erreur lors de la préparation de la requête.");
+            }
+            $conn->close(); 
+        }
+    ?>
 
+<script>
+
+$(document).ready(function () {
+
+    $('#btnAddProduit').click(function () {
+
+        $('#ajoutProduitForm')[0].reset();
+        $('#id_produit').parent().hide(); 
+        $('#id_produit').val(''); 
+
+        // Changer l'affichage des boutons
+        $('#saveButton').removeClass('d-none');
+        $('#updateButton').addClass('d-none'); 
+
+        // Afficher le modal
+        $('#addProduitModal').modal('show');
+   });
+})
+
+$(document).on('click', '.btnEdit', function(){
+    var id_produit = $(this).attr('id');
+    alert(id_produit);
+    console.log('Envoi de la requête AJAX... ID:', id_categorie);
+    $.ajax({
+        url: 'TraitementProd.php',
+        type: 'POST',
+        data: {
+            id_categorie: id_categorie,
+            action: 'editCategorie'
+        },
+        success: function(response) {
+            console.log("Réponse du serveur :", response);
+
+            try {
+                const data = JSON.parse(response);
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    $('#id_categorie').val(data.id_categorie).prop('readonly', true);
+                    $('#nom_cat').val(data.nom_cat);
+                    $('#description').val(data.description);
+
+                    $('#updateButton').removeClass('d-none');
+                    $('#saveButton').addClass('d-none');
+
+                    $('#addCategorieModal').removeAttr('aria-hidden');
+                    $('#addCategorieModal').modal('show'); 
+                }
+            } catch (e) {
+                console.error("Erreur JSON :", e);
+                console.log("Réponse brute du serveur :", response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur AJAX :", status, error);
+        }
+    });
+});
+
+// evenement applique sur le bouton ajoutCategorie
+$('#updateButton').click(function(){
+    var id_categorie = $('#id_categorie').val();
+    var nom_cat = $('#nom_cat').val();
+    var description = $('#description').val();
+    $.ajax({
+    url: 'TraitementCat.php',
+    type: 'POST',
+    data: {
+            id_categorie: id_categorie,
+            nom_cat: nom_cat,
+            description: description,
+            action: 'updateCategorie'
+        },
+
+        dataType: 'json',
+        success: function(data){
+            alert(data.message);
+            $('#addCategorieModal').modal('hide');
+            location.reload();
+        },
+        error: function(){
+
+            alert("Une erreur est survenue lors de la reccuperation des details de la categorie!");
+            console.error("Une erreur est survenue lors de la reccuperation des details de la categorie!");    
+        }
+    })
+});
+
+//suppression d'une categorie
+
+$('#openAddCategorieModal').click(function(){
+$('#resetButton').click();
+updateBtn = document.getElementById('updateButton');
+saveBtn = document.getElementById('saveButton');
+saveBtn.classList.remove('d-none');
+updateBtn.classList.add('d-none');
+});
+
+$(document).on('click', '.btnDel', function(){
+var id_categorie = $(this).attr('id');
+alert (id_categorie);
+$.ajax({
+    url: 'TraitementCat.php',
+    type: 'POST',
+    data: {
+        id_categorie: id_categorie,
+        action: 'deleteCategorie'
+    },
+    dataType: 'json',
+    success: function(data){
+       location.reload();
+    },
+    error:function(){
+        alert("Une erreur est survenue lors de la reccuperation des details de la categorie!");
+        console.error("Une erreur est survenue lors de la reccuperation des details de la categorie..");
+       // console.error("");
+    }
+});
+})
+
+</script>
+
+</body>
 </html>
