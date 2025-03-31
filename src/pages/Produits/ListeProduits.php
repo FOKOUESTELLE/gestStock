@@ -88,7 +88,7 @@
                                     <td><?=$row["description"]?></td>  
                                     <td class='text-center'>
                                       <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_produit"]?>" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                        <button class="btn btn-danger rounded btnSup" id="<?= $row["id_produit"]?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                                        <button class="btn btn-danger rounded btnDel" id="<?= $row["id_produit"]?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
                                      </td>
                                     </tr>
                                     <?php
@@ -126,7 +126,7 @@
 
    
     <!-- Modal pour ajouter un produit -->
-    <div class="modal fade" id="addProduitModal" tabindex="-1" aria-labelledby="#addProduitModalLabel" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal fade" id="addProduitModal" tabindex="-1" aria-labelledby="#addProduitModalLabel" data-bs-backdrop="static">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-3 shadow">
                 <div class="modal-header bg-dark-subtle">
@@ -323,12 +323,12 @@ $(document).on('click', '.btnEdit', function(){
                     alert(data.error);
                 } else {
                     $('#id_produit').val(data.id_produit).prop('readonly', true);
-                    $('#nom_cat').val(data.categorie);
+                    $('#nom_cat').val(data.id_categorie);
                     $('#id_categorie').val(data.id_categorie).prop('readonly', true);
                     $('#nom_produit').val(data.nom_produit);
                     $('#nbre_exemp').val(data.nbre_exemp);
                     $('#description').val(data.description);
-
+                    // $('#addProduitModalLabel').html("Modifier un produit");
 
                     $('#updateButton').removeClass('d-none');
                     $('#saveButton').addClass('d-none');
@@ -358,6 +358,7 @@ $('#updateButton').click(function() {
     var description = $('#description').val();
 
     // Envoi de la requête Ajax pour mettre à jour le produit
+    if (confirm("Êtes-vous sûr de vouloir modifier ce produit ?")) {
     $.ajax({
         url: 'TraitementProd.php',
         type: 'POST',
@@ -372,9 +373,8 @@ $('#updateButton').click(function() {
         },
         dataType: 'json',
         success: function(data) {
-            alert(data.message);
             if (data.success) {
-                alert(data.message); // Afficher le message de succès
+                alert(data.message); 
                 $('#addProduitModal').modal('hide'); // Fermer le modal
                 location.reload(); // Recharger la page pour voir les changements
             } else {
@@ -386,38 +386,44 @@ $('#updateButton').click(function() {
             alert("Une erreur est survenue lors de la mise à jour du produit.");
         }
     });
+    }
 });
-//suppression d'une categorie
+//suppression d'un produit
 
 $('#openAddCategorieModal').click(function(){
-$('#resetButton').click();
-updateBtn = document.getElementById('updateButton');
-saveBtn = document.getElementById('saveButton');
-saveBtn.classList.remove('d-none');
-updateBtn.classList.add('d-none');
+    $('#resetButton').click();
+    updateBtn = document.getElementById('updateButton');
+    saveBtn = document.getElementById('saveButton');
+    saveBtn.classList.remove('d-none');
+    updateBtn.classList.add('d-none');
 });
 
 $(document).on('click', '.btnDel', function(){
-var id_categorie = $(this).attr('id');
-alert (id_categorie);
-$.ajax({
-    url: 'TraitementCat.php',
-    type: 'POST',
-    data: {
-        id_categorie: id_categorie,
-        action: 'deleteCategorie'
-    },
-    dataType: 'json',
-    success: function(data){
-       location.reload();
-    },
-    error:function(){
-        alert("Une erreur est survenue lors de la reccuperation des details de la categorie!");
-        console.error("Une erreur est survenue lors de la reccuperation des details de la categorie..");
-       // console.error("");
+    var id_produit = $(this).attr('id');
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+        $.ajax({
+            url: 'TraitementProd.php',
+            type: 'POST',
+            data: {
+                id_produit: id_produit,
+                action: 'deleteProduit'
+            },
+            dataType: 'json',
+            success: function(data){
+                alert(data.message);
+                if (data.succes) {
+                    location.reload();
+                }
+            },
+            error: function(){
+                alert("Une erreur est survenue lors de la suppression !");
+                console.error("Erreur lors de la suppression du produit.");
+            }
+        });
     }
 });
-})
+
 
 </script>
 

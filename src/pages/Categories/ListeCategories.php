@@ -296,6 +296,7 @@ $result = $conn -> query($sql);
         var id_categorie = $('#id_categorie').val();
         var nom_cat = $('#nom_cat').val();
         var description = $('#description').val();
+        if (confirm("Êtes-vous sûr de vouloir modifier cette categorie ?")) {
         $.ajax({
         url: 'TraitementCat.php',
         type: 'POST',
@@ -318,6 +319,7 @@ $result = $conn -> query($sql);
                 console.error("Une erreur est survenue lors de la reccuperation des details de la categorie!");       
             }
         })
+    }
     });
 
     //suppression d'une categorie
@@ -328,11 +330,12 @@ $result = $conn -> query($sql);
     saveBtn = document.getElementById('saveButton');
     saveBtn.classList.remove('d-none');
     updateBtn.classList.add('d-none');
-});
+    });
 
 $(document).on('click', '.btnDel', function(){
     var id_categorie = $(this).attr('id');
     alert (id_categorie);
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette categorie ?")) {
     $.ajax({
         url: 'TraitementCat.php',
         type: 'POST',
@@ -349,8 +352,10 @@ $(document).on('click', '.btnDel', function(){
             console.error("Une erreur est survenue lors de la reccuperation des details de la categorie..");
            // console.error("");
         }
+        
     });
-})
+  }
+});
 
 </script>
 </body>

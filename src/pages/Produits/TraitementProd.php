@@ -13,7 +13,8 @@
             case 'editProduit':
                 $id_produit = intval($_POST['id_produit']);
 
-                $sql = "SELECT * FROM produits WHERE id_produit = ?";
+                $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.nbre_exemp, P.description
+                        FROM produits P, categorie C WHERE P.id_categorie = C.id_categorie AND P.id_produit = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("i", $id_produit);
                 $stmt->execute();
@@ -26,50 +27,48 @@
                     echo json_encode(['error' => 'Aucun produit trouvé pour cet ID']);
                 }
                 break;
-
-            case 'updateProduit':
-                    $id_produit = $_POST['id_produit'];
-                    $categorie = $_POST['categorie'];
-                    $id_categorie = $_POST['id_categorie'];
+                case 'updateProduit':
+                    $id_produit = $_POST['id_produit']; 
+                    $id_categorie = $_POST['id_categorie'];  
                     $nom_produit = $_POST['nom_produit'];
                     $nbre_exemp = $_POST['nbre_exemp'];
-                    $description= $_POST['description'];
-
-                    $sql = "UPDATE produits set categorie = ?, id_categorie = ?, nom_produit = ?, nbre_exemp = ?, description = ? WHERE id_produit = ?";
-                    //echo json_encode($sql);
+                    $description = $_POST['description'];
+                
+                    // Correction de la requête
+                    $sql = "UPDATE produits 
+                            SET nom_produit = ?, nbre_exemp = ?, description = ?, id_categorie = ? 
+                            WHERE id_produit = ?";
+                
                     $conn = getConnection();
-                    $result = $conn -> prepare($sql);
-                    $result -> bind_param("sisisi", $categorie, $id_categorie, $nom_produit, $nbre_exemp, $description, $id_produit);
-                    if($result->execute()){
-
+                    $result = $conn->prepare($sql);
+                
+                    // Correction des types et du nombre de paramètres
+                    $result->bind_param("sisii", $nom_produit, $nbre_exemp, $description, $id_categorie, $id_produit);
+                
+                    if ($result->execute()) {
                         $response = array(
                             'success' => true,
-                            'message' => 'Mise a jour effectuee'
+                            'message' => 'Mise à jour effectuée'
                         );
-
-                    }else{
-
+                    } else {
                         $response = array(
                             'success' => false,
-                            'message' => 'Echec lors de la modification'
+                            'message' => 'Échec lors de la modification'
                         );
-
                     }
-                    // var_dump($response);
+                
                     echo json_encode($response);
-                    // Fermer la connexion
-                    //closeConnection($conn);
-                    //exit();
-
                     break;
+                
+                
 
-                    case 'deleteCategorie':
+                    case 'deleteProduit':
 
-                        $id_categorie = $_POST['id_categorie'];
-                        $sql =  "DELETE FROM categorie WHERE id_categorie = ?";
+                        $id_produit = $_POST['id_produit'];
+                        $sql =  "DELETE FROM produits WHERE id_produit = ?";
                         $conn = getConnection();
                         $result = $conn -> prepare($sql);
-                        $result -> bind_param("i",  $id_categorie);
+                        $result -> bind_param("i", $id_produit);
                         if($result->execute()){
                             $response = array(
                                 'succes' => true,
