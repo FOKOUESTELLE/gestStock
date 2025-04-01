@@ -53,7 +53,7 @@
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-cube"></i> Exemplaires</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <button class="btn btn-add btn-success rounded-5 shadow" id = "btnAddExemplaire" data-bs-toggle="modal" data-bs-target="#addExemplaireModal">
             <i class="typcn typcn-plus m-lg-1"></i> Ajouter un Exemplaire
 
 
@@ -127,24 +127,24 @@
 
    
     <!-- Modal pour ajouter un produit -->
-    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal fade" id="addExemplaireModal" tabindex="-1" aria-labelledby="addExemplaireModalLabel" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-3 shadow">
                 <div class="modal-header bg-dark-subtle">
-                    <h5 class="modal-title text-success" id="addStudentModalLabel"><i class="typcn typcn-plus m-lg-1"></i> Ajouter un Exemplaire <i class="typcn typcn-plus-circle"></i></h5>
+                    <h5 class="modal-title text-success" id="addExemplaireModalLabel"><i class="typcn typcn-plus m-lg-1"></i> Ajouter un Exemplaire <i class="typcn typcn-plus-circle"></i></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fas fa-times text-danger"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="ajoutProduitForm" method = "post" action ="">
+                    <form id="ajoutExemplaireForm" method = "post" action ="">
                     <button id="startScan">Scanner un code-barres</button>
                     <video id="scanner" style="width: 300px; height: 200px; display: none;"></video>
                     <div class="mb-3">
                        <label for="nom" class="form-label">
-                       <i class="typcn typcn-tag menu-icon"></i>ID exmplaire
+                       <i class="typcn typcn-tag menu-icon"></i>ID exemplaire
                        </label>
-                       <input type="text" class="form-control" id="id_exmplaire" name = "id_exmplaire" readonly> 
+                       <input type="text" class="form-control" id="id_exemplaire" name = "id_exemplaire" readonly> 
                    </div>
                     <div class="mb-3">
                        <label for="code_barre" class="form-label">
@@ -304,31 +304,31 @@
 
 $(document).ready(function () {
 
-    $('#btnAddProduit').click(function () {
+    $('#btnAddExemplaire').click(function () {
 
-        $('#ajoutProduitForm')[0].reset();
-        $('#id_produit').parent().hide(); 
-        $('#id_produit').val(''); 
+        $('#ajoutExemplaireForm')[0].reset();
+        $('#id_exemplaire').parent().hide(); 
+        $('#id_exemplaire').val(''); 
 
         // Changer l'affichage des boutons
         $('#saveButton').removeClass('d-none');
         $('#updateButton').addClass('d-none'); 
 
         // Afficher le modal
-        $('#addProduitModal').modal('show');
+        $('#addExemplaireModal').modal('show');
    });
 })
 
 $(document).on('click', '.btnEdit', function(){
-    var id_produit = $(this).attr('id');
-    // alert(id_produit);
-    console.log('Envoi de la requête AJAX... ID:', id_produit);
+    var id_exemplaire = $(this).attr('id');
+    //alert(id_exemplaire);
+    console.log('Envoi de la requête AJAX... ID:', id_exemplaire);
     $.ajax({
-        url: 'TraitementProd.php',
+        url: 'TraitementExemp.php',
         type: 'POST',
         data: {
-            id_produit: id_produit,
-            action: 'editProduit'
+            id_exemplaire: id_exemplaire,
+            action: 'editExemp'
         },
         success: function(response) {
             console.log("Réponse du serveur :", response);
@@ -339,19 +339,19 @@ $(document).on('click', '.btnEdit', function(){
                 if (data.error) {
                     alert(data.error);
                 } else {
+                    $('#id_exemplaire').val(data.id_exemplaire).prop('readonly', true);
+                    $('#code_bar').val(data.code_bar).prop('readonly', true);
+                    $('#nom_produit').val(data.id_produit);
+                    $('#original_price').val(data.original_price);
+                    $('#special_price').val(data.special_price);
                     $('#id_produit').val(data.id_produit).prop('readonly', true);
-                    $('#nom_cat').val(data.id_categorie);
-                    $('#id_categorie').val(data.id_categorie).prop('readonly', true);
-                    $('#nom_produit').val(data.nom_produit);
-                    $('#nbre_exemp').val(data.nbre_exemp);
-                    $('#description').val(data.description);
-                    // $('#addProduitModalLabel').html("Modifier un produit");
+                    // $('#addExemplaireModalLabel').html("Modifier un produit");
 
                     $('#updateButton').removeClass('d-none');
                     $('#saveButton').addClass('d-none');
 
-                    $('#addProduitModal').removeAttr('aria-hidden');
-                    $('#addProduitModal').modal('show'); 
+                    $('#addExemplaireModal').removeAttr('aria-hidden');
+                    $('#addExemplaireModal').modal('show'); 
                 }
             } catch (e) {
                 console.error("Erreur JSON :", e);
@@ -364,50 +364,50 @@ $(document).on('click', '.btnEdit', function(){
     });
 });
 
-// evenement applique sur le bouton ajoutProduit
+// evenement applique sur le bouton ajoutExemplaire
 
 $('#updateButton').click(function() {
-    var id_produit = $('#id_produit').val(); // Récupérer l'ID du produit
-    var categorie = $('#nom_cat').val();
-    var id_categorie = $('#id_categorie').val();
+    var id_exemplaire = $('#id_exemplaire').val(); // Récupérer l'ID du produit
+    var code_bar = $('#code_bar').val();
     var nom_produit = $('#nom_produit').val();
-    var nbre_exemp = $('#nbre_exemp').val();
-    var description = $('#description').val();
+    var original_price = $('#original_price').val();
+    var special_price = $('#special_price').val();
+    var id_produit = $('#id_produit').val();
 
-    // Envoi de la requête Ajax pour mettre à jour le produit
-    if (confirm("Êtes-vous sûr de vouloir modifier ce produit ?")) {
+    // Envoi de la requête Ajax pour mettre à jour l'exemplaire
+    if (confirm("Êtes-vous sûr de vouloir modifier cet exemplaire ?")) {
     $.ajax({
-        url: 'TraitementProd.php',
+        url: 'TraitementExemp.php',
         type: 'POST',
         data: {
-            id_produit: id_produit,
-            categorie: categorie,
-            id_categorie: id_categorie,
+            id_exemplaire: id_exemplaire,
+            code_bar: code_bar,
             nom_produit: nom_produit,
-            nbre_exemp: nbre_exemp,
-            description: description,
-            action: 'updateProduit'
+            original_price: original_price,
+            special_price: special_price,
+            id_produit: id_produit,
+            action: 'updateExemp'
         },
         dataType: 'json',
         success: function(data) {
             if (data.success) {
                 alert(data.message); 
-                $('#addProduitModal').modal('hide'); // Fermer le modal
+                $('#addExemplaireModal').modal('hide'); // Fermer le modal
                 location.reload(); // Recharger la page pour voir les changements
             } else {
                 alert(data.message); // Afficher l'erreur
             }
         },
         error: function(xhr, status, error) {
-            console.log("Erreur lors de la mise à jour du produit :", status, error);
-            alert("Une erreur est survenue lors de la mise à jour du produit.");
+            console.log("Erreur lors de la mise à jour de l'exemplaire :", status, error);
+            alert("Une erreur est survenue lors de la mise à jour de l'exemplaire.");
         }
     });
     }
 });
 //suppression d'un produit
 
-$('#openAddCategorieModal').click(function(){
+$('#openAddExemplaireModal').click(function(){
     $('#resetButton').click();
     updateBtn = document.getElementById('updateButton');
     saveBtn = document.getElementById('saveButton');
@@ -416,26 +416,27 @@ $('#openAddCategorieModal').click(function(){
 });
 
 $(document).on('click', '.btnDel', function(){
-    var id_produit = $(this).attr('id');
+    var id_exemplaire = $(this).attr('id');
+    alert (id_exemplaire);
 
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet exemplaire ?")) {
         $.ajax({
-            url: 'TraitementProd.php',
+            url: 'TraitementExemp.php',
             type: 'POST',
             data: {
-                id_produit: id_produit,
-                action: 'deleteProduit'
+                id_exemplaire: id_exemplaire,
+                action: 'deleteExemp'
             },
             dataType: 'json',
             success: function(data){
                 alert(data.message);
-                if (data.succes) {
+                if (data.success) {
                     location.reload();
                 }
             },
             error: function(){
                 alert("Une erreur est survenue lors de la suppression !");
-                console.error("Erreur lors de la suppression du produit.");
+                console.error("Erreur lors de la suppression de exemplaire.");
             }
         });
     }
