@@ -1,8 +1,13 @@
 
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
-
+require_once '../Fonctions/db_connection.php';
+$conn = getConnection();
+$sql = "SELECT id_produit, nom_produit FROM produits";
+$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +17,18 @@ require_once '../Nav/sidebar.php';
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>AjouterExemplaire</title>
+  <link rel = "stylesheet" href = "StyleScanner.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <script>
+     // Fonction pour mettre à jour le champ id_produit en fonction du produit sélectionné
+     function updateProduitId() {
+       var produitSelect = document.getElementById('nom_produit');
+       var produitIdInput = document.getElementById('id_produit');
+       // Récupérer l'ID du produit à partir de l'attribut data-id_produit de l'option sélectionnée
+       var selectedOption =produitSelect.options[produitSelect.selectedIndex];
+      produitIdInput.value = selectedOption.getAttribute('data-id_produit');
+     }
+</script>
 </head>
 
 <body>
@@ -26,25 +43,38 @@ require_once '../Nav/sidebar.php';
             </div>
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutProduitForm" method = "POST" action ="">
+
                     <div class="mb-3">
-                        <label for="sku" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> SKU
-                        </label>
-                        <input type="text" class="form-control" id="sku_prod" name="sku_prod" placeholder="Entrez le SKU du produit" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le SKU doit contenir 1 à 6 caractères alphanumériques.">
-                    </div>  
-                    <div class="mb-3">
+                    <button id="startScan">Scanner un code-barres</button>
+                    <video id="scanner" style="width: 300px; height: 200px; display: none;"></video>
                         <label for="code_barre" class="form-label">
                             <i class="typcn typcn-credit-card menu-icon"></i> Code barre
                         </label>
-                        <input type="text" class="form-control" id="code_barre" name="code_barre" placeholder="Entrez le code barre du produit" required maxlength="13">
+                        <input type="text" class="form-control" id="code_bar" name="code_bar"  placeholder="Entrez le code barre du produit" required maxlength="13" autofocus>
                     </div>
                     <div class="mb-3">
-                        <label for="code" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> CodeProduit
-                        </label>
-                        <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="code du produit" required>
+                         <label for="type" class="form-label">
+                         <i class="typcn typcn-th-large-outline menu-icon"></i>Nom du produit
+                         </label>
+                         <select class="form-select" id="nom_produit" name = "nom_produit" onchange = "updateProduitId()" required>
+                             <option value="">Sélectionnez le produit</option>
+                             <?php
+                                  if ($result->num_rows > 0) {
+                                      while ($row = $result->fetch_assoc()) {
+                                          echo "<option value='" . $row['id_produit'] . "' data-id_produit='" . $row['id_produit'] . "'>" . $row['nom_produit'] . "</option>";
+                                      }
+                                  } else {
+                                      echo "<option value=''>Aucun produit disponible</option>";
+                                  }
+                                  ?>
+                         </select>
                     </div>
-                    
+                    <div class="mb-3">
+                         <label for="nom" class="form-label">
+                         <i class="typcn typcn-tag menu-icon"></i>ID produit
+                         </label>
+                         <input type="text" class="form-control" id="id_produit" name = "id_produit" readonly> 
+                     </div>
                     <div class="mb-3">
                         <label for="original_price" class="form-label">
                             <i class="typcn typcn-tag menu-icon"></i> Prix original
@@ -59,23 +89,6 @@ require_once '../Nav/sidebar.php';
                         <input type="text" class="form-control" id="special_price" name="special_price" placeholder="Entrez le prix spécial du produit" required>
                     </div>
                     
-                    <div class="mb-3">
-                        <label for="type" class="form-label">
-                            <i class="typcn typcn-th-large-outline menu-icon"></i> Type
-                        </label>
-                        <select class="form-select" id="type" name="type" required>
-                            <option value="">Sélectionnez le type</option>
-                            <option value="M">Télévision</option>
-                            <option value="F">Ordinateur</option>
-                        </select>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="description" class="form-label">
-                            <i class="typcn typcn-document-text menu-icon"></i> Description
-                        </label>
-                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
-                    </div> 
                     <div class="d-flex justify-content-between">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="typcn typcn-times me-2"></i> Annuler
@@ -135,6 +148,110 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+  <?php
+  
+  if (isset($_POST["enregistrer"])) {
+      $code_bar = $_POST["code_bar"];
+      $nom_produit = $_POST["nom_produit"];
+      $id_produit = $_POST["id_produit"];
+      $original_price = $_POST["original_price"];
+      $special_price = $_POST["special_price"];
+      $conn = getConnection();
+      
+      if (!$conn) {
+          die("Échec de la connexion à la base de données !");
+      }
+
+      // Vérifier si le code-barres existe déjà
+      $check_sql = "SELECT COUNT(*) FROM produits WHERE code_bar = ?";
+      $stmt = $conn->prepare($check_sql);
+      $stmt->bind_param("s", $code_bar);
+      $stmt->execute();
+      $stmt->bind_result($count);
+      $stmt->fetch();
+      $stmt->close();
+  
+      if ($count > 0) {
+          echo "<script>alert('Ce code-barres existe déjà !'); window.history.back();</script>";
+          exit();
+      }
+     
+      $sql = "INSERT INTO exemplaire (code_bar, nom_produit, original_price, special_price, id_produit) VALUES (?, ?, ?, ?, ?)";
+      $result = $conn->prepare($sql);
+      if (!$result) {
+       die("Erreur lors de la préparation de la requête: " . $conn->error);
+   }    
+      if ($result) {
+         
+          $result->bind_param("ssiii", $code_bar, $nom_produit, $original_price,  $special_price, $id_produit);
+          if ($result->execute()) {
+              $_SESSION["code_bar"] = $code_bar;
+              $_SESSION["nom_produit"] = $nom_produit;
+              $_SESSION["original_price"] = $original_price;
+              $_SESSION["special_price"] = $special_price;
+              $_SESSION["id_produit"] = $id_produit;
+              header("Location: ../../pages/samples/succes.php");
+              exit();
+          } else {
+              // En cas d'erreur
+              header("Location: ../../pages/samples/error-500.php");
+              exit();
+          }
+          $result->close(); 
+      } else {
+          die("Erreur lors de la préparation de la requête.");
+      }
+      $conn->close(); 
+  }
+?>
+ <script>
+        document.getElementById("startScan").addEventListener("click", function() {
+            let scanner = document.getElementById("scanner");
+            scanner.style.display = "block"; // Afficher la vidéo
+            navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+            scanner.srcObject = stream; // Attacher le flux vidéo à la balise <video>
+            scanner.play(); // Démarrer la lecture vidéo
+            console.log("Caméra démarrée avec succès");
+        })
+        .catch(function(err) {
+            console.error("Erreur d'accès à la caméra : ", err);
+        });
+
+                Quagga.init({
+        inputStream: {
+            name: "Live",
+                    type: "LiveStream",
+                    constraints: {
+                        width: 400,
+                        height: 300,
+                        facingMode: "environment" // Utilise la caméra arrière sur mobile
+                    },
+                    target: scanner, // Le canevas utilisé pour afficher la vidéo
+                    willReadFrequently: true  // Ajouter cette ligne pour améliorer les performances
+                },
+                decoder: {
+                    readers: ["ean_reader"] // Supporte EAN-13
+                }
+            }, function(err) {
+                if (!err) {
+                    Quagga.start(); // Commencer à scanner
+                } else {
+                    console.error("Erreur Quagga: ", err);
+                }
+            });
+
+        });
+        Quagga.onDetected(function(result) {
+    var codeBarre = result.codeResult.code; // Le code-barres détecté
+    document.getElementById("code_bar").value = codeBarre; // Affiche le code-barres dans le champ du formulaire
+    alert("Code-barres détecté : " + codeBarre); // Affiche une alerte avec le code-barres détecté
+    Quagga.stop(); // Arrête l'analyse après la détection
+    scanner.style.display = "none"; // Cache la caméra après la détection
+});
+
+    </script>
+
+</body>
 </html>

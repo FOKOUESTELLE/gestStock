@@ -57,7 +57,7 @@ $result = $conn->query($sql);
                            <?php
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
-                                        echo "<option value='" . $row['nom_cat'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
+                                        echo "<option value='" . $row['id_categorie'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
                                     }
                                 } else {
                                     echo "<option value=''>Aucune categorie disponible</option>";
@@ -75,7 +75,7 @@ $result = $conn->query($sql);
                         <label for="nom" class="form-label">
                         <i class="typcn typcn-tag menu-icon"></i> Nom du produit
                         </label>
-                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
                         <label for="qte" class="form-label">
@@ -143,7 +143,6 @@ $result = $conn->query($sql);
   <?php
    
    if (isset($_POST["enregistrer"])) {
-       // $id = $_POST["id_user"];
        $categorie = $_POST["nom_cat"];
        $id_categorie = $_POST["id_categorie"];
        $nom = $_POST["nom"];

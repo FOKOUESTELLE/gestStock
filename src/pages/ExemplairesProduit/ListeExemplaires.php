@@ -1,6 +1,16 @@
 <?php
-require_once '../Nav/navbar.php';
-require_once '../Nav/sidebar.php';
+    session_start();
+    ob_start();
+    require_once '../Nav/navbar.php';
+    require_once '../Nav/sidebar.php';
+    require_once '../Fonctions/db_connection.php';
+    require '../Fonctions/fonctions.php';
+    $sql = "SELECT E.id_exemplaire, E.code_bar, P.nom_produit, E.original_price, E.special_price, P.id_produit
+            FROM exemplaire E, produits P WHERE E.id_produit = P.id_produit";
+    $conn = getConnection();
+    $result = $conn -> query($sql);
+    $sql2 = "SELECT id_produit, nom_produit FROM produits";
+    $result2 = $conn->query($sql2);
 
 ?>
 
@@ -20,6 +30,17 @@ require_once '../Nav/sidebar.php';
   <link rel="stylesheet" href="../../assets/css/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <script>
+     // Fonction pour mettre à jour le champ id_produit en fonction du produit sélectionné
+     function updateProduitId() {
+       var produitSelect = document.getElementById('nom_produit');
+       var produitIdInput = document.getElementById('id_produit');
+       // Récupérer l'ID du produit à partir de l'attribut data-id_produit de l'option sélectionnée
+       var selectedOption =produitSelect.options[produitSelect.selectedIndex];
+      produitIdInput.value = selectedOption.getAttribute('data-id_produit');
+     }
+</script>
 </head>
 
 <body>
@@ -44,36 +65,41 @@ require_once '../Nav/sidebar.php';
                 <table class="table table-striped table-hover table-bordered rounded-3 align-middle mt-4">
                     <thead class="table-primary">
                         <tr class="text-center fw-bold">
-                            <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> SKU
-                            <th scope="col"><i class="typcn typcn-credit-card menu-icon"></i> Code barre
-                            <th scope="col">  <i class="typcn typcn-tag menu-icon"></i> CodeProduit
-                            <th scope="col"><i class="typcn typcn-th-large-outline menu-icon fs-3"></i>Type
-                            <th scope="col"><i class="typcn typcn-document-text menu-icon fs-3"></i>Description
-                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Prix original
-                            <th scope="col"><i class="typcn typcn-star menu-icon"></i> Prix spécial
+                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i> ID Exemplaire</th>
+                            <th scope="col"><i class="typcn typcn-credit-card menu-icon"></i> Code barre</th>
+                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i> NomProduit</th>
+                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i> IDProduit</th>
+                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Prix original</th>
+                            <th scope="col"><i class="typcn typcn-star menu-icon"></i> Prix spécial</th>
                             <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
 
                         </tr>
                     </thead>
 
                         <tbody id="productsList">
-                                 
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-                                      <td></td>
-
-                                      <td class='text-center'>
-
-                                      <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
-                                      <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                        <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
-                                     </td>
-                                    </tr>
-
+                                <?php
+                                     if($result -> num_rows >0){
+                                         While($row = $result->fetch_assoc()){
+                                ?>
+                         <tr>
+                             <td><?=$row["id_exemplaire"]?></td>
+                             <td><?=$row["code_bar"]?></td>
+                             <td><?=$row["nom_produit"]?></td>
+                             <td><?=$row["id_produit"]?></td>
+                             <td><?=$row["original_price"]?></td>
+                             <td><?=$row["special_price"]?></td>  
+                             <td class='text-center'>
+                               <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_exemplaire"]?>" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
+                                 <button class="btn btn-danger rounded btnDel" id="<?= $row["id_exemplaire"]?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                              </td>
+                             </tr>
+                             <?php
+                                }
+                            }
+                            else{
+                                echo "<tr><td colspan='6' style='text-align:center;'>Aucun exemplaire trouvé</td></tr>";
+                            }
+                           ?>
                         </tbody>
                     </table>
                     <!-- Pagination -->
@@ -112,56 +138,56 @@ require_once '../Nav/sidebar.php';
                 </div>
                 <div class="modal-body">
                     <form id="ajoutProduitForm" method = "post" action ="">
+                    <button id="startScan">Scanner un code-barres</button>
+                    <video id="scanner" style="width: 300px; height: 200px; display: none;"></video>
                     <div class="mb-3">
-           <label for="sku" class="form-label">
-           <i class="typcn typcn-tag menu-icon"></i> SKU
-           </label>
-           <input type="text" class="form-control" id="sku_prod" name="sku_prod" placeholder="Entrez le SKU du produit" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le SKU doit contenir 1 à 6 caractères alphanumériques.">
-       </div>  
-       <div class="mb-3">
-           <label for="code_barre" class="form-label">
-               <i class="typcn typcn-credit-card menu-icon"></i> Code barre
-           </label>
-           <input type="text" class="form-control" id="code_barre" name="code_barre" placeholder="Entrez le code barre du produit" required maxlength="13">
-       </div>
-       <div class="mb-3">
-           <label for="code" class="form-label">
-           <i class="typcn typcn-tag menu-icon"></i> CodeProduit
-           </label>
-           <input type="text" class="form-control" id="code_prod" name = "code_prod" placeholder="code du produit" required>
-       </div>
-       
-       <div class="mb-3">
-           <label for="original_price" class="form-label">
-               <i class="typcn typcn-tag menu-icon"></i> Prix original
-           </label>
-           <input type="text" class="form-control" id="original_price" name="original_price" placeholder="Entrez le prix original du produit" required>
-       </div>
-       
-       <div class="mb-3">
-           <label for="special_price" class="form-label">
-               <i class="typcn typcn-star menu-icon"></i> Prix spécial
-           </label>
-           <input type="text" class="form-control" id="special_price" name="special_price" placeholder="Entrez le prix spécial du produit" required>
-       </div>
-       
-       <div class="mb-3">
-           <label for="type" class="form-label">
-               <i class="typcn typcn-th-large-outline menu-icon"></i> Type
-           </label>
-           <select class="form-select" id="type" name="type" required>
-               <option value="">Sélectionnez le type</option>
-               <option value="M">Télévision</option>
-               <option value="F">Ordinateur</option>
-           </select>
-       </div>
-       
-       <div class="mb-3">
-           <label for="description" class="form-label">
-               <i class="typcn typcn-document-text menu-icon"></i> Description
-           </label>
-           <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
-       </div> 
+                       <label for="nom" class="form-label">
+                       <i class="typcn typcn-tag menu-icon"></i>ID exmplaire
+                       </label>
+                       <input type="text" class="form-control" id="id_exmplaire" name = "id_exmplaire" readonly> 
+                   </div>
+                    <div class="mb-3">
+                       <label for="code_barre" class="form-label">
+                           <i class="typcn typcn-credit-card menu-icon"></i> Code barre
+                       </label>
+                       <input type="text" class="form-control" id="code_bar" name="code_bar"  placeholder="Entrez le code barre du produit" required maxlength="13" autofocus>
+                   </div>
+                   <div class="mb-3">
+                        <label for="type" class="form-label">
+                        <i class="typcn typcn-th-large-outline menu-icon"></i>Nom du produit
+                        </label>
+                        <select class="form-select" id="nom_produit" name = "nom_produit" onchange = "updateProduitId()" required>
+                            <option value="">Sélectionnez le produit</option>
+                            <?php
+                                 if ($result2->num_rows > 0) {
+                                     while ($row = $result2->fetch_assoc()) {
+                                         echo "<option value='" . $row['id_produit'] . "' data-id_produit='" . $row['id_produit'] . "'>" . $row['nom_produit'] . "</option>";
+                                     }
+                                 } else {
+                                     echo "<option value=''>Aucun produit disponible</option>";
+                                 }
+                                 ?>
+                        </select>
+                   </div>
+                   <div class="mb-3">
+                        <label for="nom" class="form-label">
+                        <i class="typcn typcn-tag menu-icon"></i>ID produit
+                        </label>
+                        <input type="text" class="form-control" id="id_produit" name = "id_produit" readonly> 
+                    </div>
+                   <div class="mb-3">
+                       <label for="original_price" class="form-label">
+                           <i class="typcn typcn-tag menu-icon"></i> Prix original
+                       </label>
+                       <input type="text" class="form-control" id="original_price" name="original_price" placeholder="Entrez le prix original du produit" required>
+                   </div>
+                   
+                   <div class="mb-3">
+                       <label for="special_price" class="form-label">
+                           <i class="typcn typcn-star menu-icon"></i> Prix spécial
+                       </label>
+                       <input type="text" class="form-control" id="special_price" name="special_price" placeholder="Entrez le prix spécial du produit" required>
+                   </div>
                         <div class="d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 <i class="fas fa-times-circle me-2"></i> Annuler
@@ -217,6 +243,205 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
+  <?php
+  
+  if (isset($_POST["enregistrer"])) {
+      $code_bar = $_POST["code_bar"];
+      $nom_produit = $_POST["nom_produit"];
+      $id_produit = $_POST["id_produit"];
+      $original_price = $_POST["original_price"];
+      $special_price = $_POST["special_price"];
+      $conn = getConnection();
+      
+      if (!$conn) {
+          die("Échec de la connexion à la base de données !");
+      }
 
+      //Vérifier si le code-barres existe déjà
+    //   $check_sql = "SELECT COUNT(*) FROM produits WHERE code_bar = ?";
+    //   $stmt = $conn->prepare($check_sql);
+    //   $stmt->bind_param("s", $code_bar);
+    //   $stmt->execute();
+    //   $stmt->bind_result($count);
+    //   $stmt->fetch();
+    //   $stmt->close();
+  
+    //   if ($count > 0) {
+        //   echo "<script>alert('Ce code-barres existe déjà !'); window.history.back();</script>";
+        //   exit();
+    //   }
+     
+      $sql = "INSERT INTO exemplaire (code_bar, nom_produit, original_price, special_price, id_produit) VALUES (?, ?, ?, ?, ?)";
+      $result = $conn->prepare($sql);
+      if (!$result) {
+       die("Erreur lors de la préparation de la requête: " . $conn->error);
+   }    
+      if ($result) {
+         
+          $result->bind_param("ssiii", $code_bar, $nom_produit, $original_price,  $special_price, $id_produit);
+          if ($result->execute()) {
+              $_SESSION["code_bar"] = $code_bar;
+              $_SESSION["nom_produit"] = $nom_produit;
+              $_SESSION["original_price"] = $original_price;
+              $_SESSION["special_price"] = $special_price;
+              $_SESSION["id_produit"] = $id_produit;
+              header("Location: ../../pages/samples/succes.php");
+              exit();
+          } else {
+              // En cas d'erreur
+              header("Location: ../../pages/samples/error-500.php");
+              exit();
+          }
+          $result->close(); 
+      } else {
+          die("Erreur lors de la préparation de la requête.");
+      }
+      $conn->close(); 
+  }
+?>
+
+<script>
+
+$(document).ready(function () {
+
+    $('#btnAddProduit').click(function () {
+
+        $('#ajoutProduitForm')[0].reset();
+        $('#id_produit').parent().hide(); 
+        $('#id_produit').val(''); 
+
+        // Changer l'affichage des boutons
+        $('#saveButton').removeClass('d-none');
+        $('#updateButton').addClass('d-none'); 
+
+        // Afficher le modal
+        $('#addProduitModal').modal('show');
+   });
+})
+
+$(document).on('click', '.btnEdit', function(){
+    var id_produit = $(this).attr('id');
+    // alert(id_produit);
+    console.log('Envoi de la requête AJAX... ID:', id_produit);
+    $.ajax({
+        url: 'TraitementProd.php',
+        type: 'POST',
+        data: {
+            id_produit: id_produit,
+            action: 'editProduit'
+        },
+        success: function(response) {
+            console.log("Réponse du serveur :", response);
+
+            try {
+                const data = JSON.parse(response);
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    $('#id_produit').val(data.id_produit).prop('readonly', true);
+                    $('#nom_cat').val(data.id_categorie);
+                    $('#id_categorie').val(data.id_categorie).prop('readonly', true);
+                    $('#nom_produit').val(data.nom_produit);
+                    $('#nbre_exemp').val(data.nbre_exemp);
+                    $('#description').val(data.description);
+                    // $('#addProduitModalLabel').html("Modifier un produit");
+
+                    $('#updateButton').removeClass('d-none');
+                    $('#saveButton').addClass('d-none');
+
+                    $('#addProduitModal').removeAttr('aria-hidden');
+                    $('#addProduitModal').modal('show'); 
+                }
+            } catch (e) {
+                console.error("Erreur JSON :", e);
+                console.log("Réponse brute du serveur :", response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur AJAX :", status, error);
+        }
+    });
+});
+
+// evenement applique sur le bouton ajoutProduit
+
+$('#updateButton').click(function() {
+    var id_produit = $('#id_produit').val(); // Récupérer l'ID du produit
+    var categorie = $('#nom_cat').val();
+    var id_categorie = $('#id_categorie').val();
+    var nom_produit = $('#nom_produit').val();
+    var nbre_exemp = $('#nbre_exemp').val();
+    var description = $('#description').val();
+
+    // Envoi de la requête Ajax pour mettre à jour le produit
+    if (confirm("Êtes-vous sûr de vouloir modifier ce produit ?")) {
+    $.ajax({
+        url: 'TraitementProd.php',
+        type: 'POST',
+        data: {
+            id_produit: id_produit,
+            categorie: categorie,
+            id_categorie: id_categorie,
+            nom_produit: nom_produit,
+            nbre_exemp: nbre_exemp,
+            description: description,
+            action: 'updateProduit'
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                alert(data.message); 
+                $('#addProduitModal').modal('hide'); // Fermer le modal
+                location.reload(); // Recharger la page pour voir les changements
+            } else {
+                alert(data.message); // Afficher l'erreur
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur lors de la mise à jour du produit :", status, error);
+            alert("Une erreur est survenue lors de la mise à jour du produit.");
+        }
+    });
+    }
+});
+//suppression d'un produit
+
+$('#openAddCategorieModal').click(function(){
+    $('#resetButton').click();
+    updateBtn = document.getElementById('updateButton');
+    saveBtn = document.getElementById('saveButton');
+    saveBtn.classList.remove('d-none');
+    updateBtn.classList.add('d-none');
+});
+
+$(document).on('click', '.btnDel', function(){
+    var id_produit = $(this).attr('id');
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+        $.ajax({
+            url: 'TraitementProd.php',
+            type: 'POST',
+            data: {
+                id_produit: id_produit,
+                action: 'deleteProduit'
+            },
+            dataType: 'json',
+            success: function(data){
+                alert(data.message);
+                if (data.succes) {
+                    location.reload();
+                }
+            },
+            error: function(){
+                alert("Une erreur est survenue lors de la suppression !");
+                console.error("Erreur lors de la suppression du produit.");
+            }
+        });
+    }
+});
+
+
+</script>
+</body>
 </html>
