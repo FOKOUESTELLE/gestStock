@@ -1,7 +1,12 @@
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
-
+require_once '../Fonctions/db_connection.php';
+$sql = "SELECT * FROM fournisseur";
+$conn = getConnection();
+$result = $conn -> query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +37,7 @@ require_once '../Nav/sidebar.php';
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-group-outline"></i>Fournnisseur</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <button class="btn btn-add btn-success rounded-5 shadow" id = "btnAddFourn" data-bs-toggle="modal" data-bs-target="#addFournModal">
             <i class="typcn typcn-user-add"></i> Ajouter Fournisseur 
 
             </button>
@@ -43,26 +48,34 @@ require_once '../Nav/sidebar.php';
                 <table class="table table-striped table-hover table-bordered rounded-3 align-middle mt-4">
                     <thead class="table-primary">
                         <tr class="text-center fw-bold">
-                        <th scope="col"><i class="typcn typcn-pencil menu-icon fs-3"></i> Code</th>
+                        <th scope="col"><i class="typcn typcn-pencil menu-icon fs-3"></i> ID fournisseur</th>
                         <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i> Nom</th>
-                        <th scope="col"><i class="typcn typcn-phone menu-icon fs-3"></i> Email</th>
+                        <th scope="col"><i class="typcn typcn-mail menu-icon fs-3"></i> Email
                         <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
 
-                    </tr>
                     </thead>
 
                         <tbody id="clientsList">
-                                 
-                          <td></td>
-                          <td></td>
-                          <td></td>
-                          <td class='text-center'>
-
-                         <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
-                         <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                           <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
-                        </td>
-                                    </tr>
+                                <?php
+                                    if($result -> num_rows >0){
+                                        While($row = $result->fetch_assoc()){
+                               ?>
+                        <tr>
+                            <td><?=$row["id_fourn"]?></td>
+                            <td><?=$row["nom_fourn"]?></td>
+                            <td><?=$row["email"]?></td>
+                            <td class='text-center'>
+                              <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_fourn"]?>" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
+                                <button class="btn btn-danger rounded btnDel" id="<?= $row["id_fourn"]?>" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
+                             </td>
+                            </tr>
+                            <?php
+                               }
+                           }
+                           else{
+                               echo "<tr><td colspan='6' style='text-align:center;'>Aucun fournisseur trouvé</td></tr>";
+                           }
+                          ?>
 
                         </tbody>
                     </table>
@@ -91,28 +104,28 @@ require_once '../Nav/sidebar.php';
 
    
     <!-- Modal pour ajouter un produit -->
-    <div class="modal fade" id="addStudentModal" tabindex="-1" aria-labelledby="addStudentModalLabel" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal fade" id="addFournModal" tabindex="-1" aria-labelledby="addFournModalLabel" data-bs-backdrop="static" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content rounded-3 shadow">
                 <div class="modal-header bg-dark-subtle">
-                    <h5 class="modal-title text-success" id="addStudentModalLabel"><i class="typcn typcn-user-add"></i>Ajouter un Fournisseur <i class="fas fa-plus-circle"></i></h5>
+                    <h5 class="modal-title text-success" id="addFournModalLabel"><i class="typcn typcn-user-add"></i>Ajouter un Fournisseur <i class="fas fa-plus-circle"></i></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times text-danger"></i>
+                    <i class="typcn typcn-times text-danger"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                <div class="mb-3">
+                <form id="ajoutFournForm" method = "post" action ="">
+                    <div class="mb-3">
                         <label for="matricule" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Code
+                        <i class="typcn typcn-key menu-icon fs-3"></i> ID Fournisseur
                         </label>
-                        <input type="text" class="form-control" id="code_fourn" name = "code_fourn" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques."> 
-                        <small class="form-text text-muted">Par exemple : A12345</small>
+                        <input type="text" class="form-control" id="id_fourn" name = "id_fourn" required readonly> 
                     </div>
                     <div class="mb-3">
                         <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nom
+                        <i class="typcn typcn-tag menu-icon"></i> Nom du fournisseur
                         </label>
-                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du fournisseur" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                        <input type="text" class="form-control" id="nom_fourn" name = "nom_fourn" placeholder="Entrez le nom du fournisseur" required title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">
@@ -210,6 +223,174 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+  <?php
+  
+  if (isset($_POST["enregistrer"])) {
+      $nom_fourn = $_POST["nom_fourn"];
+      $email = $_POST["email"];
+      $conn = getConnection();
+      
+      if (!$conn) {
+          die("Échec de la connexion à la base de données !");
+      }
+      $sql = "INSERT INTO fournisseur (nom_fourn, email) VALUES (?, ?)";
+      $result = $conn->prepare($sql);
+      if (!$result) {
+       die("Erreur lors de la préparation de la requête: " . $conn->error);
+   }    
+      if ($result) {
+         
+          $result->bind_param("ss", $nom_fourn, $email);
+          if ($result->execute()) {
+              $_SESSION["nom_fourn"] = $nom_fourn;
+              $_SESSION["email"] = $email;
+              header("Location: ../../pages/samples/succes.php");
+              exit();
+          } else {
+              // En cas d'erreur
+              header("Location: ../../pages/samples/error-500.php");
+              exit();
+          }
+          $result->close(); 
+      } else {
+          die("Erreur lors de la préparation de la requête.");
+      }
+      $conn->close(); 
+  }
+?>
+
+<script>
+
+$(document).ready(function () {
+
+    $('#btnAddFourn').click(function () {
+
+        $('#ajoutFournForm')[0].reset();
+        $('#id_fourn').parent().hide(); 
+        $('#id_fourn').val(''); 
+
+        // Changer l'affichage des boutons
+        $('#saveButton').removeClass('d-none');
+        $('#updateButton').addClass('d-none'); 
+
+        // Afficher le modal
+        $('#addFournModal').modal('show');
+   });
+})
+
+$(document).on('click', '.btnEdit', function(){
+    var id_fourn = $(this).attr('id');
+    //alert(id_fourn);
+    console.log('Envoi de la requête AJAX... ID:', id_fourn);
+    $.ajax({
+        url: 'TraitementFourn.php',
+        type: 'POST',
+        data: {
+            id_fourn: id_fourn,
+            action: 'editFourn'
+        },
+        success: function(response) {
+            console.log("Réponse du serveur :", response);
+
+            try {
+                const data = JSON.parse(response);
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    $('#id_fourn').val(data.id_fourn).prop('readonly', true);
+                    $('#nom_fourn').val(data.nom_fourn).prop('readonly', true);
+                    $('#email').val(data.email);
+
+                    $('#updateButton').removeClass('d-none');
+                    $('#saveButton').addClass('d-none');
+
+                    $('#addFournModal').removeAttr('aria-hidden');
+                    $('#addFournModal').modal('show'); 
+                }
+            } catch (e) {
+                console.error("Erreur JSON :", e);
+                console.log("Réponse brute du serveur :", response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur AJAX :", status, error);
+        }
+    });
+});
+
+$('#updateButton').click(function() {
+    var id_fourn = $('#id_fourn').val();
+    var nom_fourn = $('#nom_fourn').val();
+    var email = $('#email').val();
+
+    if (confirm("Êtes-vous sûr de vouloir modifier ce fournisseur ?")) {
+    $.ajax({
+        url: 'TraitementFourn.php',
+        type: 'POST',
+        data: {
+            id_fourn: id_fourn,
+            nom_fourn: nom_fourn,
+            email: email,
+            action: 'updateFourn'
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                alert(data.message); 
+                $('#addFournModal').modal('hide');
+                location.reload(); 
+            } else {
+                alert(data.message); 
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur lors de la mise à jour du fournisseur :", status, error);
+            alert("Une erreur est survenue lors de la mise à jour du fournisseur.");
+        }
+    });
+    }
+});
+//suppression d'un produit
+
+$('#openAddFournModal').click(function(){
+    $('#resetButton').click();
+    updateBtn = document.getElementById('updateButton');
+    saveBtn = document.getElementById('saveButton');
+    saveBtn.classList.remove('d-none');
+    updateBtn.classList.add('d-none');
+});
+
+$(document).on('click', '.btnDel', function(){
+    var id_exemplaire = $(this).attr('id');
+    alert (id_exemplaire);
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet exemplaire ?")) {
+        $.ajax({
+            url: 'TraitementExemp.php',
+            type: 'POST',
+            data: {
+                id_exemplaire: id_exemplaire,
+                action: 'deleteExemp'
+            },
+            dataType: 'json',
+            success: function(data){
+                alert(data.message);
+                if (data.success) {
+                    location.reload();
+                }
+            },
+            error: function(){
+                alert("Une erreur est survenue lors de la suppression !");
+                console.error("Erreur lors de la suppression de exemplaire.");
+            }
+        });
+    }
+});
+
+
+</script>
+
+</body>
 </html>

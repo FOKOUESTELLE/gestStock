@@ -124,7 +124,7 @@
             </div>
         </div>
     </div>
-
+ 
    
     <!-- Modal pour ajouter un produit -->
     <div class="modal fade" id="addExemplaireModal" tabindex="-1" aria-labelledby="addExemplaireModalLabel" data-bs-backdrop="static" aria-hidden="true">
@@ -297,6 +297,25 @@
       $conn->close(); 
   }
 ?>
+<?php
+    // $searchQuery = "";
+    // if (isset($_SESSION['search'])) {
+        // $searchQuery = $_SESSION['search'];
+    // }
+// 
+    // $conn = getConnection();
+// 
+// 
+    // if ($searchQuery != "") {
+        // $query = "SELECT * FROM exemplaire WHERE id_exemplaire LIKE ? OR code_bar LIKE ? OR nom_produit LIKE ? OR id_produit LIKE ? OR original_price LIKE ? OR special_price LIKE ?";
+        // $stmt = $conn->prepare($query);
+        // $searchTerm = "%" . $searchQuery . "%";  
+        // $stmt->bind_param("issiii", $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm, $searchTerm);
+    // } else {
+        // $query = "SELECT * FROM exemplaire";
+        // $stmt = $conn->prepare($query);
+    // }
+?>
 
 <script>
 
@@ -442,5 +461,8 @@ $(document).on('click', '.btnDel', function(){
 
 
 </script>
+
+
 </body>
 </html>
+

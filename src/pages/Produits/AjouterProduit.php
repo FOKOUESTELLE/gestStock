@@ -77,12 +77,6 @@ $result = $conn->query($sql);
                         </label>
                         <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required title="Veuillez entrer un nom valide.">
                     </div>
-                    <div class="mb-3">
-                        <label for="qte" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nombre d'exemplaire
-                        </label>
-                        <input type="number" class="form-control" id="nbre_exemp" name = "nbre_exemp" required> 
-                    </div>        
                     
                     <div class="mb-3">
                         <label for="description" class="form-label">
@@ -155,19 +149,18 @@ $result = $conn->query($sql);
        }
       
        // Utiliser une requête préparée pour éviter l'injection SQL
-       $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, nbre_exemp, description) VALUES (?, ?, ?, ?, ?)";
+       $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, description) VALUES (?, ?, ?, ?)";
        $result = $conn->prepare($sql);
        if (!$result) {
         die("Erreur lors de la préparation de la requête: " . $conn->error);
     }    
        if ($result) {
           
-           $result->bind_param("sisis", $categorie, $id_categorie, $nom,  $nbre_exemp, $description);
+           $result->bind_param("siss", $categorie, $id_categorie, $nom, $description);
            if ($result->execute()) {
                $_SESSION["categorie"] = $categorie;
                $_SESSION["id_categorie"] = $id_categorie;
                $_SESSION["nom"] = $nom;
-               $_SESSION["nbre_exemp"] = $nbre_exemp;
                $_SESSION["description"] = $description;
                header("Location: ../../pages/samples/succes.php");
                exit();

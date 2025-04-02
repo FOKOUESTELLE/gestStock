@@ -1,22 +1,17 @@
 <?php
     include_once '../Fonctions/db_connection.php';
 
-    // Activer le mode debug pour afficher les erreurs PHP
-    // error_reporting(E_ALL);
-    // ini_set('display_errors', 1);
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $conn = getConnection();
         $action = $_POST['action'];
 
         switch ($action) {
-            case 'editProduit':
-                $id_produit = intval($_POST['id_produit']);
+            case 'editFourn':
+                $id_fourn = intval($_POST['id_fourn']);
 
-                $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.description
-                        FROM produits P, categorie C WHERE P.id_categorie = C.id_categorie AND P.id_produit = ?";
+                $sql = "SELECT* FROM fournisseur";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $id_produit);
+                $stmt->bind_param("i", $id_exemplaire);
                 $stmt->execute();
                 $result = $stmt->get_result();
 
@@ -24,25 +19,27 @@
                     $data = $result->fetch_assoc();
                     echo json_encode($data);
                 } else {
-                    echo json_encode(['error' => 'Aucun produit trouvé pour cet ID']);
+                    echo json_encode(['error' => 'Aucun exemplaire trouvé pour cet ID']);
                 }
                 break;
-                case 'updateProduit':
-                    $id_produit = $_POST['id_produit']; 
-                    $id_categorie = $_POST['id_categorie'];  
+                case 'updateExemp':
+                    $id_exemplaire = $_POST['id_exemplaire']; 
+                    $code_bar = $_POST['code_bar'];  
                     $nom_produit = $_POST['nom_produit'];
-                    $description = $_POST['description'];
+                    $original_price = $_POST['original_price'];
+                    $special_price = $_POST['special_price'];
+                    $id_produit = $_POST['id_produit'];
                 
                     // Correction de la requête
-                    $sql = "UPDATE produits 
-                            SET nom_produit = ?, description = ?, id_categorie = ? 
-                            WHERE id_produit = ?";
+                    $sql = "UPDATE exemplaire 
+                            SET nom_produit = ?, original_price = ?, special_price = ?, id_produit = ? 
+                            WHERE id_exemplaire = ?";
                 
                     $conn = getConnection();
                     $result = $conn->prepare($sql);
                 
                     // Correction des types et du nombre de paramètres
-                    $result->bind_param("ssii", $nom_produit, $description, $id_categorie, $id_produit);
+                    $result->bind_param("siiii", $nom_produit, $original_price, $special_price, $id_produit, $id_exemplaire);
                 
                     if ($result->execute()) {
                         $response = array(
@@ -57,25 +54,23 @@
                     }
                 
                     echo json_encode($response);
-                    break;
-                
-                
+                    break; 
 
-                    case 'deleteProduit':
+                    case 'deleteExemp':
 
-                        $id_produit = $_POST['id_produit'];
-                        $sql =  "DELETE FROM produits WHERE id_produit = ?";
+                        $id_exemplaire = $_POST['id_exemplaire'];
+                        $sql = "DELETE FROM exemplaire WHERE id_exemplaire = ?";
                         $conn = getConnection();
                         $result = $conn -> prepare($sql);
-                        $result -> bind_param("i", $id_produit);
+                        $result -> bind_param("i", $id_exemplaire);
                         if($result->execute()){
                             $response = array(
-                                'succes' => true,
+                                'success' => true,
                                 'message' => 'Supression effectuee'
                             );
                         }else{
                             $response = array(
-                                'succes' => false,
+                                'success' => false,
                                 'message' => 'Echec de la Supression'
                             );
 

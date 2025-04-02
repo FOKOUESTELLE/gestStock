@@ -1,4 +1,9 @@
-
+<?php
+// session_start();  // Démarre la session pour pouvoir utiliser $_SESSION
+// if (isset($_POST['search'])) {
+    // $_SESSION['search'] = $_POST['search'];
+// }
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,10 +58,17 @@
        </ul>
        <ul class="navbar-nav navbar-nav-right">
          <li class="nav-item nav-date dropdown">
-           <a class="nav-link d-flex justify-content-center align-items-center" href="javascript:;">
-             <h6 class="date mb-0">Today : Mar 23</h6>
-             <i class="typcn typcn-calendar"></i>
-           </a>
+             <form method="POST" class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="search" placeholder="Rechercher par nom, prénom, email, etc." value="<?= isset($_POST['search']) ? htmlspecialchars($_POST['search']) : '' ?>" />
+                    <button class="btn btn-primary" type="submit">
+                    <i class="typcn typcn-zoom"></i>
+
+
+                    </button>
+                </div>
+            </form>
+
          </li>
          <li class="nav-item dropdown">
            <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center" id="messageDropdown" href="#" data-bs-toggle="dropdown">

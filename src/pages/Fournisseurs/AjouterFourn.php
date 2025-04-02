@@ -1,8 +1,10 @@
 
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
-
+require_once '../Fonctions/db_connection.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,18 +28,18 @@ require_once '../Nav/sidebar.php';
             </div>
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutClientForm" method = "POST" action ="">
-                    <div class="mb-3">
-                        <label for="matricule" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Code
-                        </label>
-                        <input type="text" class="form-control" id="code_fourn" name = "code_fourn" placeholder="Entrez le code" required maxlength="6" pattern="[A-Za-z0-9]{1,6}" title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                        <small class="form-text text-muted">Par exemple : A12345</small>
-                    </div>
+                    <!-- <div class="mb-3"> -->
+                        <!-- <label for="matricule" class="form-label"> -->
+                        <!-- <i class="typcn typcn-tag menu-icon"></i> Code -->
+                        <!-- </label> -->
+                        <!-- <input type="text" class="form-control" id="code_fourn" name = "code_fourn" placeholder="Entrez le code" required title="Le code doit contenir 1 à 6 caractères alphanumériques."> -->
+                        <!-- <small class="form-text text-muted">Par exemple : A12345</small> -->
+                    <!-- </div> -->
                     <div class="mb-3">
                         <label for="nom" class="form-label">
-                        <i class="typcn typcn-tag menu-icon"></i> Nom
+                        <i class="typcn typcn-tag menu-icon"></i> Nom du fournisseur
                         </label>
-                        <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
+                        <input type="text" class="form-control" id="nom_fourn" name = "nom_fourn" placeholder="Entrez le nom du produit" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide.">
                     </div>
                     <div class="mb-3">
                     <label for="email" class="form-label">
@@ -95,6 +97,43 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
+  <?php
+  
+  if (isset($_POST["enregistrer"])) {
+      $nom_fourn = $_POST["nom_fourn"];
+      $email = $_POST["email"];
+      $conn = getConnection();
+      
+      if (!$conn) {
+          die("Échec de la connexion à la base de données !");
+      }
+      $sql = "INSERT INTO fournisseur (nom_fourn, email) VALUES (?, ?)";
+      $result = $conn->prepare($sql);
+      if (!$result) {
+       die("Erreur lors de la préparation de la requête: " . $conn->error);
+   }    
+      if ($result) {
+         
+          $result->bind_param("ss", $nom_fourn, $email);
+          if ($result->execute()) {
+              $_SESSION["nom_fourn"] = $nom_fourn;
+              $_SESSION["email"] = $email;
+              header("Location: ../../pages/samples/succes.php");
+              exit();
+          } else {
+              // En cas d'erreur
+              header("Location: ../../pages/samples/error-500.php");
+              exit();
+          }
+          $result->close(); 
+      } else {
+          die("Erreur lors de la préparation de la requête.");
+      }
+      $conn->close(); 
+  }
+?>
+
+
 </body>
 
 </html>
