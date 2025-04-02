@@ -138,8 +138,6 @@
                 </div>
                 <div class="modal-body">
                     <form id="ajoutExemplaireForm" method = "post" action ="">
-                    <button id="startScan">Scanner un code-barres</button>
-                    <video id="scanner" style="width: 300px; height: 200px; display: none;"></video>
                     <div class="mb-3">
                        <label for="nom" class="form-label">
                        <i class="typcn typcn-tag menu-icon"></i>ID exemplaire

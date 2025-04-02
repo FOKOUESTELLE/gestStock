@@ -59,25 +59,23 @@
                     }
                 
                     echo json_encode($response);
-                    break;
-                
-                
+                    break; 
 
-                    case 'deleteExem':
+                    case 'deleteExemp':
 
-                        $id_produit = $_POST['id_produit'];
-                        $sql =  "DELETE FROM produits WHERE id_produit = ?";
+                        $id_exemplaire = $_POST['id_exemplaire'];
+                        $sql = "DELETE FROM exemplaire WHERE id_exemplaire = ?";
                         $conn = getConnection();
                         $result = $conn -> prepare($sql);
-                        $result -> bind_param("i", $id_produit);
+                        $result -> bind_param("i", $id_exemplaire);
                         if($result->execute()){
                             $response = array(
-                                'succes' => true,
+                                'success' => true,
                                 'message' => 'Supression effectuee'
                             );
                         }else{
                             $response = array(
-                                'succes' => false,
+                                'success' => false,
                                 'message' => 'Echec de la Supression'
                             );
 

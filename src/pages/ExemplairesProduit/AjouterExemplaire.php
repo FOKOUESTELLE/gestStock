@@ -18,7 +18,7 @@ $result = $conn->query($sql);
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>AjouterExemplaire</title>
   <link rel = "stylesheet" href = "StyleScanner.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+  <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
   <script>
      // Fonction pour mettre à jour le champ id_produit en fonction du produit sélectionné
      function updateProduitId() {
@@ -43,14 +43,16 @@ $result = $conn->query($sql);
             </div>
             <div class="card-body shadow">
                 <form  enctype="multipart/form-data" id="ajoutProduitForm" method = "POST" action ="">
+                <div class="mb-3">
+                    <video id = "preview" width = "400 px"></video>
+                </div>
 
                     <div class="mb-3">
-                    <button id="startScan">Scanner un code-barres</button>
-                    <video id="scanner" style="width: 300px; height: 200px; display: none;"></video>
                         <label for="code_barre" class="form-label">
                             <i class="typcn typcn-credit-card menu-icon"></i> Code barre
                         </label>
                         <input type="text" class="form-control" id="code_bar" name="code_bar"  placeholder="Entrez le code barre du produit" required maxlength="13" autofocus>
+                        <p id="scan_status"></p>
                     </div>
                     <div class="mb-3">
                          <label for="type" class="form-label">
@@ -164,19 +166,19 @@ $result = $conn->query($sql);
       }
 
       // Vérifier si le code-barres existe déjà
-      $check_sql = "SELECT COUNT(*) FROM produits WHERE code_bar = ?";
-      $stmt = $conn->prepare($check_sql);
-      $stmt->bind_param("s", $code_bar);
-      $stmt->execute();
-      $stmt->bind_result($count);
-      $stmt->fetch();
-      $stmt->close();
+    //   $check_sql = "SELECT COUNT(*) FROM produits WHERE code_bar = ?";
+    //   $stmt = $conn->prepare($check_sql);
+    //   $stmt->bind_param("s", $code_bar);
+    //   $stmt->execute();
+    //   $stmt->bind_result($count);
+    //   $stmt->fetch();
+    //   $stmt->close();
   
-      if ($count > 0) {
-          echo "<script>alert('Ce code-barres existe déjà !'); window.history.back();</script>";
-          exit();
-      }
-     
+    //   if ($count > 0) {
+        //   echo "<script>alert('Ce code-barres existe déjà !'); window.history.back();</script>";
+        //   exit();
+    //   }
+    //  
       $sql = "INSERT INTO exemplaire (code_bar, nom_produit, original_price, special_price, id_produit) VALUES (?, ?, ?, ?, ?)";
       $result = $conn->prepare($sql);
       if (!$result) {
@@ -205,53 +207,45 @@ $result = $conn->query($sql);
       $conn->close(); 
   }
 ?>
- <script>
-        document.getElementById("startScan").addEventListener("click", function() {
-            let scanner = document.getElementById("scanner");
-            scanner.style.display = "block"; // Afficher la vidéo
-            navigator.mediaDevices.getUserMedia({ video: true })
-        .then(function(stream) {
-            scanner.srcObject = stream; // Attacher le flux vidéo à la balise <video>
-            scanner.play(); // Démarrer la lecture vidéo
-            console.log("Caméra démarrée avec succès");
-        })
-        .catch(function(err) {
-            console.error("Erreur d'accès à la caméra : ", err);
-        });
 
-                Quagga.init({
-        inputStream: {
-            name: "Live",
-                    type: "LiveStream",
-                    constraints: {
-                        width: 400,
-                        height: 300,
-                        facingMode: "environment" // Utilise la caméra arrière sur mobile
-                    },
-                    target: scanner, // Le canevas utilisé pour afficher la vidéo
-                    willReadFrequently: true  // Ajouter cette ligne pour améliorer les performances
-                },
-                decoder: {
-                    readers: ["ean_reader"] // Supporte EAN-13
-                }
-            }, function(err) {
-                if (!err) {
-                    Quagga.start(); // Commencer à scanner
+
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+
+            // Récupération des caméras disponibles
+            Instascan.Camera.getCameras().then(function(cameras) {
+                console.log("Caméras détectées:", cameras);
+
+                if (cameras.length > 0) {
+                    // Si la caméra est disponible, démarrer le scanner
+                    scanner.start(cameras[0]);
                 } else {
-                    console.error("Erreur Quagga: ", err);
+                    alert('Aucune caméra trouvée');
                 }
+            }).catch(function(e) {
+                console.error('Erreur d’accès à la caméra:', e);
             });
 
-        });
-        Quagga.onDetected(function(result) {
-    var codeBarre = result.codeResult.code; // Le code-barres détecté
-    document.getElementById("code_bar").value = codeBarre; // Affiche le code-barres dans le champ du formulaire
-    alert("Code-barres détecté : " + codeBarre); // Affiche une alerte avec le code-barres détecté
-    Quagga.stop(); // Arrête l'analyse après la détection
-    scanner.style.display = "none"; // Cache la caméra après la détection
-});
+            // Ajouter un écouteur pour l'événement "scan"
+            scanner.addListener('scan', function(content) {
+                // Affiche le code scanné dans la console
+                console.log("Code scanné : ", content);
 
+                // Affiche le contenu scanné dans le champ "code_bar"
+                document.getElementById('code_bar').value = content;
+
+                // Affiche un message de confirmation sous le champ de texte
+                document.getElementById('scan_status').textContent = "Code scanné avec succès : " + content;
+
+                // Annonce vocale du code scanné
+                const utterance = new SpeechSynthesisUtterance("Le code scanné est : " + content);
+                utterance.lang = "fr-FR";  // Choisir la langue (ici français)
+                speechSynthesis.speak(utterance);
+            });
+        });
     </script>
 
-</body>
+ </body>
 </html>
+
