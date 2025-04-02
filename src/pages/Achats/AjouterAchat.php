@@ -25,33 +25,16 @@ require_once '../Nav/sidebar.php';
             </div>
             <div class="card-body shadow">
             <form enctype="multipart/form-data" id="ajoutAchatForm" method="POST" action="">
-                 <!-- Code achat -->
-                 <div class="mb-3">
-                     <label for="code_client" class="form-label">
-                         <i class="typcn typcn-tag"></i> Code
-                     </label>
-                     <input type="text" class="form-control" id="code_achat" name="code_achat" 
-                            placeholder="Entrez le code" required maxlength="6" 
-                            pattern="[A-Za-z0-9]{1,6}" 
-                            title="Le code doit contenir 1 à 6 caractères alphanumériques.">
-                     <small class="form-text text-muted">
-                         <i class="typcn typcn-info-large"></i> Par exemple : A12345
-                     </small>
-                 </div>
-
-                 <!-- Type d'Achat -->
                  <div class="mb-3">
                      <label for="type_achat" class="form-label">
-                         <i class="typcn typcn-th-large-outline"></i> Type
+                         <i class="typcn typcn-th-large-outline"></i> Type Achat
                      </label>
                      <select class="form-select" id="type_achat" name="type_achat" required>
-                         <option value="">Sélectionnez le type</option>
+                         <option value="">Sélectionnez le type de l'achat</option>
                          <option value="M">Local</option>
                          <option value="F">Import</option>
                      </select>
                  </div>
-
-                               <!-- Raison de l'Achat -->
                   <div class="mb-3">
                       <label for="raison_achat" class="form-label">
                           <i class="typcn typcn-lightbulb"></i> Raison de l'Achat
@@ -92,16 +75,9 @@ require_once '../Nav/sidebar.php';
 
         <!-- content-wrapper ends -->
         <!-- partial:../../partials/_footer.html -->
-        <footer class="footer">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" class="text-muted" target="_blank">Bootstrapdash</a>. All rights reserved.</span>
-                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">Hand-crafted & made with <i class="typcn typcn-heart-full-outline text-danger"></i></span>
-                    </div>
-                </div>    
-            </div>        
-        </footer>
+        <?php
+            require_once '../Nav/footer.php';
+        ?> 
         <!-- partial -->
       </div>
       <!-- main-panel ends -->

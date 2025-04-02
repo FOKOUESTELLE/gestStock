@@ -1,3 +1,15 @@
+<?php
+ session_start();
+ ob_start();
+ require_once 'pages/Fonctions/db_connection.php';
+ require 'pages/Fonctions/fonctions.php';
+ $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.prix_unitaire, P.description
+         FROM produits P, categorie C, exemplaire E WHERE P.id_categorie = C.id_categorie ";
+ $conn = getConnection();
+ $result = $conn -> query($sql);
+ $sql2 = "SELECT id_categorie, nom_cat FROM categorie";
+ $result2 = $conn->query($sql2);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,7 +30,17 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="assets/images/favicon.ico" />
   <!-- Lien vers Bootstrap CSS via CDN -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <script>
+     // Fonction pour mettre à jour le champ id_categorie en fonction de la categorie sélectionnée
+     function updateCategorieId() {
+       var categorieSelect = document.getElementById('nom_cat');
+       var categorieIdInput = document.getElementById('id_categorie');
+       // Récupérer l'ID de la categorie à partir de l'attribut data-id_categorie de l'option sélectionnée
+       var selectedOption =categorieSelect.options[categorieSelect.selectedIndex];
+      categorieIdInput.value = selectedOption.getAttribute('data-id_categorie');
+     }
+</script>
 
 </head>
 <body>
@@ -27,7 +49,7 @@
     <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
       <div class="navbar-brand-wrapper d-flex justify-content-center">
         <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
-          <a class="navbar-brand brand-logo" href="index.html"><img src="../../../assets/images/logo.svg" alt="logo"/></a>
+        <a class="navbar-brand brand-Logo1" href="index.php"><img src="assets/images/Logo1.jpeg" alt="logo" class="img-fluid w-102 w-sm-50"></a>
           <a class="navbar-brand brand-logo-mini" href="index.html"><img src="../../../assets/images/logo-mini.svg" alt="logo"/></a>
           <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
             <span class="typcn typcn-th-menu"></span>
@@ -203,31 +225,16 @@
       </div>
     </nav>
     <div class="container-fluid page-body-wrapper">      
-      <!-- partial:partials/_sidebar.html -->
-
+      <!-- partial:../../partials/_sidebar.html -->
       <nav class="sidebar sidebar-offcanvas mt-10" id="sidebar">
        
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link" href="../../index.html">
+            <a class="nav-link" href="../../index.php">
               <i class="typcn typcn-device-desktop menu-icon"></i>
               <span class="menu-title">Dashboard</span>
               <div class="badge badge-danger">new</div>
             </a>
-          </li>          
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-              <i class="typcn typcn-document-text menu-icon"></i>
-              <span class="menu-title">UI Elements</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="ui-basic">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/buttons.html">Buttons</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/dropdowns.html">Dropdowns</a></li>              
-                <li class="nav-item"> <a class="nav-link" href="../../pages/ui-features/typography.html">Typography</a></li>
-              </ul>
-            </div>
           </li>          
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
@@ -240,7 +247,7 @@
                 <li class="nav-item"><a class="nav-link" href="../../pages/forms/basic_elements.html">Basic Elements</a></li>                
               </ul>
             </div>
-          </li>          
+          </li>        
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
             <i class="typcn typcn-gift menu-icon"></i>
@@ -257,12 +264,12 @@
             </div>
           </li>
           <li class="nav-item">
-              <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
+              <a class="nav-link" data-bs-toggle="collapse" href="#gestion-categorie" aria-expanded="false" aria-controls="gestion-produits">
               <i class="typcn typcn-gift menu-icon"></i>
                 <span class="menu-title">Categories de Produits</span>
                 <i class="menu-arrow"></i>
               </a>
-              <div class="collapse" id="gestion-produits">
+              <div class="collapse" id="gestion-categorie">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item"> <a class="nav-link" href="pages/Categories/AjouterCatProd.php">Ajouter</a></li>
                   <li class="nav-item"> <a class="nav-link" href="pages/Categories/ListeCategories.php">Liste des categories</a></li>
@@ -277,8 +284,8 @@
              </a>
              <div class="collapse" id="gestion-clients">
                <ul class="nav flex-column sub-menu">
-                 <li class="nav-item"> <a class="nav-link" href="../../pages/Clients/AjouterClient.php">Ajouter</a></li>
-                 <li class="nav-item"> <a class="nav-link" href="../../pages/Clients/ListeClients.php">Liste des clients</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="pages/Clients/AjouterClient.php">Ajouter</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="pages/Clients/ListeClients.php">Liste des clients</a></li>
                </ul>
              </div>
         </li>
@@ -290,8 +297,8 @@
            </a>
            <div class="collapse" id="gestion-paiements">
              <ul class="nav flex-column sub-menu">
-               <li class="nav-item"> <a class="nav-link" href="../../pages/Paiements/AjouterPaiement.php">Ajouter</a></li>
-               <li class="nav-item"> <a class="nav-link" href="../../pages/Paiements/ListePaiements.php">Liste des paiements</a></li>
+               <li class="nav-item"> <a class="nav-link" href="pages/Paiements/AjouterPaiement.php">Ajouter</a></li>
+               <li class="nav-item"> <a class="nav-link" href="pages/Paiements/ListePaiements.php">Liste des paiements</a></li>
              </ul>
            </div>
       </li>
@@ -303,8 +310,8 @@
           </a>
           <div class="collapse" id="gestion-clients">
             <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="../../pages/Fournisseurs/AjouterFourn.php">Ajouter</a></li>
-              <li class="nav-item"> <a class="nav-link" href="../../pages/Fournisseurs/ListeFourns.php">Liste des fournisseurs</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/Fournisseurs/AjouterFourn.php">Ajouter</a></li>
+              <li class="nav-item"> <a class="nav-link" href="pages/Fournisseurs/ListeFourns.php">Liste des fournisseurs</a></li>
             </ul>
           </div>
         </li>
@@ -316,9 +323,9 @@
              </a>
              <div class="collapse" id="gestion-achats">
                <ul class="nav flex-column sub-menu">
-                 <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/AjouterAchat.php">Ajouter</a></li>
-                 <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/ListeAchats.php">Liste des achats</a></li>
-                 <li class="nav-item"> <a class="nav-link" href="../../pages/Achats/ListeProduitsAchetes.php">Liste des produits achetes</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="pages/Achats/AjouterAchat.php">Ajouter</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="pages/Achats/ListeAchats.php">Liste des achats</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="pages/Achats/ListeProduitsAchetes.php">Liste des produits achetes</a></li>
                  
 
                </ul>
@@ -326,19 +333,82 @@
              
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-commandes" aria-expanded="false" aria-controls="gestion-achats">
+            <a class="nav-link" data-bs-toggle="collapse" href="#gestion-commandes" aria-expanded="false" aria-controls="gestion-commandes">
              <i class="typcn typcn-shopping-bag menu-icon"></i>  
              <span class="menu-title">Gestion des commandes</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="gestion-commandes">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/Commandes/CreerCommande.php">Creer</a></li>
-                <li class="nav-item"> <a class="nav-link" href="../../pages/commandes/ListeCommandes.php">Liste des commandes</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/Commandes/CreerCommande.php">Creer</a></li>
+                <li class="nav-item"> <a class="nav-link" href="pages/commandes/ListeCommandes.php">Liste des commandes</a></li>
               </ul>
-            </div>
-            
+            </div>   
        </li>
+       <li class="nav-item">
+           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-roles" aria-expanded="false" aria-controls="gestion-roles">
+             <i class="typcn typcn-group-outline menu-icon"></i>
+             <span class="menu-title">Gestion des rôles</span>
+             <i class="menu-arrow"></i>
+           </a>
+           <div class="collapse" id="gestion-roles">
+             <ul class="nav flex-column sub-menu">
+               <li class="nav-item">
+                 <a class="nav-link" href="../../pages/Roles/AjouterRole.php">
+                   <i class="typcn typcn-user-add"></i> Ajouter
+                 </a>
+               </li>
+               <li class="nav-item">
+                 <a class="nav-link" href="../../pages/Roles/ListeRoles.php">
+                   <i class="typcn typcn-th-list"></i> Liste des rôles
+                 </a>
+               </li>     
+             </ul>
+           </div>
+        </li>
+        <li class="nav-item">
+           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-permissions" aria-expanded="false" aria-controls="gestion-permissions">
+               <i class="typcn typcn-key-outline menu-icon"></i>
+               <span class="menu-title">Gestion des permissions</span>
+               <i class="menu-arrow"></i>
+           </a>
+           <div class="collapse" id="gestion-permissions">
+               <ul class="nav flex-column sub-menu">
+                   <li class="nav-item">
+                       <a class="nav-link" href="../../pages/Permissions/AjouterPermission.php">
+                           <i class="typcn typcn-user-add"></i> Ajouter
+                       </a>
+        </li>
+             <li class="nav-item">
+               <a class="nav-link" href="../../pages/Permissions/ListePermissions.php">
+                 <i class="typcn typcn-th-list"></i> Liste des permissions
+               </a>
+             </li>     
+           </ul>
+         </div>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link" data-bs-toggle="collapse" href="#gestion-users" aria-expanded="false" aria-controls="gestion-users">
+             <i class="typcn typcn-group-outline"></i>
+               <span class="menu-title">Gestion des utilisateurs</span>
+               <i class="menu-arrow"></i>
+         </a>
+         <div class="collapse" id="gestion-users">
+             <ul class="nav flex-column sub-menu">
+                 <li class="nav-item">
+                     <a class="nav-link" href="../../pages/Users/AjouterUser.php">
+                         <i class="typcn typcn-user-add"></i> Ajouter
+                     </a>
+                  </li>
+                  <li class="nav-item">
+                   <a class="nav-link" href="pages/Users/ListeUsers.php">
+                     <i class="typcn typcn-th-list"></i> Liste des utilisateurs
+                   </a>
+                 </li>     
+               </ul>
+       </div>
+    </li>
+
 
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
@@ -672,6 +742,17 @@
             </div>
           </div>
 
+          <div class="container my-5">
+            <h1 class="text-center text-bold">Gerer les Produits</h1>
+            <div class="card border-primary mb-3 rounded-3">
+                <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
+                <h3 class="mb-0"><i class="typcn typcn-cube"></i> Produits</h3>
+                    <button class="btn btn-add btn-success rounded-5 shadow" id ="btnAddProduit" data-bs-toggle="modal" data-bs-target="#addProduitModal" data-action="add">
+                    <i class="typcn typcn-plus m-lg-1"></i> Ajouter Produit
+
+                    </button>
+          </div>
+
           <div class="row">
             <div class="col-md-12">
               <div class="card">
@@ -679,24 +760,53 @@
                   <table class="table table-striped project-orders-table">
                     <thead>
                       <tr>
-                        <th class="ms-5">ID</th>
-                        <th>Project name</th>
-                        <th>Customer</th>
-                        <th>Deadline</th>
-                        <th>Payouts	</th>
-                        <th>Traffic</th>
-                        <th>Actions</th>
+                      <th scope="col"><i class="typcn typcn-key menu-icon fs-3"></i> ID Produit
+                       <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Categorie
+                       <th scope="col"><i class="typcn typcn-key menu-icon fs-3"></i>ID Categorie
+                       <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Nom du produit
+                       <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Prix unitaire
+                       <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Total d'exemplaire
+                       <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Prix Total
+                       <th scope="col"><i class="typcn typcn-document-text menu-icon fs-3"></i>Description
+                       <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
                       </tr>
                     </thead>
-                    <tbody>
-                      <tr>
-                        <td>#D1</td>
-                        <td>Consectetur adipisicing elit </td>
-                        <td>Beulah Cummings</td>
-                        <td>03 Jan 2019</td>
-                        <td>$ 5235</td>
-                        <td>1.3K</td>
-                        <td>
+                    <tbody id = "productsList">
+                    <?php
+                           if ($result->num_rows > 0) {
+                               while ($row = $result->fetch_assoc()) {
+                                   // Récupérer l'ID du produit
+                                   $id_produit = $row["id_produit"];
+                                   
+                                   // Requête pour compter le nombre d'exemplaires associés au produit
+                                   $conn = getConnection();
+                                   $sql = "SELECT COUNT(E.id_exemplaire) AS total_exemplaires
+                                           FROM exemplaire E
+                                           WHERE E.id_produit = ?";
+                                   $stmt = $conn->prepare($sql);
+                                   if ($stmt) {
+                                       $stmt->bind_param("i", $id_produit); // Lier l'ID produit
+                                       $stmt->execute();
+                                       $stmt->bind_result($total_exemplaires);
+                                       $stmt->fetch();
+                                       $stmt->close();
+                                   } else {
+                                       // Si la requête échoue
+                                       $total_exemplaires = 0;
+                                   }
+                                   $sql3 = " SELECT (P.prix_unitaire * COUNT(E.id_exemplaire)) AS prix_total WHERE E.id_produit = P.id_produit ";
+                                   $result3 = $conn->query($sql3);
+                       ?>
+                           <tr>
+                               <td><?= $row["id_produit"] ?></td>
+                               <td><?= $row["nom_cat"] ?></td>
+                               <td><?= $row["id_categorie"] ?></td>
+                               <td><?= $row["nom_produit"] ?></td>
+                               <td><?= $row["prix_unitaire"] ?> FCFA</td>
+                               <td><?= isset($total_exemplaires) ? $total_exemplaires : 0 ?></td>
+                               <td><?= number_format($row["prix_unitaire"], 0, ',', ' ') ?> FCFA</td>
+                               <td><?= $row["description"] ?></td>
+                               <td>
                           <div class="d-flex align-items-center">
                             <button type="button" class="btn btn-success btn-sm btn-icon-text me-3">
                               Edit
@@ -709,106 +819,122 @@
                           </div>
                         </td>
                       </tr>
-                      <tr>
-                        <td>#D2</td>
-                        <td>Correlation natural resources silo</td>
-                        <td>Mitchel Dunford</td>
-                        <td>09 Oct 2019</td>
-                        <td>$ 3233</td>
-                        <td>5.4K</td>
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text me-3">
-                              Edit
-                              <i class="typcn typcn-edit btn-icon-append"></i>                          
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm btn-icon-text">
-                              Delete
-                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#D3</td>
-                        <td>social capital compassion social</td>
-                        <td>Pei Canaday</td>
-                        <td>18 Jun 2019</td>
-                        <td>$ 4311</td>
-                        <td>2.1K</td>
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text me-3">
-                              Edit
-                              <i class="typcn typcn-edit btn-icon-append"></i>                          
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm btn-icon-text">
-                              Delete
-                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#D4</td>
-                        <td>empower communities thought</td>
-                        <td>Gaynell Sharpton</td>
-                        <td>23 Mar 2019</td>
-                        <td>$ 7743</td>
-                        <td>2.7K</td>
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text me-3">
-                              Edit
-                              <i class="typcn typcn-edit btn-icon-append"></i>                          
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm btn-icon-text">
-                              Delete
-                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>#D5</td>
-                        <td> Targeted effective; mobilize </td>
-                        <td>Audrie Midyett</td>
-                        <td>22 Aug 2019</td>
-                        <td>$ 2455</td>
-                        <td>1.2K</td>
-                        <td>
-                          <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text me-3">
-                              Edit
-                              <i class="typcn typcn-edit btn-icon-append"></i>                          
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm btn-icon-text">
-                              Delete
-                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
+                      <?php
+                             }
+                         } else {
+                             echo "<tr><td colspan='7' style='text-align:center;'>Aucun produit trouvé</td></tr>";
+                         }
+                     ?>
                     </tbody>
                   </table>
+                                   <!-- Pagination -->
+                  <nav aria-label="Page navigation">
+                     <ul class="pagination justify-content-center">
+                         <li class="page-item">
+                             <a class="page-link" href="#" aria-label="Précédent">
+                                 <span aria-hidden="true">&laquo;</span>
+                             </a>
+                         </li>
+                         <li class="page-item"><a class="page-link" href="#">1</a></li>
+                         <li class="page-item"><a class="page-link" href="#">2</a></li>
+                         <li class="page-item"><a class="page-link" href="#">3</a></li>
+                         <li class="page-item">
+                             <a class="page-link" href="#" aria-label="Suivant">
+                                 <span aria-hidden="true">&raquo;</span>
+                             </a>
+                         </li>
+                     </ul>
+                 </nav>
                 </div>
               </div>
             </div>
           </div>
 
+              <!-- Modal pour ajouter un produit -->
+    <div class="modal fade" id="addProduitModal" tabindex="-1" aria-labelledby="#addProduitModalLabel" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3 shadow">
+                <div class="modal-header bg-dark-subtle">
+                    <h5 class="modal-title text-success" id="addProduitModalLabel"><i class="typcn typcn-plus m-lg-1"></i> Ajouter un produit <i class="typcn typcn-plus-circle"></i></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times text-danger"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="ajoutProduitForm" method = "post" action ="">
+                        <div class="mb-3">
+                           <label for="id_produit" class="form-label">
+                               <i class="typcn typcn-key-outline menu-icon"></i> ID Produit
+                           </label>
+                           <input type="number" class="form-control" id="id_produit" name="id_produit" placeholder = "Ne rien saisir" required readonly>   
+                        </div>                             
+                            <div class="mb-3">
+                              <label for="type" class="form-label">
+                              <i class="typcn typcn-th-large-outline menu-icon"></i>Categorie
+                              </label>
+                              <select class="form-select" id="nom_cat" name = "nom_cat" onchange = "updateCategorieId()" required>
+                                  <option value="">Sélectionnez la categorie</option>
+                                  <?php
+                                       if ($result2->num_rows > 0) {
+                                           while ($row = $result2->fetch_assoc()) {
+                                               echo "<option value='" . $row['id_categorie'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
+                                           }
+                                       } else {
+                                           echo "<option value=''>Aucune categorie disponible</option>";
+                                       }
+                                       ?>
+                              </select>
+                          </div>
+                           <div class="mb-3">
+                               <label for="nom" class="form-label">
+                               <i class="typcn typcn-tag menu-icon"></i>ID categorie
+                               </label>
+                               <input type="text" class="form-control" id="id_categorie" name = "id_categorie" readonly> 
+                           </div>
+                           <div class="mb-3">
+                               <label for="nom" class="form-label">
+                               <i class="typcn typcn-tag menu-icon"></i> Nom du produit
+                               </label>
+                               <input type="text" class="form-control" id="nom_produit" name = "nom_produit" placeholder="Entrez le nom du produit" required title="Veuillez entrer un nom valide.">
+                           </div>
+                           <div class="mb-3">
+                               <label for="id" class="form-label">
+                               <i class="typcn typcn-tag menu-icon"></i>Prix unitaire
+                               </label>
+                               <input type="number" class="form-control" id="prix_unitaire" name = "prix_unitaire"  placeholder="Entrez le prix unitaire du produit" > 
+                           </div>
+                           <div class="mb-3">
+                               <label for="description" class="form-label">
+                               <i class="typcn typcn-document-text menu-icon"></i>Description
+                               </label>
+                               <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times-circle me-2"></i> Annuler
+                            </button>
+                            <button type="submit" class="btn btn-success" name = "enregistrer" id ="saveButton">
+                                <i class="fas fa-check-circle me-2"></i> Enregistrer
+                            </button>
+                            <button type="button" class="btn btn-warning d-none"  name = "modifier" id ="updateButton">
+                                <i class="fas fa-check-circle me-2"></i> Modifier
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+</div>
+
+
         </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
-        <footer class="footer">
-            <div class="card">
-                <div class="card-body">
-                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="https://www.bootstrapdash.com/" class="text-muted" target="_blank">Bootstrapdash</a>. All rights reserved.</span>
-                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center text-muted">Hand-crafted & made with <i class="typcn typcn-heart-full-outline text-danger"></i></span>
-                    </div>
-                </div>    
-            </div>        
-        </footer>
+        <?php
+            require_once 'pages/Nav/footer.php';
+        ?> 
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
@@ -834,7 +960,192 @@
   <!-- Custom js for this page-->
   <script src="assets/js/dashboard.js"></script>
   <!-- End custom js for this page-->
-</body>
+  <?php
+           if (isset($_POST["enregistrer"])) {
+            $categorie = $_POST["nom_cat"];
+            $id_categorie = $_POST["id_categorie"];
+            $nom = $_POST["nom_produit"];
+            $prix_unitaire = $_POST["prix_unitaire"];
+            $description = $_POST["description"];
+            $conn = getConnection();
+            
+            if (!$conn) {
+                die("Échec de la connexion à la base de données !");
+            }
+           
+            // Utiliser une requête préparée pour éviter l'injection SQL
+            $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, prix_unitaire, description) VALUES (?, ?, ?, ?, ?)";
+            $result = $conn->prepare($sql);
+            if (!$result) {
+             die("Erreur lors de la préparation de la requête: " . $conn->error);
+         }    
+            if ($result) {
+               
+                $result->bind_param("sisis", $categorie, $id_categorie, $nom, $prix_unitaire, $description);
+                if ($result->execute()) {
+                    $_SESSION["categorie"] = $categorie;
+                    $_SESSION["id_categorie"] = $id_categorie;
+                    $_SESSION["nom_produit"] = $nom_produit;
+                    $_SESSION["prix_unitaire"] = $prix_unitaire;
+                    $_SESSION["description"] = $description;
+                    header("Location:pages/samples/succes.php");
+                    exit();
+                } else {
+                    // En cas d'erreur
+                    header("Location: pages/samples/error-500.php");
+                    exit();
+                }
+                $result->close(); 
+            } else {
+                die("Erreur lors de la préparation de la requête.");
+            }
+            $conn->close(); 
+        }
+    ?>
 
+<script>
+
+$(document).ready(function () {
+
+    $('#btnAddProduit').click(function () {
+
+        $('#ajoutProduitForm')[0].reset();
+        $('#id_produit').parent().hide(); 
+        $('#id_produit').val(''); 
+
+        // Changer l'affichage des boutons
+        $('#saveButton').removeClass('d-none');
+        $('#updateButton').addClass('d-none'); 
+
+        // Afficher le modal
+        $('#addProduitModal').modal('show');
+   });
+})
+
+$(document).on('click', '.btnEdit', function(){
+    var id_produit = $(this).attr('id');
+    // alert(id_produit);
+    console.log('Envoi de la requête AJAX... ID:', id_produit);
+    $.ajax({
+        url: 'TraitementProd.php',
+        type: 'POST',
+        data: {
+            id_produit: id_produit,
+            action: 'editProduit'
+        },
+        success: function(response) {
+            console.log("Réponse du serveur :", response);
+
+            try {
+                const data = JSON.parse(response);
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    $('#id_produit').val(data.id_produit).prop('readonly', true);
+                    $('#nom_cat').val(data.id_categorie);
+                    $('#id_categorie').val(data.id_categorie).prop('readonly', true);
+                    $('#nom_produit').val(data.nom_produit);
+                    $('#prix_unitaire').val(data.prix_unitaire);
+                    $('#description').val(data.description);
+                    // $('#addProduitModalLabel').html("Modifier un produit");
+
+                    $('#updateButton').removeClass('d-none');
+                    $('#saveButton').addClass('d-none');
+
+                    $('#addProduitModal').removeAttr('aria-hidden');
+                    $('#addProduitModal').modal('show'); 
+                }
+            } catch (e) {
+                console.error("Erreur JSON :", e);
+                console.log("Réponse brute du serveur :", response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur AJAX :", status, error);
+        }
+    });
+});
+
+// evenement applique sur le bouton ajoutProduit
+
+$('#updateButton').click(function() {
+    var id_produit = $('#id_produit').val(); // Récupérer l'ID du produit
+    var categorie = $('#nom_cat').val();
+    var id_categorie = $('#id_categorie').val();
+    var nom_produit = $('#nom_produit').val();
+    var prix_unitaire = $('#prix_unitaire').val();
+    var description = $('#description').val();
+
+    // Envoi de la requête Ajax pour mettre à jour le produit
+    if (confirm("Êtes-vous sûr de vouloir modifier ce produit ?")) {
+    $.ajax({
+        url: 'TraitementProd.php',
+        type: 'POST',
+        data: {
+            id_produit: id_produit,
+            categorie: categorie,
+            id_categorie: id_categorie,
+            nom_produit: nom_produit,
+            prix_unitaire: prix_unitaire,
+            description: description,
+            action: 'updateProduit'
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                alert(data.message); 
+                $('#addProduitModal').modal('hide'); // Fermer le modal
+                location.reload(); // Recharger la page pour voir les changements
+            } else {
+                alert(data.message); // Afficher l'erreur
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur lors de la mise à jour du produit :", status, error);
+            alert("Une erreur est survenue lors de la mise à jour du produit.");
+        }
+    });
+    }
+});
+//suppression d'un produit
+
+$('#openAddCategorieModal').click(function(){
+    $('#resetButton').click();
+    updateBtn = document.getElementById('updateButton');
+    saveBtn = document.getElementById('saveButton');
+    saveBtn.classList.remove('d-none');
+    updateBtn.classList.add('d-none');
+});
+
+$(document).on('click', '.btnDel', function(){
+    var id_produit = $(this).attr('id');
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+        $.ajax({
+            url: 'TraitementProd.php',
+            type: 'POST',
+            data: {
+                id_produit: id_produit,
+                action: 'deleteProduit'
+            },
+            dataType: 'json',
+            success: function(data){
+                alert(data.message);
+                if (data.succes) {
+                    location.reload();
+                }
+            },
+            error: function(){
+                alert("Une erreur est survenue lors de la suppression !");
+                console.error("Erreur lors de la suppression du produit.");
+            }
+        });
+    }
+});
+
+</script>
+
+</body>
 </html>
 

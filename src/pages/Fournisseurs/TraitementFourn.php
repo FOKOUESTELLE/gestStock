@@ -9,9 +9,9 @@
             case 'editFourn':
                 $id_fourn = intval($_POST['id_fourn']);
 
-                $sql = "SELECT* FROM fournisseur";
+                $sql = "SELECT* FROM fournisseur WHERE id_fourn = ?";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $id_exemplaire);
+                $stmt->bind_param("i", $id_fourn);
                 $stmt->execute();
                 $result = $stmt->get_result();
 
@@ -19,27 +19,22 @@
                     $data = $result->fetch_assoc();
                     echo json_encode($data);
                 } else {
-                    echo json_encode(['error' => 'Aucun exemplaire trouvé pour cet ID']);
+                    echo json_encode(['error' => 'Aucun fournisseur trouvé pour cet ID']);
                 }
                 break;
-                case 'updateExemp':
-                    $id_exemplaire = $_POST['id_exemplaire']; 
-                    $code_bar = $_POST['code_bar'];  
-                    $nom_produit = $_POST['nom_produit'];
-                    $original_price = $_POST['original_price'];
-                    $special_price = $_POST['special_price'];
-                    $id_produit = $_POST['id_produit'];
+                case 'updateFourn':
+                    $id_fourn = $_POST['id_fourn']; 
+                    $nom_fourn = $_POST['nom_fourn'];
+                    $email = $_POST['email'];
                 
-                    // Correction de la requête
-                    $sql = "UPDATE exemplaire 
-                            SET nom_produit = ?, original_price = ?, special_price = ?, id_produit = ? 
-                            WHERE id_exemplaire = ?";
+                    $sql = "UPDATE fournisseur 
+                            SET nom_fourn = ?, email = ?
+                            WHERE id_fourn = ?";
                 
                     $conn = getConnection();
                     $result = $conn->prepare($sql);
                 
-                    // Correction des types et du nombre de paramètres
-                    $result->bind_param("siiii", $nom_produit, $original_price, $special_price, $id_produit, $id_exemplaire);
+                    $result->bind_param("ssi", $nom_fourn, $email, $id_fourn);
                 
                     if ($result->execute()) {
                         $response = array(
@@ -56,13 +51,13 @@
                     echo json_encode($response);
                     break; 
 
-                    case 'deleteExemp':
+                    case 'deleteFourn':
 
-                        $id_exemplaire = $_POST['id_exemplaire'];
-                        $sql = "DELETE FROM exemplaire WHERE id_exemplaire = ?";
+                        $id_fourn = $_POST['id_fourn'];
+                        $sql = "DELETE FROM fournisseur WHERE id_fourn = ?";
                         $conn = getConnection();
                         $result = $conn -> prepare($sql);
-                        $result -> bind_param("i", $id_exemplaire);
+                        $result -> bind_param("i", $id_fourn);
                         if($result->execute()){
                             $response = array(
                                 'success' => true,

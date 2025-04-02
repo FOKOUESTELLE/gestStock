@@ -113,16 +113,9 @@ require_once '../Nav/sidebar.php';
     </div>
 </div>
 
-<footer class="footer">
-    <div class="card">
-        <div class="card-body">
-            <div class="d-sm-flex justify-content-center justify-content-sm-between">
-                <span class="text-muted">Copyright © 2024 Bootstrapdash. Tous droits réservés.</span>
-                <span class="text-muted">Hand-crafted & made with <i class="typcn typcn-heart-full-outline text-danger"></i></span>
-            </div>
-        </div>    
-    </div>        
-</footer>
+        <?php
+             require_once '../Nav/footer.php';
+         ?> 
 
 <script src="../../assets/vendors/js/vendor.bundle.base.js"></script>
 <script src="../../assets/js/off-canvas.js"></script>

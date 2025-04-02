@@ -5,8 +5,8 @@
     require_once '../Nav/sidebar.php';
     require_once '../Fonctions/db_connection.php';
     require '../Fonctions/fonctions.php';
-    $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.description
-            FROM produits P, categorie C WHERE P.id_categorie = C.id_categorie";
+    $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.prix_unitaire, P.description
+            FROM produits P, categorie C, exemplaire E WHERE P.id_categorie = C.id_categorie ";
     $conn = getConnection();
     $result = $conn -> query($sql);
     $sql2 = "SELECT id_categorie, nom_cat FROM categorie";
@@ -63,11 +63,13 @@
                 <table class="table table-striped table-hover table-bordered rounded-3 align-middle mt-4">
                     <thead class="table-primary">
                         <tr class="text-center fw-bold">
-                            <th scope="col"><i class="typcn typcn-tag menu-icon fs-3"></i> ID Produit
+                            <th scope="col"><i class="typcn typcn-key menu-icon fs-3"></i> ID Produit
                             <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Categorie
-                            <th scope="col"><i class="typcn typcn-tag menu-icon"></i>ID Categorie
+                            <th scope="col"><i class="typcn typcn-key menu-icon fs-3"></i>ID Categorie
                             <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Nom du produit
+                            <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Prix unitaire
                             <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Total d'exemplaire
+                            <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Prix Total
                             <th scope="col"><i class="typcn typcn-document-text menu-icon fs-3"></i>Description
                             <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
 
@@ -98,30 +100,33 @@
                                           // Si la requête échoue
                                           $total_exemplaires = 0;
                                       }
-                                      $conn->close();
+                                      $sql3 = " SELECT (P.prix_unitaire * COUNT(E.id_exemplaire)) AS prix_total WHERE E.id_produit = P.id_produit ";
+                                      $result3 = $conn->query($sql3);
                           ?>
-                  <tr>
-                      <td><?= $row["id_produit"] ?></td>
-                      <td><?= $row["nom_cat"] ?></td>
-                      <td><?= $row["id_categorie"] ?></td>
-                      <td><?= $row["nom_produit"] ?></td>
-                      <td><?= isset($total_exemplaires) ? $total_exemplaires : 0 ?></td> <!-- Afficher le nombre d'exemplaires -->
-                      <td><?= $row["description"] ?></td>
-                      <td class="text-center">
-                          <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_produit"] ?>" name="btnmod">
-                              <i class="typcn typcn-edit fs-3"></i>
-                          </button>
-                          <button class="btn btn-danger rounded btnDel" id="<?= $row["id_produit"] ?>" name="btnsup">
-                              <i class="typcn typcn-trash fs-3"></i>
-                          </button>
-                      </td>
-                  </tr>
-      <?php
-              }
-          } else {
-              echo "<tr><td colspan='7' style='text-align:center;'>Aucun produit trouvé</td></tr>";
-          }
-      ?>
+                              <tr>
+                                  <td><?= $row["id_produit"] ?></td>
+                                  <td><?= $row["nom_cat"] ?></td>
+                                  <td><?= $row["id_categorie"] ?></td>
+                                  <td><?= $row["nom_produit"] ?></td>
+                                  <td><?= $row["prix_unitaire"] ?> FCFA</td>
+                                  <td><?= isset($total_exemplaires) ? $total_exemplaires : 0 ?></td>
+                                  <td><?= number_format($row["prix_unitaire"], 0, ',', ' ') ?> FCFA</td>
+                                  <td><?= $row["description"] ?></td>
+                                  <td class="text-center">
+                                      <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_produit"] ?>" name="btnmod">
+                                          <i class="typcn typcn-edit fs-3"></i>
+                                      </button>
+                                      <button class="btn btn-danger rounded btnDel" id="<?= $row["id_produit"] ?>" name="btnsup">
+                                          <i class="typcn typcn-trash fs-3"></i>
+                                      </button>
+                                  </td>
+                              </tr>
+                         <?php
+                                 }
+                             } else {
+                                 echo "<tr><td colspan='7' style='text-align:center;'>Aucun produit trouvé</td></tr>";
+                             }
+                         ?>
 
                         </tbody>
                     </table>
@@ -197,6 +202,12 @@
                                <input type="text" class="form-control" id="nom_produit" name = "nom_produit" placeholder="Entrez le nom du produit" required title="Veuillez entrer un nom valide.">
                            </div>
                            <div class="mb-3">
+                               <label for="id" class="form-label">
+                               <i class="typcn typcn-tag menu-icon"></i>Prix unitaire
+                               </label>
+                               <input type="number" class="form-control" id="prix_unitaire" name = "prix_unitaire"  placeholder="Entrez le prix unitaire du produit" > 
+                           </div>
+                           <div class="mb-3">
                                <label for="description" class="form-label">
                                <i class="typcn typcn-document-text menu-icon"></i>Description
                                </label>
@@ -262,6 +273,7 @@
             $categorie = $_POST["nom_cat"];
             $id_categorie = $_POST["id_categorie"];
             $nom = $_POST["nom_produit"];
+            $prix_unitaire = $_POST["prix_unitaire"];
             $description = $_POST["description"];
             $conn = getConnection();
             
@@ -270,18 +282,19 @@
             }
            
             // Utiliser une requête préparée pour éviter l'injection SQL
-            $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, description) VALUES (?, ?, ?, ?)";
+            $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, prix_unitaire, description) VALUES (?, ?, ?, ?, ?)";
             $result = $conn->prepare($sql);
             if (!$result) {
              die("Erreur lors de la préparation de la requête: " . $conn->error);
          }    
             if ($result) {
                
-                $result->bind_param("siss", $categorie, $id_categorie, $nom, $description);
+                $result->bind_param("sisis", $categorie, $id_categorie, $nom, $prix_unitaire, $description);
                 if ($result->execute()) {
                     $_SESSION["categorie"] = $categorie;
                     $_SESSION["id_categorie"] = $id_categorie;
                     $_SESSION["nom_produit"] = $nom_produit;
+                    $_SESSION["prix_unitaire"] = $prix_unitaire;
                     $_SESSION["description"] = $description;
                     header("Location: ../../pages/samples/succes.php");
                     exit();
@@ -341,6 +354,7 @@ $(document).on('click', '.btnEdit', function(){
                     $('#nom_cat').val(data.id_categorie);
                     $('#id_categorie').val(data.id_categorie).prop('readonly', true);
                     $('#nom_produit').val(data.nom_produit);
+                    $('#prix_unitaire').val(data.prix_unitaire);
                     $('#description').val(data.description);
                     // $('#addProduitModalLabel').html("Modifier un produit");
 
@@ -368,6 +382,7 @@ $('#updateButton').click(function() {
     var categorie = $('#nom_cat').val();
     var id_categorie = $('#id_categorie').val();
     var nom_produit = $('#nom_produit').val();
+    var prix_unitaire = $('#prix_unitaire').val();
     var description = $('#description').val();
 
     // Envoi de la requête Ajax pour mettre à jour le produit
@@ -380,6 +395,7 @@ $('#updateButton').click(function() {
             categorie: categorie,
             id_categorie: id_categorie,
             nom_produit: nom_produit,
+            prix_unitaire: prix_unitaire,
             description: description,
             action: 'updateProduit'
         },

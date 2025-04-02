@@ -77,7 +77,12 @@ $result = $conn->query($sql);
                         </label>
                         <input type="text" class="form-control" id="nom" name = "nom" placeholder="Entrez le nom du produit" required title="Veuillez entrer un nom valide.">
                     </div>
-                    
+                    <div class="mb-3">
+                       <label for="id" class="form-label">
+                       <i class="typcn typcn-tag menu-icon"></i>Prix unitaire
+                       </label>
+                       <input type="number" class="form-control" id="prix unitaire" name = "prix_unitaire"  placeholder="Entrez le prix unitaire du produit" > 
+                   </div>
                     <div class="mb-3">
                         <label for="description" class="form-label">
                         <i class="typcn typcn-document-text menu-icon"></i>Description
@@ -140,7 +145,7 @@ $result = $conn->query($sql);
        $categorie = $_POST["nom_cat"];
        $id_categorie = $_POST["id_categorie"];
        $nom = $_POST["nom"];
-       $nbre_exemp = $_POST["nbre_exemp"];
+       $prix_unitaire = $_POST['prix_unitaire'];
        $description = $_POST["description"];
        $conn = getConnection();
        
@@ -149,18 +154,19 @@ $result = $conn->query($sql);
        }
       
        // Utiliser une requête préparée pour éviter l'injection SQL
-       $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, description) VALUES (?, ?, ?, ?)";
+       $sql = "INSERT INTO produits (categorie, id_categorie, nom_produit, prix_unitaire, description) VALUES (?, ?, ?, ?, ?)";
        $result = $conn->prepare($sql);
        if (!$result) {
         die("Erreur lors de la préparation de la requête: " . $conn->error);
     }    
        if ($result) {
           
-           $result->bind_param("siss", $categorie, $id_categorie, $nom, $description);
+           $result->bind_param("sisis", $categorie, $id_categorie, $nom, $prix_unitaire, $description);
            if ($result->execute()) {
                $_SESSION["categorie"] = $categorie;
                $_SESSION["id_categorie"] = $id_categorie;
                $_SESSION["nom"] = $nom;
+               $_SESSION["prix_unitaire"] = $prix_unitaire;
                $_SESSION["description"] = $description;
                header("Location: ../../pages/samples/succes.php");
                exit();

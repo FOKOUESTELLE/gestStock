@@ -13,7 +13,7 @@
             case 'editProduit':
                 $id_produit = intval($_POST['id_produit']);
 
-                $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.description
+                $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.prix_unitaire, P.description
                         FROM produits P, categorie C WHERE P.id_categorie = C.id_categorie AND P.id_produit = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("i", $id_produit);
@@ -31,18 +31,19 @@
                     $id_produit = $_POST['id_produit']; 
                     $id_categorie = $_POST['id_categorie'];  
                     $nom_produit = $_POST['nom_produit'];
+                    $prix_unitaire = $_POST['prix_unitaire'];
                     $description = $_POST['description'];
                 
                     // Correction de la requête
                     $sql = "UPDATE produits 
-                            SET nom_produit = ?, description = ?, id_categorie = ? 
+                            SET nom_produit = ?, prix_unitaire = ?, description = ?, id_categorie = ? 
                             WHERE id_produit = ?";
                 
                     $conn = getConnection();
                     $result = $conn->prepare($sql);
                 
                     // Correction des types et du nombre de paramètres
-                    $result->bind_param("ssii", $nom_produit, $description, $id_categorie, $id_produit);
+                    $result->bind_param("sisii", $nom_produit, $prix_unitaire, $description, $id_categorie, $id_produit);
                 
                     if ($result->execute()) {
                         $response = array(

@@ -35,7 +35,6 @@
                     $special_price = $_POST['special_price'];
                     $id_produit = $_POST['id_produit'];
                 
-                    // Correction de la requête
                     $sql = "UPDATE exemplaire 
                             SET nom_produit = ?, original_price = ?, special_price = ?, id_produit = ? 
                             WHERE id_exemplaire = ?";
@@ -43,7 +42,6 @@
                     $conn = getConnection();
                     $result = $conn->prepare($sql);
                 
-                    // Correction des types et du nombre de paramètres
                     $result->bind_param("siiii", $nom_produit, $original_price, $special_price, $id_produit, $id_exemplaire);
                 
                     if ($result->execute()) {

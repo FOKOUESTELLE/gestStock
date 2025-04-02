@@ -48,7 +48,7 @@ $result = $conn -> query($sql);
                 <table class="table table-striped table-hover table-bordered rounded-3 align-middle mt-4">
                     <thead class="table-primary">
                         <tr class="text-center fw-bold">
-                        <th scope="col"><i class="typcn typcn-pencil menu-icon fs-3"></i> ID fournisseur</th>
+                        <th scope="col"><i class="typcn typcn-key menu-icon fs-3"></i> ID fournisseur</th>
                         <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i> Nom</th>
                         <th scope="col"><i class="typcn typcn-mail menu-icon fs-3"></i> Email
                         <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
@@ -363,16 +363,16 @@ $('#openAddFournModal').click(function(){
 });
 
 $(document).on('click', '.btnDel', function(){
-    var id_exemplaire = $(this).attr('id');
-    alert (id_exemplaire);
+    var id_fourn = $(this).attr('id');
+    //alert (id_fourn);
 
     if (confirm("Êtes-vous sûr de vouloir supprimer cet exemplaire ?")) {
         $.ajax({
-            url: 'TraitementExemp.php',
+            url: 'TraitementFourn.php',
             type: 'POST',
             data: {
-                id_exemplaire: id_exemplaire,
-                action: 'deleteExemp'
+                id_fourn: id_fourn,
+                action: 'deleteFourn'
             },
             dataType: 'json',
             success: function(data){
@@ -382,8 +382,8 @@ $(document).on('click', '.btnDel', function(){
                 }
             },
             error: function(){
-                alert("Une erreur est survenue lors de la suppression !");
-                console.error("Erreur lors de la suppression de exemplaire.");
+                alert("Une erreur est survenue lors de la suppression du fournisseur!");
+                console.error("Erreur lors de la suppression du fournisseur.");
             }
         });
     }
