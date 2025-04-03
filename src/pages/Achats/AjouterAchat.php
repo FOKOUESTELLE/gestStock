@@ -1,8 +1,10 @@
 
 <?php
+session_start();
+ob_start();
 require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
-
+require_once '../Fonctions/db_connection.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +47,18 @@ require_once '../Nav/sidebar.php';
                           <option value="Vendre">Vendre directement</option>
                       </select>
                   </div>
-
+                  <div class="mb-3">
+                      <label for="qte" class="form-label">
+                      <i class="typcn typcn-th-list menu-icon"></i>Quantite
+                      </label>
+                      <input type="number" class="form-control" id="qte" name="qte" required>   
+                  </div>                             
+                  <div class="mb-3">
+                        <label for="qte" class="form-label">
+                        <i class="typcn typcn-th-list menu-icon"></i> Prix unitaire d'achat
+                        </label>
+                        <input type="number" class="form-control" id="pu_achat" name="pu_achat" required>   
+                    </div>                                 
                   <!-- Boutons -->
                   <div class="d-flex justify-content-between">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -101,6 +114,50 @@ require_once '../Nav/sidebar.php';
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+  <?php
+   
+   if (isset($_POST["enregistrer"])) {
+       $type_achat = $_POST["type_achat"];
+       $raison_achat = $_POST["raison_achat"];
+       $qte = $_POST["qte"];
+       $pu_achat = $_POST["pu_achat"]; 
+       $conn = getConnection();
+       
+       if (!$conn) {
+           die("Échec de la connexion à la base de données !");
+       }
+      
+       // Utiliser une requête préparée pour éviter l'injection SQL
+       $sql = "INSERT INTO achat (type_achat, raison_achat, qte, pu_achat) VALUES (?, ?, ?, ?)";
+       $result = $conn->prepare($sql);
+       if (!$result) {
+        die("Erreur lors de la préparation de la requête: " . $conn->error);
+    }    
+       if ($result) {
+          
+           $result->bind_param("ssii", $type_achat, $raison_achat, $qte, $pu_achat);
+           if ($result->execute()) {
+               $_SESSION["type_achat"] = $type_achat;
+               $_SESSION["raison_achat"] = $raison_achat;
+               $_SESSION["qte"] = $qte;
+               $_SESSION["pu_achat"] = $pu_achat;
+               header("Location: ../../pages/samples/succes.php");
+               exit();
+           } else {
+               // En cas d'erreur
+               header("Location: ../../pages/samples/error-500.php");
+               exit();
+           }
+           $result->close(); 
+       } else {
+           die("Erreur lors de la préparation de la requête.");
+       }
+       $conn->close(); 
+   }
+
+ ?>
+
+
+</body>
 </html>

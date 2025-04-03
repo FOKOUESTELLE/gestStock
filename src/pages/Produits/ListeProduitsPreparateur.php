@@ -2,7 +2,6 @@
     session_start();
     ob_start();
     require_once '../Nav/navbar.php';
-    require_once '../Nav/sidebar.php';
     require_once '../Fonctions/db_connection.php';
     require '../Fonctions/fonctions.php';
     $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.prix_unitaire, P.description
