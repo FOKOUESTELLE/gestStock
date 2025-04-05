@@ -2,7 +2,6 @@
     session_start();
     ob_start();
     require_once '../Nav/navbar.php';
-    require_once '../Nav/sidebar.php';
     require_once '../Fonctions/db_connection.php';
     require '../Fonctions/fonctions.php';
     $sql = "SELECT E.id_exemplaire, E.code_bar, P.nom_produit, E.original_price, E.special_price, P.id_produit
@@ -44,6 +43,56 @@
 </head>
 
 <body>
+
+   <!-- partial -->
+   <br><br><br>
+   <div class="container-fluid page-body-wrapper">      
+     <!-- partial:../../partials/_sidebar.html -->
+     <nav class="sidebar sidebar-offcanvas mt-10" id="sidebar">
+      
+       <ul class="nav">
+         <li class="nav-item">
+           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
+           <i class="typcn typcn-gift menu-icon"></i>
+             <span class="menu-title">Gestion des Produits</span>
+             <i class="menu-arrow"></i>
+           </a>
+           <div class="collapse" id="gestion-produits">
+             <ul class="nav flex-column sub-menu">
+               <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/AjouterProduitReceptioniste.php">Ajouter</a></li>
+               <li class="nav-item"> <a class="nav-link" href="../../pages/Produits/ListeProduitsReceptioniste.php">Liste de produits</a></li>
+               <li class="nav-item"> <a class="nav-link" href="../../pages/ExemplairesProduit/AjouterExemplaireReceptioniste.php">AjouterExemplaire</a></li>
+               <li class="nav-item"> <a class="nav-link" href="../../pages/ExemplairesProduit/ListeExemplairesReceptioniste.php">Liste des Exemplaires</a></li>
+             </ul>
+           </div>
+         </li>
+         <li class="nav-item">
+             <a class="nav-link" data-bs-toggle="collapse" href="#gestion-categorie" aria-expanded="false" aria-controls="gestion-produits">
+             <i class="typcn typcn-gift menu-icon"></i>
+               <span class="menu-title">Categories de Produits</span>
+               <i class="menu-arrow"></i>
+             </a>
+             <div class="collapse" id="gestion-categorie">
+               <ul class="nav flex-column sub-menu">
+                 <li class="nav-item"> <a class="nav-link" href="../../pages/Categories/AjouterCatProdReceptioniste.php">Ajouter</a></li>
+                 <li class="nav-item"> <a class="nav-link" href="../../pages/Categories/ListeCategoriesReceptioniste.php">Liste des categories</a></li>
+               </ul>
+             </div>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+             <i class="typcn typcn-user-add-outline menu-icon"></i>
+             <span class="menu-title">Deconnexion</span>
+             <i class="menu-arrow"></i>
+           </a>
+           <div class="collapse" id="auth">
+             <ul class="nav flex-column sub-menu">
+               <li class="nav-item"> <a class="nav-link" href="../samples/login.php"> Deconnexion </a></li>                              
+             </ul>
+           </div>
+         </li>                            
+       </ul>
+     </nav>
 
       
 <!-- Liste des produits  -->

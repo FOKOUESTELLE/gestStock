@@ -5,10 +5,13 @@ require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
 require_once '../Fonctions/db_connection.php';
 require '../Fonctions/fonctions.php';
-$sql = "SELECT* FROM users";
+$sql = "SELECT U.id_user, R.nom_role, U.nom_user, U.adresse_mail, U.password
+        FROM users U, roles R
+        WHERE U.id_role = R.id_role ORDER BY id_user";
 $conn = getConnection();
 $result = $conn -> query($sql);
-
+$sql2 = "SELECT id_role, nom_role FROM roles";
+$result2 = $conn->query($sql2);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,10 +29,20 @@ $result = $conn -> query($sql);
   <link rel="stylesheet" href="../../assets/css/style.css">
   <!-- endinject -->
   <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
+
+  <script>
+     // Fonction pour mettre à jour le champ id_role en fonction du rôle sélectionné
+     function updateRoleId() {
+       var roleSelect = document.getElementById('role');
+       var roleIdInput = document.getElementById('id_role');
+       // Récupérer l'ID du rôle à partir de l'attribut data-id_role de l'option sélectionnée
+       var selectedOption = roleSelect.options[roleSelect.selectedIndex];
+       roleIdInput.value = selectedOption.getAttribute('data-id_role');
+     }
+</script>
 </head>
 <body>
-
-      
+     
 <!-- Liste des produits  -->
 
 <div class="container my-5">
@@ -37,7 +50,7 @@ $result = $conn -> query($sql);
     <div class="card border-primary mb-3 rounded-3">
         <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
         <h3 class="mb-0"><i class="typcn typcn-group-outline"></i>Users</h3>
-            <button class="btn btn-add btn-success rounded-5 shadow" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <button class="btn btn-add btn-success rounded-5 shadow" id = "btnAddUser" data-bs-toggle="modal" data-bs-target="#addUserModal">
             <i class="typcn typcn-user-add"></i> Add User 
             </button>
         </div>
@@ -52,7 +65,6 @@ $result = $conn -> query($sql);
                         <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i>Adresse mail</th>
                         <th scope="col"><i class="typcn typcn-key-outline menu-icon fs-3"></i>Password</th>
                         <th scope="col"><i class="typcn typcn-user-outline menu-icon fs-3"></i> Role</th>
-                        <th scope="col"><i class="typcn typcn-key-outline menu-icon fs-3"></i> ID role</th>
                         <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
                     </tr>
                     </thead>
@@ -67,14 +79,15 @@ $result = $conn -> query($sql);
                                     <td><?=$row["nom_user"]?></td>
                                     <td><?=$row["adresse_mail"]?></td>
                                     <td><?=$row["password"]?></td>
-                                    <td><?=$row["role"]?></td>
-                                    <td><?=$row["id_role"]?></td>   
-
-                                    <td class='text-center'>
-                                    <button class="btn btn-info rounded"><i class="typcn typcn-eye-outline me-2 fs-3"></i></button>
-                                    <button class="btn btn-warning rounded btnEdit" name="btnmod"> <i class="typcn typcn-edit fs-3"></i></button>
-                                      <button class="btn btn-danger rounded" name="btnsup"><i class="typcn typcn-trash fs-3"></i></button>
-                                    </td>
+                                    <td><?=$row["nom_role"]?></td>
+                                    <td class="text-center">
+                                    <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_user"] ?>" name="btnmod">
+                                        <i class="typcn typcn-edit fs-3"></i>
+                                    </button>
+                                    <button class="btn btn-danger rounded btnDel" id="<?= $row["id_user"] ?>" name="btnsup">
+                                        <i class="typcn typcn-trash fs-3"></i>
+                                    </button>
+                                </td>
                                 </tr>
                                 <?php
                                     }
@@ -121,53 +134,55 @@ $result = $conn -> query($sql);
                         </button>
                     </div>
                     <div class="modal-body">
+                    <form id="ajoutUserForm" method = "post" action ="">
                     <div class="mb-3">
-              <label for="matricule" class="form-label">
-              <i class="typcn typcn-key-outline menu-icon"></i>ID User
-              </label>
-              <input type="number" class="form-control" id="id_user" name = "id_user" placeholder="Entrez l'identifiant de l'utilisateur">
-         </div>
-         <div class="mb-3">
-             <label for="nom" class="form-label">
-             <i class="typcn typcn-user menu-icon"></i></i> Nom
-             </label>
-             <input type="text" class="form-control" id="nom_user" name = "nom_user" placeholder="Entrez le nom de l'utilisateur" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide">
-         </div>
-         <div class="mb-3">
-             <label for="email" class="form-label">
-             <i class="typcn typcn-user menu-icon fs-3"></i></i> Adresse mail
-             </label>
-             <input type="email" class="form-control" id="email_user" name = "email_user" placeholder="Entrez l'adresse mail de l'utilisateur" required title="Veuillez entrer une adresse mail valide">
-        </div>
-        <div class="mb-3">
-            <label for="password_user" class="form-label">
-            <i class="typcn typcn-lock-closed menu-icon fs-3"></i>Mot de passe
-            </label>
-            <input type="password" class="form-control" id="password_user" name="password_user" placeholder="Entrez le mot de passe de l'utilisateur" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}" title="Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre, un caractère spécial (@#$%^&+=!) et avoir une longueur minimale de 8 caractères.">
-        </div>
-        <div class="mb-3">
-             <label for="matricule" class="form-label">
-             <i class="typcn typcn-user-outline menu-icon"></i>Role
-             </label>
-             <select class="form-select" id="role" name="role" required onchange="updateRoleId()">
-                 <option value="">Sélectionnez le rôle</option>
-                 <?php
-                 if ($result->num_rows > 0) {
-                     while ($row = $result->fetch_assoc()) {
-                         echo "<option value='" . $row['nom_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
-                     }
-                 } else {
-                     echo "<option value=''>Aucun rôle disponible</option>";
-                 }
-                 ?>
-             </select>
-         </div>                          
-         <div class="mb-3">
-             <label for="matricule" class="form-label">
-             <i class="typcn typcn-key-outline menu-icon"></i>ID role
-             </label>
-             <input type="number" class="form-control" id="id_role" name = "id_role" placeholder="identifiant du role" readonly>
-         </div>
+                         <label for="matricule" class="form-label">
+                         <i class="typcn typcn-key-outline menu-icon"></i>ID User
+                         </label>
+                         <input type="number" class="form-control" id="id_user" name = "id_user" readonly>
+                    </div>
+                 <div class="mb-3">
+                     <label for="nom" class="form-label">
+                     <i class="typcn typcn-user menu-icon"></i></i> Nom
+                     </label>
+                     <input type="text" class="form-control" id="nom_user" name = "nom_user" placeholder="Entrez le nom de l'utilisateur" required pattern="[A-Za-zÀ-ÿ '-]+" title="Veuillez entrer un nom valide">
+                 </div>
+                 <div class="mb-3">
+                     <label for="email" class="form-label">
+                     <i class="typcn typcn-user menu-icon fs-3"></i></i> Adresse mail
+                     </label>
+                     <input type="email" class="form-control" id="email_user" name = "email_user" placeholder="Entrez l'adresse mail de l'utilisateur" required title="Veuillez entrer une adresse mail valide">
+                </div>
+                <div class="mb-3">
+                    <label for="password_user" class="form-label">
+                    <i class="typcn typcn-lock-closed menu-icon fs-3"></i>Mot de passe
+                    </label>
+                    <input type="password" class="form-control" id="password_user" name="password_user" placeholder="Entrez le mot de passe de l'utilisateur" required pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}" title="Le mot de passe doit contenir au moins une lettre majuscule, une lettre minuscule, un chiffre, un caractère spécial (@#$%^&+=!) et avoir une longueur minimale de 8 caractères.">
+                </div>
+                <div class="mb-3">
+                  <label for="matricule" class="form-label">
+                  <i class="typcn typcn-user-outline menu-icon"></i>Role
+                  </label>
+                  <select class="form-select" id="role" name="role" required onchange="updateRoleId()">
+                      <option value="">Sélectionnez le rôle</option>
+                      <?php
+                      if ($result2->num_rows > 0) {
+                          while ($row = $result2->fetch_assoc()) {
+                              echo "<option value='" . $row['id_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
+                          }
+                      } else {
+                          echo "<option value=''>Aucun rôle disponible</option>";
+                      }
+                      ?>
+                  </select>
+              </div>                          
+                 </div>                          
+                 <div class="mb-3">
+                     <label for="matricule" class="form-label">
+                     <i class="typcn typcn-key-outline menu-icon"></i>ID role
+                     </label>
+                     <input type="number" class="form-control" id="id_role" name = "id_role" placeholder="identifiant du role" readonly>
+                 </div>
                     <div class="d-flex justify-content-between">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             <i class="fas fa-times-circle me-2"></i> Annuler
@@ -182,7 +197,7 @@ $result = $conn -> query($sql);
                 </form>
             </div>
         </div>
-</div>
+    </div>
 </div>
 </main>
 </div>
@@ -257,6 +272,192 @@ $result = $conn -> query($sql);
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-</body>
 
+  <?php
+   
+   if (isset($_POST["enregistrer"])) {
+       // $id = $_POST["id_user"];
+       $nom = $_POST["nom_user"];
+       $email = $_POST["email_user"];
+       $password = $_POST["password_user"];
+       $id_role = $_POST["id_role"];
+       $conn = getConnection();
+       
+       if (!$conn) {
+           die("Échec de la connexion à la base de données !");
+       }
+      
+       // Utiliser une requête préparée pour éviter l'injection SQL
+       $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role) VALUES (?, ?, ?, ?)";
+       $result = $conn->prepare($sql);
+       if ($result) {
+          
+           $result->bind_param("sssis", $nom, $email, $password, $id_role, $role);
+           if ($result->execute()) {
+               $_SESSION["id"] = $id;
+               $_SESSION["nom"] = $nom;
+               $_SESSION["email"] = $email;
+               $_SESSION["password"] = $password;
+               $_SESSION["id_role"] = $id_role;
+               header("Location: ../../pages/samples/succes.php");
+               exit();
+           } else {
+               // En cas d'erreur
+               header("Location: ../../pages/samples/error-500.php");
+               exit();
+           }
+           $result->close(); 
+       } else {
+           die("Erreur lors de la préparation de la requête.");
+       }
+       $conn->close(); 
+   }
+
+ ?>
+
+<script>
+
+$(document).ready(function () {
+
+    $('#btnAddUser').click(function () {
+
+        $('#ajoutUserForm')[0].reset();
+        $('#id_user').parent().hide(); 
+        $('#id_user').val(''); 
+
+        // Changer l'affichage des boutons
+        $('#saveButton').removeClass('d-none');
+        $('#updateButton').addClass('d-none'); 
+
+        // Afficher le modal
+        $('#addUserModal').modal('show');
+   });
+})
+
+$(document).on('click', '.btnEdit', function(){
+    var id_user = $(this).attr('id');
+     //alert(id_user);
+    console.log('Envoi de la requête AJAX... ID:', id_user);
+    $.ajax({
+        url: 'TraitementUser.php',
+        type: 'POST',
+        data: {
+            id_user: user,
+            action: 'editUser'
+        },
+        success: function(response) {
+            console.log("Réponse du serveur :", response);
+
+            try {
+                const data = JSON.parse(response);
+
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    $('#id_produit').val(data.id_produit).prop('readonly', true);
+                    $('#nom_cat').val(data.id_categorie);
+                    $('#id_categorie').val(data.id_categorie).prop('readonly', true);
+                    $('#nom_produit').val(data.nom_produit);
+                    $('#prix_unitaire').val(data.prix_unitaire);
+                    $('#description').val(data.description);
+                    // $('#addProduitModalLabel').html("Modifier un produit");
+
+                    $('#updateButton').removeClass('d-none');
+                    $('#saveButton').addClass('d-none');
+
+                    $('#addProduitModal').removeAttr('aria-hidden');
+                    $('#addProduitModal').modal('show'); 
+                }
+            } catch (e) {
+                console.error("Erreur JSON :", e);
+                console.log("Réponse brute du serveur :", response);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur AJAX :", status, error);
+        }
+    });
+});
+
+// evenement applique sur le bouton ajoutProduit
+
+$('#updateButton').click(function() {
+    var id_produit = $('#id_produit').val(); // Récupérer l'ID du produit
+    var categorie = $('#nom_cat').val();
+    var id_categorie = $('#id_categorie').val();
+    var nom_produit = $('#nom_produit').val();
+    var prix_unitaire = $('#prix_unitaire').val();
+    var description = $('#description').val();
+
+    // Envoi de la requête Ajax pour mettre à jour le produit
+    if (confirm("Êtes-vous sûr de vouloir modifier ce produit ?")) {
+    $.ajax({
+        url: 'TraitementProd.php',
+        type: 'POST',
+        data: {
+            id_produit: id_produit,
+            categorie: categorie,
+            id_categorie: id_categorie,
+            nom_produit: nom_produit,
+            prix_unitaire: prix_unitaire,
+            description: description,
+            action: 'updateProduit'
+        },
+        dataType: 'json',
+        success: function(data) {
+            if (data.success) {
+                alert(data.message); 
+                $('#addProduitModal').modal('hide'); // Fermer le modal
+                location.reload(); // Recharger la page pour voir les changements
+            } else {
+                alert(data.message); // Afficher l'erreur
+            }
+        },
+        error: function(xhr, status, error) {
+            console.log("Erreur lors de la mise à jour du produit :", status, error);
+            alert("Une erreur est survenue lors de la mise à jour du produit.");
+        }
+    });
+    }
+});
+//suppression d'un produit
+
+$('#openAddCategorieModal').click(function(){
+    $('#resetButton').click();
+    updateBtn = document.getElementById('updateButton');
+    saveBtn = document.getElementById('saveButton');
+    saveBtn.classList.remove('d-none');
+    updateBtn.classList.add('d-none');
+});
+
+$(document).on('click', '.btnDel', function(){
+    var id_produit = $(this).attr('id');
+
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+        $.ajax({
+            url: 'TraitementProd.php',
+            type: 'POST',
+            data: {
+                id_produit: id_produit,
+                action: 'deleteProduit'
+            },
+            dataType: 'json',
+            success: function(data){
+                alert(data.message);
+                if (data.succes) {
+                    location.reload();
+                }
+            },
+            error: function(){
+                alert("Une erreur est survenue lors de la suppression !");
+                console.error("Erreur lors de la suppression du produit.");
+            }
+        });
+    }
+});
+
+
+</script>
+
+</body>
 </html>

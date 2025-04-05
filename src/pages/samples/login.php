@@ -80,8 +80,8 @@ $result = $conn->query($sql);
                         case 'Vendeuse':
                            redirection("../Commandes/CreerCommandeVendeuse.php");
                             exit();
-                        case 'Preparatteur' :
-                           redirection("../Produits/AjouterProduitPreparateur.php");
+                        case 'Receptioniste' :
+                           redirection("../Produits/AjouterProduitReceptioniste.php");
 
                         default:
                             echo "<p style='color:red;'>Rôle non reconnu.</p>";

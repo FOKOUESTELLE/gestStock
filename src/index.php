@@ -237,18 +237,6 @@
             </a>
           </li>          
           <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#form-elements" aria-expanded="false" aria-controls="form-elements">
-              <i class="typcn typcn-film menu-icon"></i>
-              <span class="menu-title">Form elements</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="form-elements">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="../../pages/forms/basic_elements.html">Basic Elements</a></li>                
-              </ul>
-            </div>
-          </li>        
-          <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#gestion-produits" aria-expanded="false" aria-controls="gestion-produits">
             <i class="typcn typcn-gift menu-icon"></i>
               <span class="menu-title">Gestion des Produits</span>
@@ -366,27 +354,6 @@
              </ul>
            </div>
         </li>
-        <li class="nav-item">
-           <a class="nav-link" data-bs-toggle="collapse" href="#gestion-permissions" aria-expanded="false" aria-controls="gestion-permissions">
-               <i class="typcn typcn-key-outline menu-icon"></i>
-               <span class="menu-title">Gestion des permissions</span>
-               <i class="menu-arrow"></i>
-           </a>
-           <div class="collapse" id="gestion-permissions">
-               <ul class="nav flex-column sub-menu">
-                   <li class="nav-item">
-                       <a class="nav-link" href="../../pages/Permissions/AjouterPermission.php">
-                           <i class="typcn typcn-user-add"></i> Ajouter
-                       </a>
-        </li>
-             <li class="nav-item">
-               <a class="nav-link" href="../../pages/Permissions/ListePermissions.php">
-                 <i class="typcn typcn-th-list"></i> Liste des permissions
-               </a>
-             </li>     
-           </ul>
-         </div>
-      </li>
       <li class="nav-item">
          <a class="nav-link" data-bs-toggle="collapse" href="#gestion-users" aria-expanded="false" aria-controls="gestion-users">
              <i class="typcn typcn-group-outline"></i>
@@ -411,22 +378,15 @@
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
               <i class="typcn typcn-user-add-outline menu-icon"></i>
-              <span class="menu-title">User Pages</span>
+              <span class="menu-title">Login Page</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="auth">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="/pages/samples/blank-page.html"> Blank Page </a></li>
                 <li class="nav-item"> <a class="nav-link" href="pages/samples/login.php"> Login </a></li>                                
               </ul>
             </div>
           </li>                            
-          <li class="nav-item">
-            <a class="nav-link" href="../../../docs/documentation.html">
-              <i class="typcn typcn-mortar-board menu-icon"></i>
-              <span class="menu-title">Documentation</span>
-            </a>
-          </li>
         </ul>
       </nav>
       <!-- partial -->
@@ -525,149 +485,149 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-xl-4 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body border-bottom">
-                  <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-2 mb-md-0 text-uppercase fw-medium">ventes globales</h6>
-                    <div class="dropdown">
-                      <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                         30 derniers jours
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                       <h6 class="dropdown-header">Paramètres de GlotoStock</h6>
-                       <a class="dropdown-item" href="javascript:;">Gérer les stocks</a>
-                       <a class="dropdown-item" href="javascript:;">Gestion des utilisateurs</a>
-                       <a class="dropdown-item" href="javascript:;">Rapports financiers</a>
-                       <div class="dropdown-divider"></div>
-                       <a class="dropdown-item" href="javascript:;">Paramètres généraux</a>
-                    </div>
+          <!-- <div class="row"> -->
+            <!-- <div class="col-xl-4 grid-margin stretch-card"> -->
+              <!-- <div class="card"> -->
+                <!-- <div class="card-body border-bottom"> -->
+                  <!-- <div class="d-flex justify-content-between align-items-center flex-wrap"> -->
+                    <!-- <h6 class="mb-2 mb-md-0 text-uppercase fw-medium">ventes globales</h6> -->
+                    <!-- <div class="dropdown"> -->
+                      <!-- <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+                         <!-- 30 derniers jours -->
+                      <!-- </button> -->
+                      <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3"> -->
+                       <!-- <h6 class="dropdown-header">Paramètres de GlotoStock</h6> -->
+                       <!-- <a class="dropdown-item" href="javascript:;">Gérer les stocks</a> -->
+                       <!-- <a class="dropdown-item" href="javascript:;">Gestion des utilisateurs</a> -->
+                       <!-- <a class="dropdown-item" href="javascript:;">Rapports financiers</a> -->
+                       <!-- <div class="dropdown-divider"></div> -->
+                       <!-- <a class="dropdown-item" href="javascript:;">Paramètres généraux</a> -->
+                    <!-- </div> -->
 
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="daoughnut-chart-sm">
-                    <canvas id="sales-chart-c" class="mt-2"></canvas>
-                  </div>
-                  <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3 mt-4">
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                      <p class="text-muted">Ventes Brutes</p>
-                      <h5>492</h5>
-                      <div class="d-flex align-items-baseline">
-                        <p class="text-success mb-0">55%</p>
-                        <i class="typcn typcn-arrow-up-thick text-success"></i>
-                      </div>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                      <p class="text-muted">Achats</p>
-                      <h5>87k</h5>
-                      <div class="d-flex align-items-baseline">
-                        <p class="text-success mb-0">80%</p>
-                        <i class="typcn typcn-arrow-up-thick text-success"></i>
-                      </div>
-                    </div>
-                    <div class="d-flex flex-column justify-content-center align-items-center">
-                      <p class="text-muted">Déclaration Fiscale</p>
-                      <h5>882</h5>
-                      <div class="d-flex align-items-baseline">
-                        <p class="text-danger mb-0">-25%</p>
-                        <i class="typcn typcn-arrow-down-thick text-danger"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="dropdown">
-                      <button class="btn bg-white p-0 pb-1 pt-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          7 derniers jours
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3">
-                        <h6 class="dropdown-header">Paramètres</h6>
-                        <a class="dropdown-item" href="javascript:;">Gestion des stocks</a>
-                        <a class="dropdown-item" href="javascript:;">Historique des transactions</a>
-                        <a class="dropdown-item" href="javascript:;">Rapports financiers</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="javascript:;">Paramètres du compte</a>
-                      </div>
-                    </div>
-                    <p class="mb-0">Vue d'ensemble financière</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-xl-4 grid-margin stretch-card">
-              <div class="row">
-                <div class="col-md-12 grid-margin stretch-card">
-                  <div class="card newsletter-card bg-gradient-warning">
-                    <div class="card-body">
-                      <div class="d-flex flex-column align-items-center justify-content-center h-100">
-                        <h5 class="mb-3 text-white">Recevoir les rapports de gestion</h5>
-                        <form class="form d-flex flex-column align-items-center justify-content-between w-100">
-                          <div class="form-group mb-2 w-100">
-                            <input type="text" class="form-control" placeholder="email address">
-                          </div>
-                          <button class="btn btn-danger btn-rounded mt-1" type="submit">S'inscrire</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-12 stretch-card">
-                  <div class="card profile-card bg-gradient-primary">
-                    <div class="card-body">
-                      <div class="row align-items-center h-100">
-                        <div class="col-md-4">
-                          <figure class="avatar mx-auto mb-4 mb-md-0">
-                            <img src="assets/images/faces/face.jpg" alt="avatar">
-                          </figure>
-                        </div>
-                        <div class="col-md-8">
-                          <h5 class="text-white text-center text-md-left">Estelle fokou</h5>
-                          <p class="text-white text-center text-md-left">estelle@gmail.com</p>
-                          <div class="d-flex align-items-center justify-content-between info pt-2">
-                            <div>
-                                  <p class="text-white fw-bold">Poste</p>
-                                  <p class="text-white fw-bold">Agence</p>
-                            </div>
-                            <div>
-                             <p class="text-white">Responsable Stock</p>
-                             <p class="text-white">Douala</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6 col-xl-4 grid-margin stretch-card">
-              <div class="card">
-                <div class="card-body border-bottom">
-                  <div class="d-flex justify-content-between align-items-center flex-wrap">
-                    <h6 class="mb-2 mb-md-0 text-uppercase fw-medium">Statistiques de vente</h6>
-                    <div class="dropdown">
-                      <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          7 derniers annees
-                      </button>
-                   <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4">
-                     <h6 class="dropdown-header">Paramètres</h6>
-                     <a class="dropdown-item" href="javascript:;">Gérer les utilisateurs</a>
-                     <a class="dropdown-item" href="javascript:;">Préférences d'affichage</a>
-                     <a class="dropdown-item" href="javascript:;">Notifications</a>
-                     <div class="dropdown-divider"></div>
-                     <a class="dropdown-item text-danger" href="pages/samples/login.php">Déconnexion</a>
-                   </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <canvas id="sales-chart-d" height="320"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
+                    <!-- </div> -->
+                  <!-- </div> -->
+                <!-- </div> -->
+                <!-- <div class="card-body"> -->
+                  <!-- <div class="daoughnut-chart-sm"> -->
+                    <!-- <canvas id="sales-chart-c" class="mt-2"></canvas> -->
+                  <!-- </div> -->
+                  <!-- <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3 mt-4"> -->
+                    <!-- <div class="d-flex flex-column justify-content-center align-items-center"> -->
+                      <!-- <p class="text-muted">Ventes Brutes</p> -->
+                      <!-- <h5>492</h5> -->
+                      <!-- <div class="d-flex align-items-baseline"> -->
+                        <!-- <p class="text-success mb-0">55%</p> -->
+                        <!-- <i class="typcn typcn-arrow-up-thick text-success"></i> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
+                    <!-- <div class="d-flex flex-column justify-content-center align-items-center"> -->
+                      <!-- <p class="text-muted">Achats</p> -->
+                      <!-- <h5>87k</h5> -->
+                      <!-- <div class="d-flex align-items-baseline"> -->
+                        <!-- <p class="text-success mb-0">80%</p> -->
+                        <!-- <i class="typcn typcn-arrow-up-thick text-success"></i> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
+                    <!-- <div class="d-flex flex-column justify-content-center align-items-center"> -->
+                      <!-- <p class="text-muted">Déclaration Fiscale</p> -->
+                      <!-- <h5>882</h5> -->
+                      <!-- <div class="d-flex align-items-baseline"> -->
+                        <!-- <p class="text-danger mb-0">-25%</p> -->
+                        <!-- <i class="typcn typcn-arrow-down-thick text-danger"></i> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
+                  <!-- </div> -->
+                  <!-- <div class="d-flex justify-content-between align-items-center"> -->
+                    <!-- <div class="dropdown"> -->
+                      <!-- <button class="btn bg-white p-0 pb-1 pt-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+                          <!-- 7 derniers jours -->
+                      <!-- </button> -->
+                      <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton3"> -->
+                        <!-- <h6 class="dropdown-header">Paramètres</h6> -->
+                        <!-- <a class="dropdown-item" href="javascript:;">Gestion des stocks</a> -->
+                        <!-- <a class="dropdown-item" href="javascript:;">Historique des transactions</a> -->
+                        <!-- <a class="dropdown-item" href="javascript:;">Rapports financiers</a> -->
+                        <!-- <div class="dropdown-divider"></div> -->
+                        <!-- <a class="dropdown-item" href="javascript:;">Paramètres du compte</a> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
+                    <!-- <p class="mb-0">Vue d'ensemble financière</p> -->
+                  <!-- </div> -->
+                <!-- </div> -->
+              <!-- </div> -->
+            <!-- </div> -->
+            <!-- <div class="col-md-6 col-xl-4 grid-margin stretch-card"> -->
+              <!-- <div class="row"> -->
+                <!-- <div class="col-md-12 grid-margin stretch-card"> -->
+                  <!-- <div class="card newsletter-card bg-gradient-warning"> -->
+                    <!-- <div class="card-body"> -->
+                      <!-- <div class="d-flex flex-column align-items-center justify-content-center h-100"> -->
+                        <!-- <h5 class="mb-3 text-white">Recevoir les rapports de gestion</h5> -->
+                        <!-- <form class="form d-flex flex-column align-items-center justify-content-between w-100"> -->
+                          <!-- <div class="form-group mb-2 w-100"> -->
+                            <!-- <input type="text" class="form-control" placeholder="email address"> -->
+                          <!-- </div> -->
+                          <!-- <button class="btn btn-danger btn-rounded mt-1" type="submit">S'inscrire</button> -->
+                        <!-- </form> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
+                  <!-- </div> -->
+                <!-- </div> -->
+                <!-- <div class="col-md-12 stretch-card"> -->
+                  <!-- <div class="card profile-card bg-gradient-primary"> -->
+                    <!-- <div class="card-body"> -->
+                      <!-- <div class="row align-items-center h-100"> -->
+                        <!-- <div class="col-md-4"> -->
+                          <!-- <figure class="avatar mx-auto mb-4 mb-md-0"> -->
+                            <!-- <img src="assets/images/faces/face.jpg" alt="avatar"> -->
+                          <!-- </figure> -->
+                        <!-- </div> -->
+                        <!-- <div class="col-md-8"> -->
+                          <!-- <h5 class="text-white text-center text-md-left">Estelle fokou</h5> -->
+                          <!-- <p class="text-white text-center text-md-left">estelle@gmail.com</p> -->
+                          <!-- <div class="d-flex align-items-center justify-content-between info pt-2"> -->
+                            <!-- <div> -->
+                                  <!-- <p class="text-white fw-bold">Poste</p> -->
+                                  <!-- <p class="text-white fw-bold">Agence</p> -->
+                            <!-- </div> -->
+                            <!-- <div> -->
+                             <!-- <p class="text-white">Responsable Stock</p> -->
+                             <!-- <p class="text-white">Douala</p> -->
+                            <!-- </div> -->
+                          <!-- </div> -->
+                        <!-- </div> -->
+                      <!-- </div> -->
+                    <!-- </div> -->
+                  <!-- </div> -->
+                <!-- </div> -->
+              <!-- </div> -->
+            <!-- </div> -->
+            <!-- <div class="col-md-6 col-xl-4 grid-margin stretch-card"> -->
+              <!-- <div class="card"> -->
+                <!-- <div class="card-body border-bottom"> -->
+                  <!-- <div class="d-flex justify-content-between align-items-center flex-wrap"> -->
+                    <!-- <h6 class="mb-2 mb-md-0 text-uppercase fw-medium">Statistiques de vente</h6> -->
+                    <!-- <div class="dropdown"> -->
+                      <!-- <button class="btn bg-white p-0 pb-1 text-muted btn-sm dropdown-toggle" type="button" id="dropdownMenuSizeButton4" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> -->
+                          <!-- 7 derniers annees -->
+                      <!-- </button> -->
+                   <!-- <div class="dropdown-menu" aria-labelledby="dropdownMenuSizeButton4"> -->
+                     <!-- <h6 class="dropdown-header">Paramètres</h6> -->
+                     <!-- <a class="dropdown-item" href="javascript:;">Gérer les utilisateurs</a> -->
+                     <!-- <a class="dropdown-item" href="javascript:;">Préférences d'affichage</a> -->
+                     <!-- <a class="dropdown-item" href="javascript:;">Notifications</a> -->
+                     <!-- <div class="dropdown-divider"></div> -->
+                     <!-- <a class="dropdown-item text-danger" href="pages/samples/login.php">Déconnexion</a> -->
+                   <!-- </div> -->
+                    <!-- </div> -->
+                  <!-- </div> -->
+                <!-- </div> -->
+                <!-- <div class="card-body"> -->
+                  <!-- <canvas id="sales-chart-d" height="320"></canvas> -->
+                <!-- </div> -->
+              <!-- </div> -->
+            <!-- </div> -->
+          <!-- </div> -->
 
           <div class="row">
             <div class="col-md-4 grid-margin stretch-card">
@@ -675,8 +635,8 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
                     <div>
-                      <p class="mb-2 text-md-center text-lg-left">Total Expenses</p>
-                      <h1 class="mb-0">8742</h1>
+                     <p class="mb-2 text-md-center text-lg-left">Dépenses totales</p>
+                     <h1 class="mb-0 text-success">8 742 FCFA</h1>
                     </div>
                     <i class="typcn typcn-briefcase icon-xl text-secondary"></i>
                   </div>
@@ -689,8 +649,8 @@
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
                     <div>
-                      <p class="mb-2 text-md-center text-lg-left">Total Budget</p>
-                      <h1 class="mb-0">47,840</h1>
+                    <p class="mb-2 text-md-center text-lg-left">Budget total</p>
+                    <h1 class="mb-0 text-primary">47 840 FCFA</h1>
                     </div>
                     <i class="typcn typcn-chart-pie icon-xl text-secondary"></i>
                   </div>
@@ -702,206 +662,18 @@
               <div class="card">
                 <div class="card-body">
                   <div class="d-flex align-items-center justify-content-between justify-content-md-center justify-content-xl-between flex-wrap mb-4">
-                    <div>
-                      <p class="mb-2 text-md-center text-lg-left">Total Balance</p>
-                      <h1 class="mb-0">$7,243</h1>
+                  <div>
+                      <p class="mb-2 text-md-center text-lg-left">Solde total</p>
+                      <h1 class="mb-0 text-success">39 098 FCFA</h1>
                     </div>
-                    <i class="typcn typcn-clipboard icon-xl text-secondary"></i>
-                  </div>
+                    <i class="typcn typcn-clipboard icon-xl text-primary"></i>
+
                   <canvas id="balance-chart" height="80"></canvas>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="container my-5">
-            <h1 class="text-center text-bold">Gerer les Produits</h1>
-            <div class="card border-primary mb-3 rounded-3">
-                <div class="card-header d-flex justify-content-between align-items-center bg-secondary-subtle text-success rounded-3">
-                <h3 class="mb-0"><i class="typcn typcn-cube"></i> Produits</h3>
-                    <button class="btn btn-add btn-success rounded-5 shadow" id ="btnAddProduit" data-bs-toggle="modal" data-bs-target="#addProduitModal" data-action="add">
-                    <i class="typcn typcn-plus m-lg-1"></i> Ajouter Produit
-
-                    </button>
-          </div>
-
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card">
-                <div class="table-responsive pt-3">
-                  <table class="table table-striped project-orders-table">
-                    <thead>
-                      <tr>
-                      <th scope="col"><i class="typcn typcn-key menu-icon fs-3"></i> ID Produit
-                       <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Categorie
-                       <th scope="col"><i class="typcn typcn-key menu-icon fs-3"></i>ID Categorie
-                       <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Nom du produit
-                       <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Prix unitaire
-                       <th scope="col"><i class="typcn typcn-tag menu-icon"></i> Total d'exemplaire
-                       <th scope="col"> <i class="typcn typcn-tag menu-icon fs-3"></i> Prix Total
-                       <th scope="col"><i class="typcn typcn-document-text menu-icon fs-3"></i>Description
-                       <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody id = "productsList">
-                    <?php
-                           if ($result->num_rows > 0) {
-                               while ($row = $result->fetch_assoc()) {
-                                   // Récupérer l'ID du produit
-                                   $id_produit = $row["id_produit"];
-                                   
-                                   // Requête pour compter le nombre d'exemplaires associés au produit
-                                   $conn = getConnection();
-                                   $sql = "SELECT COUNT(E.id_exemplaire) AS total_exemplaires
-                                           FROM exemplaire E
-                                           WHERE E.id_produit = ?";
-                                   $stmt = $conn->prepare($sql);
-                                   if ($stmt) {
-                                       $stmt->bind_param("i", $id_produit); // Lier l'ID produit
-                                       $stmt->execute();
-                                       $stmt->bind_result($total_exemplaires);
-                                       $stmt->fetch();
-                                       $stmt->close();
-                                   } else {
-                                       // Si la requête échoue
-                                       $total_exemplaires = 0;
-                                   }
-                                   $sql3 = " SELECT (P.prix_unitaire * COUNT(E.id_exemplaire)) AS prix_total WHERE E.id_produit = P.id_produit ";
-                                   $result3 = $conn->query($sql3);
-                       ?>
-                           <tr>
-                               <td><?= $row["id_produit"] ?></td>
-                               <td><?= $row["nom_cat"] ?></td>
-                               <td><?= $row["id_categorie"] ?></td>
-                               <td><?= $row["nom_produit"] ?></td>
-                               <td><?= $row["prix_unitaire"] ?> FCFA</td>
-                               <td><?= isset($total_exemplaires) ? $total_exemplaires : 0 ?></td>
-                               <td><?= number_format($row["prix_unitaire"], 0, ',', ' ') ?> FCFA</td>
-                               <td><?= $row["description"] ?></td>
-                               <td>
-                          <div class="d-flex align-items-center">
-                            <button type="button" class="btn btn-success btn-sm btn-icon-text me-3">
-                              Edit
-                              <i class="typcn typcn-edit btn-icon-append"></i>                          
-                            </button>
-                            <button type="button" class="btn btn-danger btn-sm btn-icon-text">
-                              Delete
-                              <i class="typcn typcn-delete-outline btn-icon-append"></i>                          
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      <?php
-                             }
-                         } else {
-                             echo "<tr><td colspan='7' style='text-align:center;'>Aucun produit trouvé</td></tr>";
-                         }
-                     ?>
-                    </tbody>
-                  </table>
-                                   <!-- Pagination -->
-                  <nav aria-label="Page navigation">
-                     <ul class="pagination justify-content-center">
-                         <li class="page-item">
-                             <a class="page-link" href="#" aria-label="Précédent">
-                                 <span aria-hidden="true">&laquo;</span>
-                             </a>
-                         </li>
-                         <li class="page-item"><a class="page-link" href="#">1</a></li>
-                         <li class="page-item"><a class="page-link" href="#">2</a></li>
-                         <li class="page-item"><a class="page-link" href="#">3</a></li>
-                         <li class="page-item">
-                             <a class="page-link" href="#" aria-label="Suivant">
-                                 <span aria-hidden="true">&raquo;</span>
-                             </a>
-                         </li>
-                     </ul>
-                 </nav>
-                </div>
-              </div>
-            </div>
-          </div>
-
-              <!-- Modal pour ajouter un produit -->
-    <div class="modal fade" id="addProduitModal" tabindex="-1" aria-labelledby="#addProduitModalLabel" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-3 shadow">
-                <div class="modal-header bg-dark-subtle">
-                    <h5 class="modal-title text-success" id="addProduitModalLabel"><i class="typcn typcn-plus m-lg-1"></i> Ajouter un produit <i class="typcn typcn-plus-circle"></i></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fas fa-times text-danger"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="ajoutProduitForm" method = "post" action ="">
-                        <div class="mb-3">
-                           <label for="id_produit" class="form-label">
-                               <i class="typcn typcn-key-outline menu-icon"></i> ID Produit
-                           </label>
-                           <input type="number" class="form-control" id="id_produit" name="id_produit" placeholder = "Ne rien saisir" required readonly>   
-                        </div>                             
-                            <div class="mb-3">
-                              <label for="type" class="form-label">
-                              <i class="typcn typcn-th-large-outline menu-icon"></i>Categorie
-                              </label>
-                              <select class="form-select" id="nom_cat" name = "nom_cat" onchange = "updateCategorieId()" required>
-                                  <option value="">Sélectionnez la categorie</option>
-                                  <?php
-                                       if ($result2->num_rows > 0) {
-                                           while ($row = $result2->fetch_assoc()) {
-                                               echo "<option value='" . $row['id_categorie'] . "' data-id_categorie='" . $row['id_categorie'] . "'>" . $row['nom_cat'] . "</option>";
-                                           }
-                                       } else {
-                                           echo "<option value=''>Aucune categorie disponible</option>";
-                                       }
-                                       ?>
-                              </select>
-                          </div>
-                           <div class="mb-3">
-                               <label for="nom" class="form-label">
-                               <i class="typcn typcn-tag menu-icon"></i>ID categorie
-                               </label>
-                               <input type="text" class="form-control" id="id_categorie" name = "id_categorie" readonly> 
-                           </div>
-                           <div class="mb-3">
-                               <label for="nom" class="form-label">
-                               <i class="typcn typcn-tag menu-icon"></i> Nom du produit
-                               </label>
-                               <input type="text" class="form-control" id="nom_produit" name = "nom_produit" placeholder="Entrez le nom du produit" required title="Veuillez entrer un nom valide.">
-                           </div>
-                           <div class="mb-3">
-                               <label for="id" class="form-label">
-                               <i class="typcn typcn-tag menu-icon"></i>Prix unitaire
-                               </label>
-                               <input type="number" class="form-control" id="prix_unitaire" name = "prix_unitaire"  placeholder="Entrez le prix unitaire du produit" > 
-                           </div>
-                           <div class="mb-3">
-                               <label for="description" class="form-label">
-                               <i class="typcn typcn-document-text menu-icon"></i>Description
-                               </label>
-                               <textarea class="form-control" id="description" name="description" rows="4" placeholder="Entrez la description du produit"></textarea>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                <i class="fas fa-times-circle me-2"></i> Annuler
-                            </button>
-                            <button type="submit" class="btn btn-success" name = "enregistrer" id ="saveButton">
-                                <i class="fas fa-check-circle me-2"></i> Enregistrer
-                            </button>
-                            <button type="button" class="btn btn-warning d-none"  name = "modifier" id ="updateButton">
-                                <i class="fas fa-check-circle me-2"></i> Modifier
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    </main>
-</div>
-
-
-        </div>
         <!-- content-wrapper ends -->
         <!-- partial:partials/_footer.html -->
         <?php

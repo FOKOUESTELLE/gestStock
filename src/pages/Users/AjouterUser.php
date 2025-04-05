@@ -81,7 +81,7 @@ $result = $conn->query($sql);
                              <?php
                              if ($result->num_rows > 0) {
                                  while ($row = $result->fetch_assoc()) {
-                                     echo "<option value='" . $row['nom_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
+                                     echo "<option value='" . $row['id_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
                                  }
                              } else {
                                  echo "<option value=''>Aucun rôle disponible</option>";
@@ -154,7 +154,6 @@ $result = $conn->query($sql);
         $email = $_POST["email_user"];
         $password = $_POST["password_user"];
         $id_role = $_POST["id_role"];
-        $role = $_POST["role"];
         $conn = getConnection();
         
         if (!$conn) {
@@ -162,18 +161,17 @@ $result = $conn->query($sql);
         }
        
         // Utiliser une requête préparée pour éviter l'injection SQL
-        $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role, role) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role) VALUES (?, ?, ?, ?)";
         $result = $conn->prepare($sql);
         if ($result) {
            
-            $result->bind_param("sssis", $nom, $email, $password, $id_role, $role);
+            $result->bind_param("sssi", $nom, $email, $password, $id_role);
             if ($result->execute()) {
                 $_SESSION["id"] = $id;
                 $_SESSION["nom"] = $nom;
                 $_SESSION["email"] = $email;
                 $_SESSION["password"] = $password;
                 $_SESSION["id_role"] = $id_role;
-                $_SESSION["role"] = $role;
                 header("Location: ../../pages/samples/succes.php");
                 exit();
             } else {

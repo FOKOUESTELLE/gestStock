@@ -5,8 +5,11 @@
     require_once '../Nav/sidebar.php';
     require_once '../Fonctions/db_connection.php';
     require '../Fonctions/fonctions.php';
-    $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.prix_unitaire, P.description
-            FROM produits P, categorie C, exemplaire E WHERE P.id_categorie = C.id_categorie ";
+    $sql = "SELECT P.id_produit, C.nom_cat, C.id_categorie, P.nom_produit, P.prix_unitaire, P.description,
+                    (SELECT COUNT(*) FROM exemplaire E WHERE E.id_produit = P.id_produit) AS total_exemplaires
+                    FROM produits P
+                    JOIN categorie C ON P.id_categorie = C.id_categorie ORDER BY id_produit";
+
     $conn = getConnection();
     $result = $conn -> query($sql);
     $sql2 = "SELECT id_categorie, nom_cat FROM categorie";
@@ -100,8 +103,8 @@
                                           // Si la requête échoue
                                           $total_exemplaires = 0;
                                       }
-                                      $sql3 = " SELECT (P.prix_unitaire * COUNT(E.id_exemplaire)) AS prix_total WHERE E.id_produit = P.id_produit ";
-                                      $result3 = $conn->query($sql3);
+                                            $prix_total=$row["prix_unitaire"]*$total_exemplaires;
+                             
                           ?>
                               <tr>
                                   <td><?= $row["id_produit"] ?></td>
@@ -110,7 +113,7 @@
                                   <td><?= $row["nom_produit"] ?></td>
                                   <td><?= $row["prix_unitaire"] ?> FCFA</td>
                                   <td><?= isset($total_exemplaires) ? $total_exemplaires : 0 ?></td>
-                                  <td><?= number_format($row["prix_unitaire"], 0, ',', ' ') ?> FCFA</td>
+                                  <td><?= number_format($prix_total, 0, ',', ' ') ?> FCFA</td>
                                   <td><?= $row["description"] ?></td>
                                   <td class="text-center">
                                       <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_produit"] ?>" name="btnmod">
@@ -177,7 +180,7 @@
                               <i class="typcn typcn-th-large-outline menu-icon"></i>Categorie
                               </label>
                               <select class="form-select" id="nom_cat" name = "nom_cat" onchange = "updateCategorieId()" required>
-                                  <option value="">Sélectionnez la categorie</option>
+                                  <option value="" disabled selected>Sélectionnez la categorie</option>
                                   <?php
                                        if ($result2->num_rows > 0) {
                                            while ($row = $result2->fetch_assoc()) {
@@ -293,7 +296,7 @@
                 if ($result->execute()) {
                     $_SESSION["categorie"] = $categorie;
                     $_SESSION["id_categorie"] = $id_categorie;
-                    $_SESSION["nom_produit"] = $nom_produit;
+                    $_SESSION["nom_produit"] = $nom;
                     $_SESSION["prix_unitaire"] = $prix_unitaire;
                     $_SESSION["description"] = $description;
                     header("Location: ../../pages/samples/succes.php");
