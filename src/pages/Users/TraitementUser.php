@@ -11,12 +11,12 @@
 
         switch ($action) {
             case 'editUser':
-                $id_produit = intval($_POST['id_user']);
+                $id_user = intval($_POST['id_user']);
                 $sql = "SELECT U.id_user, R.nom_role, U.nom_user, U.adresse_mail, U.password
                 FROM users U, roles R
-                WHERE U.id_role = R.id_role ORDER BY id_user";
+                WHERE U.id_role = R.id_role AND U.id_user = ? ORDER BY id_user";
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $id_produit);
+                $stmt->bind_param("i", $id_user);
                 $stmt->execute();
                 $result = $stmt->get_result();
 
@@ -24,7 +24,7 @@
                     $data = $result->fetch_assoc();
                     echo json_encode($data);
                 } else {
-                    echo json_encode(['error' => 'Aucun produit trouvé pour cet ID']);
+                    echo json_encode(['error' => 'Aucun utilisteur trouvé pour cet ID']);
                 }
                 break;
                 case 'updateProduit':

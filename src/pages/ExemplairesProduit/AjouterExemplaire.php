@@ -50,7 +50,7 @@ $result = $conn->query($sql);
                         <label for="code_barre" class="form-label">
                             <i class="typcn typcn-credit-card menu-icon"></i> Code barre
                         </label>
-                        <input type="text" class="form-control" id="code_bar" name="code_bar"  placeholder="Entrez le code barre du produit" required autofocus readonly>
+                        <input type="text" class="form-control" id="code_bar" name="code_bar"  placeholder="Entrez le code barre du produit" required autofocus >
                         <p id="scan_status"></p>
                     </div>
                     <div class="mb-3">
@@ -211,7 +211,7 @@ $result = $conn->query($sql);
     console.error('QuaggaJS n\'est pas chargé !');
 } else {
     console.log('QuaggaJS est chargé avec succès.');
-    // Votre code QuaggaJS ici
+
 }
 document.addEventListener('DOMContentLoaded', function() {
     // Vérification de la disponibilité de la caméra
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         },
         decoder: {
-            readers: ["code_128_reader"] // Utilisation d'un seul lecteur de code-barres pour simplifier
+            readers: [  "code_128_reader","ean_reader","ean_8_reader","upc_reader","upc_e_reader"] // Utilisation d'un seul lecteur de code-barres pour simplifier
         },
     }, function(err) {
         if (err) {
@@ -272,6 +272,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const utterance = new SpeechSynthesisUtterance("Le code scanné est : " + result.codeResult.code);
             utterance.lang = "fr-FR";
             speechSynthesis.speak(utterance);
+            Quagga.stop();
+
+            setTimeout(() => {
+                Quagga.start();
+                document.getElementById('scan_status').textContent += " (prêt à scanner de nouveau)";
+            }, 1500); // 1.5s d’attente avant de redémarrer le scan
         } else {
             document.getElementById('scan_status').textContent = "Erreur de lecture du code barre.";
         }

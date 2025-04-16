@@ -5,9 +5,7 @@ require_once '../Nav/navbar.php';
 require_once '../Nav/sidebar.php';
 require_once '../Fonctions/db_connection.php';
 require '../Fonctions/fonctions.php';
-$sql = "SELECT U.id_user, R.nom_role, U.nom_user, U.adresse_mail, U.password
-        FROM users U, roles R
-        WHERE U.id_role = R.id_role ORDER BY id_user";
+$sql = "SELECT* FROM users";       
 $conn = getConnection();
 $result = $conn -> query($sql);
 $sql2 = "SELECT id_role, nom_role FROM roles";
@@ -65,6 +63,7 @@ $result2 = $conn->query($sql2);
                         <th scope="col"><i class="typcn typcn-user menu-icon fs-3"></i>Adresse mail</th>
                         <th scope="col"><i class="typcn typcn-key-outline menu-icon fs-3"></i>Password</th>
                         <th scope="col"><i class="typcn typcn-user-outline menu-icon fs-3"></i> Role</th>
+                        <th scope="col"> <i class="typcn typcn-key-outline menu-icon fs-3"></i> ID Role</th>
                         <th scope="col"><i class="typcn typcn-cog fs-3"></i> Actions</th>
                     </tr>
                     </thead>
@@ -79,7 +78,8 @@ $result2 = $conn->query($sql2);
                                     <td><?=$row["nom_user"]?></td>
                                     <td><?=$row["adresse_mail"]?></td>
                                     <td><?=$row["password"]?></td>
-                                    <td><?=$row["nom_role"]?></td>
+                                    <td><?=$row["role"]?></td>
+                                    <td><?=$row["id_role"]?></td>
                                     <td class="text-center">
                                     <button class="btn btn-warning rounded btnEdit" id="<?= $row["id_user"] ?>" name="btnmod">
                                         <i class="typcn typcn-edit fs-3"></i>
@@ -272,48 +272,51 @@ $result2 = $conn->query($sql2);
   <!-- Custom js for this page-->
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
-
   <?php
-   
-   if (isset($_POST["enregistrer"])) {
-       // $id = $_POST["id_user"];
-       $nom = $_POST["nom_user"];
-       $email = $_POST["email_user"];
-       $password = $_POST["password_user"];
-       $id_role = $_POST["id_role"];
-       $conn = getConnection();
-       
-       if (!$conn) {
-           die("Échec de la connexion à la base de données !");
-       }
-      
-       // Utiliser une requête préparée pour éviter l'injection SQL
-       $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role) VALUES (?, ?, ?, ?)";
-       $result = $conn->prepare($sql);
-       if ($result) {
-          
-           $result->bind_param("sssis", $nom, $email, $password, $id_role, $role);
-           if ($result->execute()) {
-               $_SESSION["id"] = $id;
-               $_SESSION["nom"] = $nom;
-               $_SESSION["email"] = $email;
-               $_SESSION["password"] = $password;
-               $_SESSION["id_role"] = $id_role;
-               header("Location: ../../pages/samples/succes.php");
-               exit();
-           } else {
-               // En cas d'erreur
-               header("Location: ../../pages/samples/error-500.php");
-               exit();
-           }
-           $result->close(); 
-       } else {
-           die("Erreur lors de la préparation de la requête.");
-       }
-       $conn->close(); 
-   }
+  if (isset($_POST["enregistrer"])) {
+      $nom = $_POST["nom_user"];
+      $email = $_POST["email_user"];
+      $password = $_POST["password_user"];
+      $id_role = $_POST["id_role"];  // Tu récupères toujours l'ID du rôle
+      $role = $_POST["role"];  // Le nom du rôle
 
- ?>
+      $conn = getConnection();
+      
+      if (!$conn) {
+          die("Échec de la connexion à la base de données !");
+      }
+     
+      // Utiliser une requête préparée pour éviter l'injection SQL
+      $sql = "INSERT INTO users (nom_user, adresse_mail, password, role, id_role) VALUES (?, ?, ?, ?, ?)";
+      $result = $conn->prepare($sql);
+      if ($result) {
+          // Ici, tu passes le nom du rôle et l'ID du rôle
+          $result->bind_param("ssssi", $nom, $email, $password, $role, $id_role);
+          
+          if ($result->execute()) {
+              $_SESSION["nom"] = $nom;
+              $_SESSION["email"] = $email;
+              $_SESSION["password"] = $password;
+              $_SESSION["id_role"] = $id_role;
+              $_SESSION["role"] = $role;
+              
+              // Redirection vers la page de succès
+              header("Location: ../../pages/samples/succes.php");
+              exit();
+          } else {
+              // En cas d'erreur d'exécution
+              header("Location: ../../pages/samples/error-500.php");
+              exit();
+          }
+          $result->close(); 
+      } else {
+          die("Erreur lors de la préparation de la requête.");
+      }
+      $conn->close(); 
+  }
+?>
+
+
 
 <script>
 
@@ -342,7 +345,7 @@ $(document).on('click', '.btnEdit', function(){
         url: 'TraitementUser.php',
         type: 'POST',
         data: {
-            id_user: user,
+            id_user: id_user,
             action: 'editUser'
         },
         success: function(response) {
@@ -354,19 +357,18 @@ $(document).on('click', '.btnEdit', function(){
                 if (data.error) {
                     alert(data.error);
                 } else {
-                    $('#id_produit').val(data.id_produit).prop('readonly', true);
-                    $('#nom_cat').val(data.id_categorie);
-                    $('#id_categorie').val(data.id_categorie).prop('readonly', true);
-                    $('#nom_produit').val(data.nom_produit);
-                    $('#prix_unitaire').val(data.prix_unitaire);
-                    $('#description').val(data.description);
-                    // $('#addProduitModalLabel').html("Modifier un produit");
+                    $('#id_user').val(data.id_user).prop('readonly', true);
+                    $('#nom_role').val(data.role);
+                    $('#nom_user').val(data.nom_user);
+                    $('#id_role').val(data.id_role).prop('readonly', true);
+                    $('#email_user').val(data.adresse_mail);
+                    $('#password_user').val(data.password);
 
                     $('#updateButton').removeClass('d-none');
                     $('#saveButton').addClass('d-none');
 
-                    $('#addProduitModal').removeAttr('aria-hidden');
-                    $('#addProduitModal').modal('show'); 
+                    $('#addUserModal').removeAttr('aria-hidden');
+                    $('#addUserModal').modal('show'); 
                 }
             } catch (e) {
                 console.error("Erreur JSON :", e);

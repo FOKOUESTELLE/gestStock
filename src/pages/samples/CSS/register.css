@@ -1,0 +1,30 @@
+
+*{
+    margin : 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:"poppins", sans-serif ;
+}
+
+body{
+    background-color:azure;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    
+}
+
+.bg{
+    background-color:rgb(184, 235, 225);
+}
+
+.btn{
+    background-color: rgb(13, 177, 128);
+    width: 200px;
+}
+.inscription{
+    text-decoration: none;
+    color: black;
+}
+

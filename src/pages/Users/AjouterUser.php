@@ -81,7 +81,7 @@ $result = $conn->query($sql);
                              <?php
                              if ($result->num_rows > 0) {
                                  while ($row = $result->fetch_assoc()) {
-                                     echo "<option value='" . $row['id_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
+                                     echo "<option value='" . $row['nom_role'] . "' data-id_role='" . $row['id_role'] . "'>" . $row['nom_role'] . "</option>";
                                  }
                              } else {
                                  echo "<option value=''>Aucun rôle disponible</option>";
@@ -145,48 +145,49 @@ $result = $conn->query($sql);
   <script src="../../assets/js/chart.js"></script>
   <!-- End custom js for this page-->
 
+<?php
+  if (isset($_POST["enregistrer"])) {
+      $nom = $_POST["nom_user"];
+      $email = $_POST["email_user"];
+      $password = $_POST["password_user"];
+      $id_role = $_POST["id_role"];
+      $role = $_POST["role"];  
 
-  <?php
-   
-    if (isset($_POST["enregistrer"])) {
-        // $id = $_POST["id_user"];
-        $nom = $_POST["nom_user"];
-        $email = $_POST["email_user"];
-        $password = $_POST["password_user"];
-        $id_role = $_POST["id_role"];
-        $conn = getConnection();
-        
-        if (!$conn) {
-            die("Échec de la connexion à la base de données !");
-        }
-       
-        // Utiliser une requête préparée pour éviter l'injection SQL
-        $sql = "INSERT INTO users (nom_user, adresse_mail, password, id_role) VALUES (?, ?, ?, ?)";
-        $result = $conn->prepare($sql);
-        if ($result) {
-           
-            $result->bind_param("sssi", $nom, $email, $password, $id_role);
-            if ($result->execute()) {
-                $_SESSION["id"] = $id;
-                $_SESSION["nom"] = $nom;
-                $_SESSION["email"] = $email;
-                $_SESSION["password"] = $password;
-                $_SESSION["id_role"] = $id_role;
-                header("Location: ../../pages/samples/succes.php");
-                exit();
-            } else {
-                // En cas d'erreur
-                header("Location: ../../pages/samples/error-500.php");
-                exit();
-            }
-            $result->close(); 
-        } else {
-            die("Erreur lors de la préparation de la requête.");
-        }
-        $conn->close(); 
-    }
-
-  ?>
+      $conn = getConnection();
+      
+      if (!$conn) {
+          die("Échec de la connexion à la base de données !");
+      }
+     
+      
+      $sql = "INSERT INTO users (nom_user, adresse_mail, password, role, id_role) VALUES (?, ?, ?, ?, ?)";
+      $result = $conn->prepare($sql);
+      if ($result) {
+          
+          $result->bind_param("ssssi", $nom, $email, $password, $role, $id_role);
+          
+          if ($result->execute()) {
+              $_SESSION["nom"] = $nom;
+              $_SESSION["email"] = $email;
+              $_SESSION["password"] = $password;
+              $_SESSION["id_role"] = $id_role;
+              $_SESSION["role"] = $role;
+              
+              
+              header("Location: ../../pages/samples/succes.php");
+              exit();
+          } else {
+              // En cas d'erreur d'exécution
+              header("Location: ../../pages/samples/error-500.php");
+              exit();
+          }
+          $result->close(); 
+      } else {
+          die("Erreur lors de la préparation de la requête.");
+      }
+      $conn->close(); 
+  }
+?>
 
 </body>
 </html>

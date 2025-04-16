@@ -155,7 +155,7 @@
                        <label for="code_barre" class="form-label">
                            <i class="typcn typcn-credit-card menu-icon"></i> Code barre
                        </label>
-                       <input type="text" class="form-control" id="code_bar" name="code_bar"  placeholder="Entrez le code barre du produit" required autofocus readonly>
+                       <input type="text" class="form-control" id="code_bar" name="code_bar"  placeholder="Entrez le code barre du produit" required autofocus>
                    </div>
                    <div class="mb-3">
                         <label for="type" class="form-label">
@@ -472,24 +472,24 @@ $(document).on('click', '.btnDel', function(){
     console.error('QuaggaJS n\'est pas chargé !');
 } else {
     console.log('QuaggaJS est chargé avec succès.');
-    // Votre code QuaggaJS ici
+    
 }
 document.addEventListener('DOMContentLoaded', function() {
-    // Vérification de la disponibilité de la caméra
+   
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({
             video: {
                 facingMode: "environment",
-                width: { ideal: 1280 }, // Résolution idéale
+                width: { ideal: 1280 }, 
                 height: { ideal: 720 },
-                frameRate: { ideal: 30 } // Nombre d'images par seconde idéal
+                frameRate: { ideal: 30 } 
             }
         })
         .then(function(stream) {
-            // Lien entre la vidéo et le flux de la caméra
+           
             var videoElement = document.querySelector('#preview');
             videoElement.srcObject = stream;
-            videoElement.play(); // Lancer la lecture du flux vidéo
+            videoElement.play(); /
             console.log('Caméra accessible');
         })
         .catch(function(err) {
